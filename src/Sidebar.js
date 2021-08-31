@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import SidebarLink from './SidebarLink';
 
 const Sidebar = ( props ) => {
   // props
@@ -6,8 +6,8 @@ const Sidebar = ( props ) => {
   return (
     <div className="sidebar">
 
-      { pages.map( (page) => <li key={page.id}>{ page.icon + ' ' + page.title }</li>) }
-      
+      { pages.map( (page) => <SidebarLink key={ page.id } page={ page } />) }
+
     </div>
   );
 }
