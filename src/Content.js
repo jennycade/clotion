@@ -1,13 +1,13 @@
 import { useState } from 'react';
+import Block from './Block';
 
 import EditBlock from './EditBlock';
 
 const Content = ( props ) => {
   // props
-  // const {  } = props
+  const { handleContentChange, content } = props
 
   // state
-  const [content, setContent] = useState(props.content)
   const [editing, setEditing] = useState(false);
 
   // switch to editing mode
@@ -19,16 +19,10 @@ const Content = ( props ) => {
     setEditing(false);
   }
 
-  // input
-  const handleContentChange = ( event ) => {
-    const newVal = event.target.value;
-    setContent(newVal);
-  }
-
   return (
     <div className="content">
       { editing && <EditBlock handleContentChange={handleContentChange} content={ content } leaveEditingMode={ leaveEditingMode } />}
-      { !editing && <div className="content" onClick={ enterEditingMode }>{ content }</div> }
+      { (!editing) && <Block enterEditingMode={ enterEditingMode } content={ content } /> }
     </div>
   );
 };

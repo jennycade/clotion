@@ -12,10 +12,9 @@ const EditBlock = ( props ) => {
       ref={ textAreaRef }
       onChange={ handleContentChange }
       onBlur={ leaveEditingMode }
-      autoFocus="true"
-    >
-        { content }
-    </textarea>
+      autoFocus={ true }
+      value={ content }
+    />
   );
 }
 
