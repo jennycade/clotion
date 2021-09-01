@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import './Page.css';
+
 const DUMMY_PAGES = [
   {title: 'Page 1', icon: '😬', content: 'blah blah blah', id: 0},
   {title: 'Page 2', icon: '🤷‍♀️', content: 'blah blah blah', id: 1},
@@ -20,7 +22,7 @@ const Page = ( props ) => {
 
   return (
     <div className="page">
-      <title className="pageTitle">{ page.title }</title>
+      <h1 className="pageTitle">{ page.title }</h1>
       <div className="pageIcon">{ page.icon }</div>
       <div className="content">
         { page.content }

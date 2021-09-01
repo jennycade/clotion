@@ -6,6 +6,9 @@ const SidebarLink = ( props ) => {
 
   return (
     <li key={page.id}>
+      <span className="toggle">
+        ▶
+      </span>
       <span className="linkIcon">
         { page.icon }
       </span>

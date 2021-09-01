@@ -1,0 +1,35 @@
+.sidebar {
+  height: 100vh;
+  background-color: rgb(247, 246, 243);
+
+  color: rgb(114, 112, 107);
+}
+
+.sidebar a {
+  color: inherit;
+  text-decoration: inherit;
+  font-weight: bold;
+}
+
+.sidebar ul {
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar li {
+  list-style: none;
+
+  display: grid;
+  grid-template-columns: 1.5rem 1.5rem 1fr;
+  justify-items: start;
+  align-items: center;
+}
+
+.sidebar li:hover {
+  background-color: rgba(55, 53, 47, 0.2);
+}
+
+.sidebar .toggle {
+  color: rgb(170, 169, 165);
+  font-weight: normal;
+}
