@@ -1,0 +1,20 @@
+{
+  "0": {
+    "id": 0,
+    "title": "Page 1",
+    "icon": "😬",
+    "content": "Page 1 content blah blah blah"
+  },
+  "1": {
+    "id": 1,
+    "title": "Page 2",
+    "icon": "🤷‍♀️",
+    "content": "Page 2 content blah blah blah"
+  },
+  "2": {
+    "id": 2,
+    "title": "Page 3",
+    "icon": "🥳",
+    "content": "Page 3 content blah blah blah"
+  }
+}
