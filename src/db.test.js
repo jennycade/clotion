@@ -1,13 +1,38 @@
-import db from './db';
+import dataHandler from './db';
 
-const DUMMY_PAGES = [
-  {title: 'Page 1', icon: '😬', content: 'blah blah blah', id: 0},
-  {title: 'Page 2', icon: '🤷‍♀️', content: 'blah blah blah', id: 1},
-  {title: 'Page 3', icon: '🥳', content: 'blah blah blah', id: 2},
-];
+test(`getAllPages returns everything`, ( done ) => {
+  const db = dataHandler();
 
-test(`getAllPages returns everything`, () => {
-  return db.getAllPages().then(data => {
-    expect(data.length).toBe(3);
-  });
+  function callback(data) {
+    try {
+      expect(data.length).toBe(3);
+      done();
+    } catch (error) {
+      done(error);
+    }
+  }
+
+  db.getAllPages(callback);
 });
+
+// create
+test(`createPage makes a new page`, ( done) => {
+  const db = dataHandler();
+
+  function callback(data) {
+    try {
+      expect(data.length).toBe(4);
+      done();
+    } catch (error) {
+      done(error);
+    }
+
+    db.createPage('Page 4', '⏰', 'Another page!');
+    db.getAllPages(callback);
+
+  }
+})
+
+// update
+
+// delete
