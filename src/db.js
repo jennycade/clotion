@@ -5,8 +5,15 @@ const dataHandler = () => {
     {title: 'Page 3', icon: '🥳', content: 'blah blah blah Page 3', id: 2},
   ];
 
-  const getAllPages = ( callback ) => {
-    callback(DUMMY_PAGES)
+  const getAllPages = () => {
+    return Promise.resolve(DUMMY_PAGES);
+    // // callback(DUMMY_PAGES)
+    // let timeoutPromise = new Promise((resolve, reject) => {
+    //   setTimeout(() => {
+    //     resolve(DUMMY_PAGES);
+    //   }, 10);
+    // });
+    // return timeoutPromise;
   }
 
   const getPage = ( id, callback ) => {
@@ -22,10 +29,16 @@ const dataHandler = () => {
     DUMMY_PAGES.push({title, icon, content, id});
   }
 
+  const updateTitle = (id, title) => {
+    const oldPage = {...getPage(id)};
+    console.log(oldPage);
+  }
+
   return {
     getAllPages,
     getPage,
     createPage,
+    updateTitle,
   }
 }
 
