@@ -1,4 +1,5 @@
 import dataHandler from './db';
+import { countDuplicates } from './helpers';
 
 test(`getAllPages returns everything`, ( done ) => {
   const db = dataHandler();
@@ -26,12 +27,29 @@ test(`createPage makes a new page`, ( done) => {
     } catch (error) {
       done(error);
     }
-
-    db.createPage('Page 4', '⏰', 'Another page!');
-    db.getAllPages(callback);
-
   }
-})
+  db.createPage('Page 4', '⏰', 'Another page!');
+  db.getAllPages(callback);
+});
+
+test(`createPage makes a new page with a unique id`, (done) => {
+  const db = dataHandler();
+
+  function callback(data) {
+    try {
+      const ids = data.map((page) => page.id);
+      // count repeats
+      const numDuplicates = countDuplicates(ids);
+      expect(numDuplicates).toBe(0);
+
+      done();
+    } catch (error) {
+      done(error);
+    }
+  }
+  db.createPage('Page 4', '⏰', 'Another page!');
+  db.getAllPages(callback);
+});
 
 // update
 
