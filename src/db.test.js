@@ -82,3 +82,12 @@ test(`updateContent works`, () => {
 });
 
 // delete
+test(`Pages are deletable`, () => {
+  const db = dataHandler();
+
+  return db.deletePage(0)
+    .then(() => db.getAllPages())
+    .then((data) => {
+      expect(data.length).toBe(2);
+    });
+})

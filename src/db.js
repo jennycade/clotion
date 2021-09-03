@@ -44,11 +44,22 @@ const dataHandler = () => {
     return updatePage(id, 'content', content);
   }
 
+  const deletePage = (id) => {
+    // which one?
+    const i = DUMMY_PAGES.findIndex((page) => page.id === id);
+
+    // BAHLEETED
+    DUMMY_PAGES.splice(i, 1);
+
+    return Promise.resolve();
+  }
+
   return {
     getAllPages,
     getPage,
     createPage,
-    updateTitle, updateIcon, updateContent
+    updateTitle, updateIcon, updateContent,
+    deletePage,
   }
 }
 
