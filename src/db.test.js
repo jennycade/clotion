@@ -1,6 +1,7 @@
 import dataHandler from './db';
 import { countDuplicates } from './helpers';
 
+// read
 test(`getAllPages returns everything`, ( done ) => {
   const db = dataHandler();
 
@@ -14,6 +15,23 @@ test(`getAllPages returns everything`, ( done ) => {
   }
 
   db.getAllPages(callback);
+});
+
+test(`getPage returns the page`, ( done ) => {
+  const db = dataHandler();
+
+  function callback(data) {
+    try {
+      const page = {title: 'Page 1', icon: '😬', content: 'blah blah blah Page 1', id: 0};
+      expect(data).toMatchObject(page);
+
+      done();
+    } catch (error) {
+      done(error);
+    }
+  }
+
+  db.getPage(0, callback);
 });
 
 // create
@@ -52,5 +70,20 @@ test(`createPage makes a new page with a unique id`, (done) => {
 });
 
 // update
+// test(`updateTitle can change a title`, (done) => {
+//   const db = dataHandler();
+
+//   function callback(data) {
+//     try {
+//       expect(data).toC
+
+//       done();
+//     } catch (error) {
+//       done(error);
+//     }
+//   }
+//   db.updateTitle(0, 'Page 1.5');
+//   db.getAllPages(callback);
+// })
 
 // delete

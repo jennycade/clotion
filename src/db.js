@@ -7,7 +7,10 @@ const dataHandler = () => {
 
   const getAllPages = ( callback ) => {
     callback(DUMMY_PAGES)
-    
+  }
+
+  const getPage = ( id, callback ) => {
+    callback(DUMMY_PAGES.filter( (page) => page.id === id)[0]);
   }
 
   const createPage = (title, icon, content) => {
@@ -21,6 +24,7 @@ const dataHandler = () => {
 
   return {
     getAllPages,
+    getPage,
     createPage,
   }
 }
