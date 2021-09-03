@@ -7,17 +7,10 @@ const dataHandler = () => {
 
   const getAllPages = () => {
     return Promise.resolve(DUMMY_PAGES);
-    // // callback(DUMMY_PAGES)
-    // let timeoutPromise = new Promise((resolve, reject) => {
-    //   setTimeout(() => {
-    //     resolve(DUMMY_PAGES);
-    //   }, 10);
-    // });
-    // return timeoutPromise;
   }
 
-  const getPage = ( id, callback ) => {
-    callback(DUMMY_PAGES.filter( (page) => page.id === id)[0]);
+  const getPage = ( id ) => {
+    return Promise.resolve(DUMMY_PAGES.filter( (page) => page.id === id)[0]);
   }
 
   const createPage = (title, icon, content) => {
@@ -27,6 +20,8 @@ const dataHandler = () => {
     const id = Math.max(usedIds) + 1;
 
     DUMMY_PAGES.push({title, icon, content, id});
+
+    return Promise.resolve(id);
   }
 
   const updateTitle = (id, title) => {
