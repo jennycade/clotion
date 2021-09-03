@@ -24,16 +24,31 @@ const dataHandler = () => {
     return Promise.resolve(id);
   }
 
+  const updatePage = (id, element, newValue) => {
+    // which one?
+    const i = DUMMY_PAGES.findIndex((page) => page.id === id);
+    
+    // update
+    DUMMY_PAGES[i][element] = newValue;
+
+    return Promise.resolve();
+  }
+
   const updateTitle = (id, title) => {
-    const oldPage = {...getPage(id)};
-    console.log(oldPage);
+    return updatePage(id, 'title', title);
+  }
+  const updateIcon = (id, icon) => {
+    return updatePage(id, 'icon', icon);
+  }
+  const updateContent = (id, content) => {
+    return updatePage(id, 'content', content);
   }
 
   return {
     getAllPages,
     getPage,
     createPage,
-    updateTitle,
+    updateTitle, updateIcon, updateContent
   }
 }
 

@@ -50,20 +50,35 @@ test(`createPage makes a new page with a unique id`, () => {
 });
 
 // update
-// test(`updateTitle can change a title`, () => {
-//   const db = dataHandler();
+test(`updateTitle can change a title`, () => {
+  const db = dataHandler();
 
-//   function callback(data) {
-//     try {
-//       expect(data).toMatchObject({title: 'Page 1.5'});
+  return db.updateTitle(0, 'Page 1.5')
+    .then(() => db.getPage(0))
+    .then((data) => {
+      expect(data).toMatchObject({title: 'Page 1.5'});
+    });
 
-//       done();
-//     } catch (error) {
-//       done(error);
-//     }
-//   }
-//   db.updateTitle(0, 'Page 1.5');
-//   db.getPage(0, callback);
-// });
+});
+
+test(`updateIcon works`, () => {
+  const db = dataHandler();
+
+  return db.updateIcon(0, '🥺')
+    .then(() => db.getPage(0))
+    .then((data) => {
+      expect(data).toMatchObject({icon: '🥺'});
+    });
+});
+
+test(`updateContent works`, () => {
+  const db = dataHandler();
+
+  return db.updateContent(0, 'dkdkdkdkdkdkdkdkdk PAGE 1 FOREVER')
+    .then(() => db.getPage(0))
+    .then((data) => {
+      expect(data).toMatchObject({content: 'dkdkdkdkdkdkdkdkdk PAGE 1 FOREVER'});
+    });
+});
 
 // delete
