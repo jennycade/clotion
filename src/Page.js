@@ -1,28 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import './Page.css';
 
 import Content from './Content';
-
-const DUMMY_PAGES = [
-  {title: 'Page 1', icon: '😬', content: 'blah blah blah page 1', id: 0},
-  {title: 'Page 2', icon: '🤷‍♀️', content: 'blah blah blah page 2', id: 1},
-  {title: 'Page 3', icon: '🥳', content: 'blah blah blah page 3', id: 2},
-]
+import { DbContext } from './fakedb';
 
 const Page = ( props ) => {
+  // props
   const { id } = props;
 
   // state
   const [page, setPage] = useState({});
   const [content, setContent] = useState('');
 
+  // db
+  const db = useContext(DbContext);
+
   // get page info/content
   useEffect( () => {
-    const newPage = DUMMY_PAGES.filter( (page) => page.id === id)[0];
-    setPage(newPage);
-    setContent(newPage.content);
-  }, [id]);
+    db.getPage(id)
+      .then((page) => {
+        setPage(page);
+        setContent(page.content);
+      })
+      .catch((error) => {
+        console.error(`Error retreiving page: ${error}`);
+      });
+
+  }, [id, db]);
 
   // input
   const handleContentChange = ( event ) => {

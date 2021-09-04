@@ -1,6 +1,6 @@
 const dataHandler = () => {
   const DUMMY_PAGES = [
-    {title: 'Page 1', icon: '😬', content: 'blah blah blah Page 1', id: 0},
+    {title: 'Page 1', icon: '😬', content: 'I am a real page blah blah blah Page 1', id: 0},
     {title: 'Page 2', icon: '🤷‍♀️', content: 'blah blah blah Page 2', id: 1},
     {title: 'Page 3', icon: '🥳', content: 'blah blah blah Page 3', id: 2},
   ];

@@ -6,14 +6,8 @@ import Page from './Page';
 
 import './App.css';
 
-const DUMMY_PAGES = [
-  {title: 'Page 1', icon: '😬', content: 'blah blah blah', id: 0},
-  {title: 'Page 2', icon: '🤷‍♀️', content: 'blah blah blah', id: 1},
-  {title: 'Page 3', icon: '🥳', content: 'blah blah blah', id: 2},
-];
-
 function App() {
-  const [pages, setPages] = useState(DUMMY_PAGES);
+  const [pages, setPages] = useState([]);
 
   return (
     <Router>

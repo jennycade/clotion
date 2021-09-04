@@ -1,5 +1,5 @@
 import dataHandler from './db';
-import { countDuplicates } from './helpers';
+import { countDuplicates } from '../helpers';
 
 // read
 test(`getAllPages returns everything`, () => {

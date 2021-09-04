@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
+import dataHandler, { DbContext } from './fakedb';
+
 ReactDOM.render(
-  <React.StrictMode>
+  <DbContext.Provider value={ dataHandler() }>
     <App />
-  </React.StrictMode>,
+  </DbContext.Provider>,
   document.getElementById('root')
 );
