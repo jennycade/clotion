@@ -22,8 +22,8 @@ const Content = ( props ) => {
 
   return (
     <div className="content">
-      { editing && <EditBlock handleContentChange={handleContentChange} content={ content } leaveEditingMode={ leaveEditingMode } />}
-      { (!editing) && <Block enterEditingMode={ enterEditingMode } content={ content } /> }
+      { editing && <EditBlock handleContentChange={ handleContentChange } content={ content } leaveEditingMode={ leaveEditingMode } />}
+      { (!editing) && <Block enterEditingMode={ enterEditingMode }>{ props.children }</Block> }
     </div>
   );
 };

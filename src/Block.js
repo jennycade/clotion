@@ -1,9 +1,9 @@
 const Block = ( props ) => {
   // props
-  const { enterEditingMode, content } = props;
+  const { enterEditingMode } = props;
 
   return (
-    <div className="block" onClick={ enterEditingMode } >{ content }</div>
+    <div className="block" onClick={ enterEditingMode } >{ props.children }</div>
   );
 };
 

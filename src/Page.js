@@ -10,7 +10,7 @@ const Page = ( props ) => {
   const { id } = props;
 
   // state
-  const [page, setPage] = useState({});
+  const [page, setPage] = useState({title: null, id: null, content: null});
   // const [content, setContent] = useState('');
 
   // db
@@ -38,6 +38,16 @@ const Page = ( props ) => {
     setPage(oldPage);
     // setContent(newVal);
   }
+  const handleTitleChange = ( event ) => {
+    const newVal = event.target.value;
+    const oldPage = {...page};
+    oldPage.title = newVal;
+
+    setPage(oldPage);
+    // setContent(newVal);
+  }
+
+  // save changes to db
 
   const updateContent = () => {
     // send to db
@@ -53,13 +63,46 @@ const Page = ( props ) => {
         console.error(`Error saving page data: ${error}`);
       });
   }
+  const updateTitle = () => {
+    // send to db
+    db.updateTitle(id, page.title)
+      .then(() => {
+        // get content from the db (?)
+        return db.getPage(id);
+      })
+      .then((pageData) => {
+        setPage(pageData);
+      })
+      .catch((error) => {
+        console.error(`Error saving page data: ${error}`);
+      });
+  }
+  const updateIcon = () => {
+    // send to db
+    db.updateIcon(id, page.icon)
+      .then(() => {
+        // get content from the db (?)
+        return db.getPage(id);
+      })
+      .then((pageData) => {
+        setPage(pageData);
+      })
+      .catch((error) => {
+        console.error(`Error saving page data: ${error}`);
+      });
+  }
 
   return (
     <div className="page">
-      <h1 className="pageTitle">{ page.title }</h1>
+      
+      <Content handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
+        <h1 className="pageTitle">{ page.title }</h1>
+      </Content>
       <div className="pageIcon">{ page.icon }</div>
       <div className="contentArea">
-        <Content handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content } />
+        <Content handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
+          <div className="content">{ page.content }</div>
+        </Content>
       </div>
     </div>
   );
