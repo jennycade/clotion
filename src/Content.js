@@ -5,7 +5,7 @@ import EditBlock from './EditBlock';
 
 const Content = ( props ) => {
   // props
-  const { handleContentChange, content } = props
+  const { handleContentChange, updateContent, content } = props
 
   // state
   const [editing, setEditing] = useState(false);
@@ -17,6 +17,7 @@ const Content = ( props ) => {
 
   const leaveEditingMode = () => {
     setEditing(false);
+    updateContent();
   }
 
   return (

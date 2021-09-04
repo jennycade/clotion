@@ -11,7 +11,7 @@ const Page = ( props ) => {
 
   // state
   const [page, setPage] = useState({});
-  const [content, setContent] = useState('');
+  // const [content, setContent] = useState('');
 
   // db
   const db = useContext(DbContext);
@@ -21,7 +21,7 @@ const Page = ( props ) => {
     db.getPage(id)
       .then((page) => {
         setPage(page);
-        setContent(page.content);
+        // setContent(page.content);
       })
       .catch((error) => {
         console.error(`Error retreiving page: ${error}`);
@@ -32,7 +32,26 @@ const Page = ( props ) => {
   // input
   const handleContentChange = ( event ) => {
     const newVal = event.target.value;
-    setContent(newVal);
+    const oldPage = {...page};
+    oldPage.content = newVal;
+
+    setPage(oldPage);
+    // setContent(newVal);
+  }
+
+  const updateContent = () => {
+    // send to db
+    db.updateContent(id, page.content)
+      .then(() => {
+        // get content from the db (?)
+        return db.getPage(id);
+      })
+      .then((pageData) => {
+        setPage(pageData);
+      })
+      .catch((error) => {
+        console.error(`Error saving page data: ${error}`);
+      });
   }
 
   return (
@@ -40,7 +59,7 @@ const Page = ( props ) => {
       <h1 className="pageTitle">{ page.title }</h1>
       <div className="pageIcon">{ page.icon }</div>
       <div className="contentArea">
-        <Content handleContentChange={ handleContentChange } content={ content } />
+        <Content handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content } />
       </div>
     </div>
   );
