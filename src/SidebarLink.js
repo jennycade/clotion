@@ -2,19 +2,19 @@ import { Link } from 'react-router-dom';
 
 const SidebarLink = ( props ) => {
   // props
-  const { page } = props;
+  const { id, title, icon } = props;
 
   return (
-    <li key={page.id}>
+    <li key={id}>
       <span className="toggle">
         ▶
       </span>
       <span className="linkIcon">
-        { page.icon }
+        { icon }
       </span>
       <span className="pageLink">
-        <Link to={ `/${page.id}` }>
-          { page.title }
+        <Link to={ `/${id}` }>
+          { title }
         </Link>
       </span>
     </li>

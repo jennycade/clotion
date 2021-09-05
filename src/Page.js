@@ -7,10 +7,10 @@ import { DbContext } from './fakedb';
 
 const Page = ( props ) => {
   // props
-  const { id } = props;
+  const { id, updatePages } = props;
 
   // state
-  const [page, setPage] = useState({title: null, id: null, content: null});
+  const [page, setPage] = useState({title: null, id: null, content: null, icon: null});
   // const [content, setContent] = useState('');
 
   // db
@@ -67,6 +67,8 @@ const Page = ( props ) => {
     // send to db
     db.updateTitle(id, page.title)
       .then(() => {
+        // tell the App to refresh
+        updatePages();
         // get content from the db (?)
         return db.getPage(id);
       })
@@ -81,6 +83,8 @@ const Page = ( props ) => {
     // send to db
     db.updateIcon(id, page.icon)
       .then(() => {
+        // tell the App to refresh
+        updatePages();
         // get content from the db (?)
         return db.getPage(id);
       })
