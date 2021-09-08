@@ -67,13 +67,13 @@ const Page = ( props ) => {
     // send to db
     db.updateTitle(id, page.title)
       .then(() => {
-        // tell the App to refresh
-        updatePages();
         // get content from the db (?)
         return db.getPage(id);
       })
       .then((pageData) => {
         setPage(pageData);
+        // tell the App to refresh
+        updatePages();
       })
       .catch((error) => {
         console.error(`Error saving page data: ${error}`);

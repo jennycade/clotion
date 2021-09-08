@@ -1,0 +1,79 @@
+import { useState, useEffect } from "react";
+
+const fakeDB = () => {
+  const DUMMY_PAGES = [
+    {
+      title: "Page 1",
+      icon: "😬",
+      content: "I am a real page blah blah blah Page 1",
+      id: 0
+    },
+    { title: "Page 2", icon: "🤷‍♀️", content: "blah blah blah Page 2", id: 1 },
+    { title: "Page 3", icon: "🥳", content: "blah blah blah Page 3", id: 2 }
+  ];
+
+  const getAllPages = () => {
+    return Promise.resolve(DUMMY_PAGES);
+  };
+  const updatePage = (id, element, newValue) => {
+    // which one?
+    const i = DUMMY_PAGES.findIndex((page) => page.id === id);
+    
+    // update
+    DUMMY_PAGES[i][element] = newValue;
+
+    return Promise.resolve();
+  }
+
+  const updateTitle = (id, title) => {
+    return updatePage(id, 'title', title);
+  }
+
+  return {
+    getAllPages,
+    updateTitle
+  };
+};
+
+function App() {
+  const [pages, setPages] = useState([]);
+  const db = fakeDB();
+
+  // load pages
+  useEffect(() => {
+    db.getAllPages()
+      .then((allPages) => {
+        setPages(allPages);
+      })
+      .catch((error) => {
+        console.error(`Error getting pages: ${error}`);
+      });
+  }, [db]);
+
+  const updatePages = () => {
+    db.getAllPages()
+      .then((allPages) => {
+        setPages(allPages); // not triggering a re-render. Why?
+      })
+      .catch((error) => {
+        console.error(`Error getting pages: ${error}`);
+      });
+  };
+  const changeTitle = () => {
+    db.updateTitle(0, 'New title')
+  };
+
+  return (
+    <div className="App">
+      <ul>
+        {pages.map((page) => (
+          <li key={page.id}>{page.title}</li>
+        ))}
+        <button onClick={changeTitle}>Click to change *Page 1*</button>
+        <button onClick={updatePages}>Update pages</button>
+      </ul>
+    </div>
+  );
+}
+
+export default App;

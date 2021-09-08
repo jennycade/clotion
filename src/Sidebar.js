@@ -9,7 +9,7 @@ const Sidebar = ( props ) => {
     <div className="sidebar">
       <ul>
 
-        {/* { pages.map( (page) => <SidebarLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) } */}
+        { pages.map( (page) => <SidebarLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) }
 
         { props.children }
         

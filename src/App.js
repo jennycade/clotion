@@ -28,7 +28,6 @@ function App() {
   const updatePages = () => {
     db.getAllPages()
       .then((allPages) => {
-        console.table(allPages);
         setPages(allPages); // not triggering a re-render. Why?
       })
       .catch((error) => {
@@ -36,12 +35,19 @@ function App() {
       });
   }
 
+  /* for debugging */
+  const changeTitle = () => {
+    db.updateTitle(0, 'New title');
+  };
+  
+
   return (
     <Router>
       <div className="App">
         <Sidebar pages={ pages } updatePages={ updatePages }>
           { pages.map( (page) => <SidebarLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) }
           <button onClick={ updatePages }>Update pages</button>
+          <button onClick={ changeTitle }>Change a title</button>
         </Sidebar>
         <Switch>
           <Route path="/0/" exact>
