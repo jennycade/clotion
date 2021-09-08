@@ -5,60 +5,44 @@ import Sidebar from './Sidebar';
 import SidebarLink from './SidebarLink';
 import Page from './Page';
 
-import { DbContext } from './fakedb';
+// import { DbContext } from './firebase';
+import { db } from './firebase/db';
+
+import { doc, onSnapshot, collection } from "firebase/firestore";
+
 
 import './App.css';
 
 function App() {
   const [pages, setPages] = useState([]);
 
-  const db = useContext(DbContext);
-
   // load pages
   useEffect(() => {
-    db.getAllPages()
-      .then((allPages) => {
-        setPages(allPages);
-      })
-      .catch((error) => {
-        console.error(`Error getting pages: ${error}`);
+    const unsub = onSnapshot(collection(db, 'pages'), (pagesSnapshot) => {
+      const newPages = [];
+      pagesSnapshot.forEach((doc) => {
+        const newPage = {id: doc.id, ...doc.data()}
+        newPages.push(newPage);
       });
-  }, [db]);
-
-  const updatePages = () => {
-    db.getAllPages()
-      .then((allPages) => {
-        setPages(allPages); // not triggering a re-render. Why?
-      })
-      .catch((error) => {
-        console.error(`Error getting pages: ${error}`);
-      });
-  }
-
-  /* for debugging */
-  const changeTitle = () => {
-    db.updateTitle(0, 'New title');
-  };
-  
+      setPages(newPages);
+  });
+    return unsub;
+  }, []);
 
   return (
     <Router>
       <div className="App">
-        <Sidebar pages={ pages } updatePages={ updatePages }>
+        <Sidebar>
           { pages.map( (page) => <SidebarLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) }
-          <button onClick={ updatePages }>Update pages</button>
-          <button onClick={ changeTitle }>Change a title</button>
         </Sidebar>
         <Switch>
-          <Route path="/0/" exact>
-            <Page id={ 0 } updatePages={ updatePages } />
-          </Route>
-          <Route path="/2/" exact>
-            <Page id={ 2 } updatePages={ updatePages } />
-          </Route>
-          <Route path="/1/" exact>
-            <Page id={ 1 } updatePages={ updatePages } />
-          </Route>
+          { pages.map((page) => {
+            return (
+              <Route path={ `/${page.id}/` } exact>
+                <Page id={ page.id } />
+              </Route>
+            )
+          }) }
 
         </Switch>
       </div>
