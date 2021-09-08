@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
@@ -10,7 +10,7 @@ import { db } from './firebase/db';
 
 const Page = ( props ) => {
   // props
-  const { id, updatePages } = props;
+  const { id } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, content: null, icon: null});
