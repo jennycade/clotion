@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router';
 
 import Sidebar from './Sidebar';
 import SidebarLink from './SidebarLink';
@@ -14,8 +15,9 @@ import { doc, onSnapshot, collection, addDoc } from "firebase/firestore";
 import './App.css';
 
 function App() {
+  // state
   const [pages, setPages] = useState([]);
-  const [redirectPage, setRedirectPage] = useState('');
+  const [newPage, setNewPage] = useState('');
 
   // load pages
   useEffect(() => {
@@ -30,15 +32,19 @@ function App() {
     return unsub;
   }, []);
 
+  // addPage
   const addPage = async () => {
+    // boilerplate
     const newPage = {
       title: 'Untitled',
       icon: '',
       content: '',
     };
 
+    // add to firestore
     const docRef = await addDoc(collection(db, 'pages'), newPage);
-    setRedirectPage(docRef.id);
+    setNewPage(docRef.id);
+
   }
 
   return (
@@ -48,7 +54,14 @@ function App() {
           { pages.map( (page) => <SidebarLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) }
           <button onClick={ addPage }>Add page</button>
         </Sidebar>
+
+        { newPage !== '' &&
+          <Redirect to={`/${newPage}`} />
+        }
+
         <Switch>
+          
+
           { pages.map((page) => {
             return (
               <Route path={ `/${page.id}/` } exact>
@@ -56,9 +69,7 @@ function App() {
               </Route>
             )
           }) }
-          { redirectPage !== '' && 
-            <Redirect to={`/${ redirectPage }/`} />
-          }
+          
         </Switch>
       </div>
     </Router>
