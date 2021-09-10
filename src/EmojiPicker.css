@@ -1,0 +1,49 @@
+.emojiPicker {
+  position: absolute;
+  z-index: 2;
+
+  background-color: #fff;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border: 1px solid rgb(231, 231, 231);
+  border-radius: 4px;
+
+  width: 400px;
+}
+
+.emojiPicker .titleBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid rgb(231, 231, 231);
+
+  font-size: 14px;
+}
+
+.emojiPicker .inputArea {
+  margin: 5px 10px;
+  display: flex;
+}
+
+.emojiPicker input {
+  background-color: rgb(247, 247, 245);
+  border: 1px solid rgb(223, 223, 221);
+  border-radius: 4px;
+  padding: 4px;
+  width: 100%;
+}
+
+.emojiPicker input::placeholder {
+  color: rgb(175, 175, 171); 
+}
+
+.emojiPicker .content {
+  margin: 12px;
+}
+
+.emojiPicker h1 {
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+

@@ -5,6 +5,7 @@ import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import './Page.css';
 
 import Content from './Content';
+import EmojiPicker from './EmojiPicker';
 
 import { db } from './firebase/db';
 
@@ -15,6 +16,7 @@ const Page = ( props ) => {
   // state
   const [page, setPage] = useState({title: null, id: null, content: null, icon: null});
   const [docRef, setDocRef] = useState({});
+  const [showIconPicker, setShowIconPicker] = useState(false);
 
   // get page info/content
   useEffect( () => {
@@ -71,7 +73,10 @@ const Page = ( props ) => {
       <Content handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
         <h1 className="pageTitle">{ page.title }</h1>
       </Content>
-      <div className="pageIcon">{ page.icon }</div>
+
+      {showIconPicker && <EmojiPicker />}
+      <div className="pageIcon" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
+      
       <div className="contentArea">
         <Content handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
           <div className="content">{ page.content }</div>
