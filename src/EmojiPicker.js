@@ -1,8 +1,17 @@
+import { useState } from 'react';
+
 import './EmojiPicker.css';
 
-const EmojiPicker = ( props ) => {
+import { getTitles } from './helpers';
 
-  
+import emojiDb from './emoji.json';
+
+const EmojiPicker = ( props ) => {
+  // state
+  const [emojis, setEmojis] = useState(emojiDb);
+  const [groups, setGroups] = useState(getTitles(emojiDb, 'group'));
+
+  // useEffect -> reset groups when emojis changes  
 
   return (
     <div className="emojiPicker">
@@ -19,7 +28,7 @@ const EmojiPicker = ( props ) => {
 
       </header>
       <div className="content">
-        <h1>People</h1>
+        
       </div>
 
 

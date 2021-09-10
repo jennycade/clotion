@@ -13,6 +13,21 @@ const countDuplicates = (arr) => {
   return numDuplicates;
 }
 
+
+const getTitles = (arr, colName) => {
+  const reducer = (titles, newTitle) => {
+    if (!titles.includes(newTitle[colName])) {
+      return [...titles, newTitle[colName] ];
+    } else {
+      return titles;
+    }
+  }
+
+  const titles = [];
+  return arr.reduce(reducer, titles);
+}
+
 export {
   countDuplicates,
+  getTitles,
 };
