@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './EmojiPicker.css';
 
@@ -12,8 +12,34 @@ const EmojiPicker = ( props ) => {
   // state
   const [emojis, setEmojis] = useState(emojiDb);
   const [groups, setGroups] = useState(getTitles(emojiDb, 'group'));
+  const [filterText, setFilterText] = useState('');
 
-  // useEffect -> reset groups when emojis changes  
+  // useEffect -> reset groups when emojis changes
+  useEffect(() => {
+
+    const filterEmojis = ( filterText ) => {
+      // TODO: make case-insensitive
+      if (filterText !== '') {
+        let text = filterText.toLocaleLowerCase();
+        const filteredEmojis = emojiDb.filter((emoji) => emoji.name.includes(text) ||
+          emoji.sub_group.includes(text));
+        return filteredEmojis;
+      }
+      return emojiDb;
+    }
+
+    const filteredEmojis = filterEmojis(filterText);
+    setEmojis(filteredEmojis);
+    
+  }, [filterText]);
+
+  useEffect(() => {
+    setGroups(getTitles(emojis, 'group'));
+  }, [emojis])
+
+  const handleFilterTextChange = (event) => {
+    setFilterText(event.target.value);
+  }
 
   return (
     <div className="emojiPicker">
@@ -25,7 +51,7 @@ const EmojiPicker = ( props ) => {
         </div>
 
         <div className="inputArea">
-          <input type="text" placeholder="Filter…" />
+          <input type="text" placeholder="Filter…" onChange={ handleFilterTextChange } />
         </div>
 
       </header>
