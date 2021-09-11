@@ -14,7 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: 6px 12px;
   border-bottom: 1px solid rgb(231, 231, 231);
 
   font-size: 14px;
@@ -67,4 +67,9 @@
 .emojiGrid li {
   max-width: 100%;
   min-width: 0;
+}
+
+.emojiPicker .noResults {
+  color: rgb(140, 139, 135);
+  font-size: 12px;
 }

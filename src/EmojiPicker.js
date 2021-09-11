@@ -62,7 +62,11 @@ const EmojiPicker = ( props ) => {
               emojis={ emojis.filter((emoji) => emoji.group === group ) }
             />
           );
-        })}
+        })
+      }
+      { emojis.length === 0 && 
+        <p className="noResults">No results</p>
+      }
       </div>
 
 
