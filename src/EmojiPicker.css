@@ -38,7 +38,10 @@
 }
 
 .emojiPicker .content {
-  margin: 12px;
+  margin: 12px 0 12px 12px;
+  max-height: 350px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .emojiPicker h1 {
@@ -55,6 +58,13 @@
   display: grid;
   grid-template-columns: repeat(12, 1fr);
 
+  padding-right: 12px;
+
   align-items: center;
   justify-items: center;
+}
+
+.emojiGrid li {
+  max-width: 100%;
+  min-width: 0;
 }

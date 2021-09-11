@@ -9,7 +9,9 @@ const EmojiGroup = ( props ) => {
       { emojis.map((emoji) => {
         return (
           <li key={ emoji.codepoints }>
-            { emoji.emoji + emoji.name}
+            { /* onHover --> show emoji.name */ }
+            { emoji.emoji }
+            
           </li>
         );
       }) }
