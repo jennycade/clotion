@@ -1,6 +1,6 @@
 const EmojiGroup = ( props ) => {
   // props
-  const { group, emojis } = props;
+  const { group, emojis, handleIconClick } = props;
 
   return (
     <div className="emojiGroup">
@@ -8,7 +8,7 @@ const EmojiGroup = ( props ) => {
       <ul className="emojiGrid">
       { emojis.map((emoji) => {
         return (
-          <li key={ emoji.codepoints }>
+          <li key={ emoji.codepoints } onClick={ () => handleIconClick(emoji.emoji) } >
             { /* onHover --> show emoji.name */ }
             { emoji.emoji }
             

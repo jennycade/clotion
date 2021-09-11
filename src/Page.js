@@ -61,10 +61,15 @@ const Page = ( props ) => {
       title: page.title,
     });
   }
-  const updateIcon = () => {
+  const updateIcon = ( newIcon ) => {
     updateDoc(docRef, {
-      icon: page.icon,
+      icon: newIcon,
     });
+  }
+
+  const handleIconClick = ( newIcon ) => {
+    updateIcon(newIcon);
+    setShowIconPicker(false);
   }
 
   return (
@@ -74,7 +79,7 @@ const Page = ( props ) => {
         <h1 className="pageTitle">{ page.title }</h1>
       </Content>
 
-      {showIconPicker && <EmojiPicker />}
+      {showIconPicker && <EmojiPicker handleIconClick={ handleIconClick } />}
       <div className="pageIcon" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
       
       <div className="contentArea">

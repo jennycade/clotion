@@ -9,6 +9,9 @@ import { getTitles } from './helpers';
 import emojiDb from './emoji.json';
 
 const EmojiPicker = ( props ) => {
+  // props
+  const { handleIconClick } = props;
+
   // state
   const [emojis, setEmojis] = useState(emojiDb);
   const [groups, setGroups] = useState(getTitles(emojiDb, 'group'));
@@ -58,7 +61,7 @@ const EmojiPicker = ( props ) => {
       <div className="content">
       { groups.map((group) => {
           return (
-            <EmojiGroup group={ group } key={ group }
+            <EmojiGroup group={ group } key={ group } handleIconClick={ handleIconClick }
               emojis={ emojis.filter((emoji) => emoji.group === group ) }
             />
           );
