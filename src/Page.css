@@ -3,3 +3,8 @@
 
   color: rgb(55, 53, 47);
 }
+
+.pageIcon {
+  font-size: 400%;
+  width: min-content;
+}

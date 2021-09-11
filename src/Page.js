@@ -74,13 +74,19 @@ const Page = ( props ) => {
 
   return (
     <div className="page">
+
+    { showIconPicker && <EmojiPicker handleIconClick={ handleIconClick } /> }
+    { page.icon === '' && 
+      <button className="subtleButton" onClick={ () => setShowIconPicker(true) }>☺ Add icon</button>
+    }
+    <div className="pageIcon linklike" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
       
       <Content handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
+
         <h1 className="pageTitle">{ page.title }</h1>
       </Content>
 
-      {showIconPicker && <EmojiPicker handleIconClick={ handleIconClick } />}
-      <div className="pageIcon" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
+      
       
       <div className="contentArea">
         <Content handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>

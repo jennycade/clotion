@@ -48,9 +48,13 @@ const EmojiPicker = ( props ) => {
     <div className="emojiPicker">
       <header>
         <div className="titleBar">
-          <span>Emoji</span>
-          <span>😀 Random</span>
-          <span>Remove</span>
+          <span>
+            <span>Emoji</span>
+          </span>
+          <span className="rightFlex">
+            <span className="linklike">😀 Random</span>
+            <span className="linklike" onClick={ () => handleIconClick('') }>Remove</span>
+          </span>
         </div>
 
         <div className="inputArea">
