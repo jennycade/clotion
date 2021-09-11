@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import './EmojiPicker.css';
 
+import EmojiGroup from './EmojiGroup';
+
 import { getTitles } from './helpers';
 
 import emojiDb from './emoji.json';
@@ -28,7 +30,13 @@ const EmojiPicker = ( props ) => {
 
       </header>
       <div className="content">
-        
+      { groups.map((group) => {
+          return (
+            <EmojiGroup group={ group } key={ group }
+              emojis={ emojis.filter((emoji) => emoji.group === group ) }
+            />
+          );
+        })}
       </div>
 
 
