@@ -44,6 +44,15 @@ const EmojiPicker = ( props ) => {
     setFilterText(event.target.value);
   }
 
+  const selectRandomEmoji = () => {
+    // choose randomly from all emojis, not filtered list
+    const i = Math.floor( Math.random() * emojiDb.length );
+    const newEmoji = emojiDb[i];
+    
+    handleIconClick(newEmoji.emoji);
+    // console.log(newEmoji.emoji);
+  }
+
   return (
     <div className="emojiPicker">
       <header>
@@ -52,7 +61,7 @@ const EmojiPicker = ( props ) => {
             <span>Emoji</span>
           </span>
           <span className="rightFlex">
-            <span className="linklike">😀 Random</span>
+            <span className="linklike" onClick={ selectRandomEmoji }>😀 Random</span>
             <span className="linklike" onClick={ () => handleIconClick('') }>Remove</span>
           </span>
         </div>
