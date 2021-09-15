@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import Block from './Block';
-
-import EditBlock from './EditBlock';
 
 const Content = ( props ) => {
   // props
-  const { handleContentChange, updateContent, content } = props
+  const { handleContentChange, updateContent, content, element } = props
 
   // state
   const [editing, setEditing] = useState(false);
@@ -22,8 +19,28 @@ const Content = ( props ) => {
 
   return (
     <div className="content">
-      { editing && <EditBlock handleContentChange={ handleContentChange } content={ content } leaveEditingMode={ leaveEditingMode } />}
-      { (!editing) && <Block enterEditingMode={ enterEditingMode }>{ props.children }</Block> }
+      { editing && element !== 'h1' &&
+        <textarea
+          onChange={ handleContentChange }
+          onBlur={ leaveEditingMode }
+          autoFocus={ true }
+          value={ content }
+        />
+      }
+      { editing && element === 'h1' &&
+        <h1><input type="text"
+          onChange={ handleContentChange }
+          onBlur={ leaveEditingMode }
+          autoFocus={ true }
+          value={ content }
+        /></h1>
+      }
+
+      { (!editing) &&
+        <div className="block" onClick={ enterEditingMode } >
+          { props.children }
+        </div>
+      }
     </div>
   );
 };

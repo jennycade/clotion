@@ -16,3 +16,20 @@
 .titlePlaceholder { 
   color: rgb(225, 225, 224);
 }
+
+.content textarea, .content input {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  border: none;
+  padding: 0;
+  resize: none;
+  width: 100%;
+}
+.content textarea {
+  height: 100vh; /* this is a terrible fix. */
+}
+
+.content textarea:focus, .content input {
+  outline: none;
+}

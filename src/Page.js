@@ -81,7 +81,7 @@ const Page = ( props ) => {
     }
     <div className="pageIcon linklike" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
       
-      <Content handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
+      <Content element='h1' handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
         { page.title === 'Untitled' && <h1 className="pageTitle titlePlaceholder">Untitled</h1>}
         { page.title !== 'Untitled' && <h1 className="pageTitle">{ page.title }</h1>}
       </Content>
@@ -89,7 +89,7 @@ const Page = ( props ) => {
       
       
       <div className="contentArea">
-        <Content handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
+        <Content element='div' handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
           { page.content === '' && <div className="content placeholder">Press Enter to continue with an empty page.</div> }
           { page.content !== '' && <div className="content">{ page.content }</div> }
         </Content>
