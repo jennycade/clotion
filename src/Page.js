@@ -75,7 +75,7 @@ const Page = ( props ) => {
   return (
     <div className="page">
 
-    { showIconPicker && <EmojiPicker handleIconClick={ handleIconClick } /> }
+    { showIconPicker && <EmojiPicker exit={ () => setShowIconPicker(false) } handleIconClick={ handleIconClick } /> }
     { page.icon === '' && 
       <button className="subtleButton" onClick={ () => setShowIconPicker(true) }>☺ Add icon</button>
     }

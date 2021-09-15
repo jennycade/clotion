@@ -10,7 +10,7 @@ import emojiDb from './emoji.json';
 
 const EmojiPicker = ( props ) => {
   // props
-  const { handleIconClick } = props;
+  const { handleIconClick, exit } = props;
 
   // state
   const [emojis, setEmojis] = useState(emojiDb);
@@ -38,8 +38,24 @@ const EmojiPicker = ( props ) => {
 
   useEffect(() => {
     setGroups(getTitles(emojis, 'group'));
-  }, [emojis])
+  }, [emojis]);
 
+  // event listener for clicking outside the picker --> close it
+  useEffect(() => {
+    const escape = (event) => {
+      // console.table(); // return to this part!!!!!!!
+      if (event.target.classList.contains('page')) { // clicked outside the image and menu
+        exit();
+      }
+    }
+    window.addEventListener('click', escape);
+    // clean up
+    return () => {
+      window.removeEventListener('click', escape);
+    }
+  });
+
+  // functions
   const handleFilterTextChange = (event) => {
     setFilterText(event.target.value);
   }
@@ -50,7 +66,6 @@ const EmojiPicker = ( props ) => {
     const newEmoji = emojiDb[i];
     
     handleIconClick(newEmoji.emoji);
-    // console.log(newEmoji.emoji);
   }
 
   return (

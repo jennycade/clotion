@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 
 import Sidebar from './Sidebar';
 import SidebarLink from './SidebarLink';
@@ -9,7 +9,7 @@ import Page from './Page';
 // import { DbContext } from './firebase';
 import { db } from './firebase/db';
 
-import { doc, onSnapshot, collection, addDoc } from "firebase/firestore";
+import { onSnapshot, collection, addDoc } from "firebase/firestore";
 
 
 import './App.css';
