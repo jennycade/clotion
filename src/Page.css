@@ -8,3 +8,11 @@
   font-size: 400%;
   width: min-content;
 }
+
+.placeholder { 
+  color: rgb(175, 174, 172);
+}
+
+.titlePlaceholder { 
+  color: rgb(225, 225, 224);
+}

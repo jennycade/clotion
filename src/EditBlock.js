@@ -5,11 +5,11 @@ const EditBlock = ( props ) => {
   const { handleContentChange, content, leaveEditingMode } = props;
 
   // ref
-  const textAreaRef = useRef(null);
+  // const textAreaRef = useRef(null);
 
   return (
     <textarea
-      ref={ textAreaRef }
+      // ref={ textAreaRef }
       onChange={ handleContentChange }
       onBlur={ leaveEditingMode }
       autoFocus={ true }
