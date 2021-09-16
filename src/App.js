@@ -64,7 +64,7 @@ function App() {
 
           { pages.map((page) => {
             return (
-              <Route path={ `/${page.id}/` } exact>
+              <Route path={ `/${page.id}/` } key={ page.id } exact>
                 <Page id={ page.id } />
               </Route>
             )
