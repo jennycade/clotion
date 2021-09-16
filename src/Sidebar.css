@@ -3,6 +3,9 @@
   background-color: rgb(247, 246, 243);
 
   color: rgb(114, 112, 107);
+
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar a {
@@ -10,23 +13,15 @@
   text-decoration: inherit;
   font-weight: bold;
   font-size: 0.8rem;
-}
-
-.sidebar ul {
-  margin: 0;
-  padding: 0;
-}
-
-.sidebar li {
-  list-style: none;
+  height: 1.5rem;
 
   display: grid;
-  grid-template-columns: 1.5rem 1.5rem 1fr;
+  grid-template-columns: 1.5rem 1fr;
   justify-items: start;
   align-items: center;
 }
 
-.sidebar li:hover {
+.sidebar a:hover {
   background-color: rgba(55, 53, 47, 0.2);
 }
 

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 // import { useHistory } from 'react-router';
 
 import Sidebar from './Sidebar';
-import SidebarLink from './SidebarLink';
+import PageLink from './PageLink';
 import Page from './Page';
 
 // import { DbContext } from './firebase';
@@ -51,7 +51,7 @@ function App() {
     <Router>
       <div className="App">
         <Sidebar>
-          { pages.map( (page) => <SidebarLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) }
+          { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) }
           <button onClick={ addPage }>Add page</button>
         </Sidebar>
 

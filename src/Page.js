@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, deleteDoc } from 'firebase/firestore';
 
 import './Page.css';
 
@@ -8,6 +8,7 @@ import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 
 import { db } from './firebase/db';
+import PageLink from './PageLink';
 
 const Page = ( props ) => {
   // props
@@ -72,27 +73,39 @@ const Page = ( props ) => {
     setShowIconPicker(false);
   }
 
+  const deletePage = () => {
+    deleteDoc(docRef);
+  }
+
   return (
-    <div className="page">
+    <div className="pageContainer">
+      <nav>
+        <PageLink id={ page.id } title={ page.title } icon={ page.icon } />
+        <button onClick={ deletePage } class="linklike">Delete</button>
+      </nav>
+      
+      <div className="page">
 
-    { showIconPicker && <EmojiPicker exit={ () => setShowIconPicker(false) } handleIconClick={ handleIconClick } /> }
-    { page.icon === '' && 
-      <button className="subtleButton" onClick={ () => setShowIconPicker(true) }>☺ Add icon</button>
-    }
-    <div className="pageIcon linklike" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
-      
-      <Content element='h1' handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
-        { page.title === 'Untitled' && <h1 className="pageTitle titlePlaceholder">Untitled</h1>}
-        { page.title !== 'Untitled' && <h1 className="pageTitle">{ page.title }</h1>}
-      </Content>
-
-      
-      
-      <div className="contentArea">
-        <Content element='div' handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
-          { page.content === '' && <div className="content placeholder">Press Enter to continue with an empty page.</div> }
-          { page.content !== '' && <div className="content">{ page.content }</div> }
+        { showIconPicker && <EmojiPicker exit={ () => setShowIconPicker(false) } handleIconClick={ handleIconClick } /> }
+        { page.icon === '' && 
+          <button className="subtleButton" onClick={ () => setShowIconPicker(true) }>☺ Add icon</button>
+        }
+        <div className="pageIcon linklike" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
+          
+        <Content element='h1' handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
+          { page.title === 'Untitled' && <h1 className="pageTitle titlePlaceholder">Untitled</h1>}
+          { page.title !== 'Untitled' && <h1 className="pageTitle">{ page.title }</h1>}
         </Content>
+
+        
+        
+        <div className="contentArea">
+          <Content element='div' handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
+            { page.content === '' && <div className="content placeholder">Press Enter to continue with an empty page.</div> }
+            { page.content !== '' && <div className="content">{ page.content }</div> }
+          </Content>
+      
+        </div>
       </div>
     </div>
   );

@@ -33,3 +33,16 @@
 .content textarea:focus, .content input {
   outline: none;
 }
+
+nav {
+  position: sticky;
+  width: 100%;
+  
+  background-color: white;
+
+  display: flex;
+  justify-content: space-between;
+}
+nav * {
+
+}
