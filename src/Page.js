@@ -81,7 +81,7 @@ const Page = ( props ) => {
     <div className="pageContainer">
       <nav>
         <PageLink id={ page.id } title={ page.title } icon={ page.icon } />
-        <button onClick={ deletePage } class="linklike">Delete</button>
+        <button onClick={ deletePage } class="subtleButton">Delete</button>
       </nav>
       
       <div className="page">

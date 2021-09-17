@@ -1,6 +1,25 @@
+.link {
+  text-decoration: inherit;
+  color: inherit;
+  padding: 3px 6px;
+}
+
+.link:hover {
+  cursor: pointer;
+  background-color: rgb(239, 239, 239);
+}
+
+.linkIcon {
+  padding: 0 10px 0 0;
+}
+
 .pageLink {
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+nav .link {
+  border-radius: 3px;
 }

@@ -7,7 +7,7 @@ const PageLink = ( props ) => {
   const { id, title, icon } = props;
 
   return (
-    <Link to={ `/${id}` }>
+    <Link to={ `/${id}` } className="link" >
       <span className="linkIcon">
         { icon }
       </span>

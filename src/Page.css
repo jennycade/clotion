@@ -35,6 +35,7 @@
 }
 
 nav {
+  color: rgb(55, 53, 47);
   position: sticky;
   width: 100%;
   
@@ -42,7 +43,7 @@ nav {
 
   display: flex;
   justify-content: space-between;
-}
-nav * {
+  padding: 12px;
 
+  font-size: 14px;
 }
