@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 
 import { doc, onSnapshot, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db } from './firebase/db';
 
 import './Page.css';
 
 import Content from './Content';
 import EmojiPicker from './EmojiPicker';
-
-import { db } from './firebase/db';
 import PageLink from './PageLink';
+import Block from './Block';
 
 const Page = ( props ) => {
   // props
@@ -41,6 +41,7 @@ const Page = ( props ) => {
     setPage(oldPage);
     // setContent(newVal);
   }
+
   const handleTitleChange = ( event ) => {
     const newVal = event.target.value;
     const oldPage = {...page};
@@ -52,9 +53,15 @@ const Page = ( props ) => {
 
   // save changes to db
 
-  const updateContent = () => {
+  const updateContent = ( newContent ) => {
+    // save state
+    const newPage = {...page};
+    newPage.content = newContent;
+    setPage(newPage);
+
+    // save to firebase
     updateDoc(docRef, {
-      content: page.content,
+      content: newContent,
     });
   }
   const updateTitle = () => {
@@ -100,10 +107,10 @@ const Page = ( props ) => {
         
         
         <div className="contentArea">
-          <Content element='div' handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
-            { page.content === '' && <div className="content placeholder">Press Enter to continue with an empty page.</div> }
-            { page.content !== '' && <div className="content">{ page.content }</div> }
-          </Content>
+
+
+          <Block handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
+          </Block>
       
         </div>
       </div>
