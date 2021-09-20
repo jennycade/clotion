@@ -1,3 +1,5 @@
+import { createMarkup } from './helpers';
+
 let showdown = require('showdown');
 const converter = new showdown.Converter();
 
@@ -7,7 +9,8 @@ const Block = ( props ) => {
 
   // convert to and from md
   const displayAsHtml = () => {
-    return converter.makeHtml(content);
+    const html = converter.makeHtml( content );
+    return html;
   }
 
   // convert to md
@@ -26,8 +29,8 @@ const Block = ( props ) => {
       contentEditable={ true }
       onBlur={ handleBlur }
       suppressContentEditableWarning={true}
+      dangerouslySetInnerHTML={ createMarkup(displayAsHtml())}
     >
-      { displayAsHtml() }
     </div>
   );
 };

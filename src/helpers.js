@@ -27,7 +27,15 @@ const getTitles = (arr, colName) => {
   return arr.reduce(reducer, titles);
 }
 
+// html string --> jsx (use dangerouslySetInnerHtml)
+const createMarkup = ( htmlStr ) => {
+  return {__html: htmlStr};
+}
+
 export {
   countDuplicates,
   getTitles,
+  createMarkup,
 };
+
+
