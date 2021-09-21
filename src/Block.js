@@ -27,10 +27,11 @@ const Block = ( props ) => {
     <div
       className="block"
       contentEditable={ true }
-      onBlur={ handleBlur }
+      // onBlur={ handleBlur }
       suppressContentEditableWarning={true}
-      dangerouslySetInnerHTML={ createMarkup(displayAsHtml())}
+      // dangerouslySetInnerHTML={ createMarkup(displayAsHtml())}
     >
+      { displayAsHtml() }
     </div>
   );
 };
