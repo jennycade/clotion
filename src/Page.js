@@ -9,6 +9,7 @@ import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import PageLink from './PageLink';
 import Block from './Block';
+import LiveBlock from './LiveBlock';
 
 const Page = ( props ) => {
   // props
@@ -108,9 +109,10 @@ const Page = ( props ) => {
         
         <div className="contentArea">
 
+          <LiveBlock handleContentChange={ handleContentChange } updateContent={ updateContent } textContent={ page.content } />
 
-          <Block handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
-          </Block>
+          {/* <Block handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
+          </Block> */}
       
         </div>
       </div>
