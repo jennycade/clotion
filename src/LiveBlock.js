@@ -1,84 +1,49 @@
-import { useState, useEffect } from 'react';
+import { useReducer } from 'react';
+
+// reducer
+const reducer = (content, action) => {
+  if (action.type === 'updateText') {
+    const newContent = {...content};
+    content.text = action.payload;
+    return newContent;
+  }
+}
 
 const LiveBlock = ( props ) => {
   // props
   const { textContent } = props;
 
-  // state
-  const [text, setText] = useState(textContent);
-  const [blockType, setBlockType] = useState('p');
-
-  // effect: update blockType when text changes
-  useEffect(() => {
-    const mdKeys = {
-      '# ': 'h1',
-      '## ': 'h2',
-      '### ': 'h3',
-      '#### ': 'h4',
-      '##### ': 'h5',
-      '###### ': 'h6',
-    };
-    // does text start with any key from mdKeys?
-    for (const [md, tag] of Object.entries(mdKeys)) {
-      if (typeof text === 'string') {
-        if (text.search(md) === 0) {
-          // change block type
-          setBlockType(tag);
   
-          // remove md from text
-          const newText = Array.from(text).slice(md.length).join('');
-          setText(newText);
-        }
-      }
-      
-    }
-  }, [text]);
 
-  // input
-  const handleInput = (event) => {
-    console.log('I got input')
-    // update text
-    // const oldText = text;
-    // const newText = event.target.value;
+  // useReducer
+  const [state, dispatch] = useReducer(reducer, {text: textContent, blockType: 'p'});
 
-    // setText(newText);
-
-    // const mdKeys = {
-    //   '# ': 'h1',
-    //   '## ': 'h2',
-    //   '### ': 'h3',
-    //   '#### ': 'h4',
-    //   '##### ': 'h5',
-    //   '###### ': 'h6',
-    // };
-
-    // // does text start with any key from mdKeys?
-    // for (const [md, tag] of Object.entries(mdKeys)) {
-    //   if (newText.search(md) === 0) {
-    //     // change block type
-    //     setBlockType(tag);
-
-    //     // remove md from text
-    //     const newerText = newText.splice(0, md.length);
-    //     setText(newerText);
-    //   }
-    // }
+  // updating
+  const handleInput = (e) => {
+    const newContent = e.target.innerHtml;
+    dispatch({
+      type: 'updateText',
+      payload: newContent,
+    });
   }
 
-  if (blockType === 'p') {
+  if (state.blockType === 'p') {
     return (
       <p contentEditable={true} suppressContentEditableWarning={true} onInput={handleInput} >
-        { text }
+        { state.text }
       </p>
     );
   }
-  if (blockType === 'h1') {
+  if (state.blockType === 'h1') {
     return (
       <h1 contentEditable={true} suppressContentEditableWarning={true} onInput={handleInput} >
-        { text }
+        { state.text }
       </h1>
     );
   }
+  return (
+    <p>Something has gone wrong.</p>
+  );
   
 }
 
