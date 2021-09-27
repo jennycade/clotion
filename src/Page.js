@@ -8,7 +8,6 @@ import './Page.css';
 import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import PageLink from './PageLink';
-import Block from './Block';
 import LiveBlock from './LiveBlock';
 
 const Page = ( props ) => {
