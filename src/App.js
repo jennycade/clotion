@@ -9,7 +9,7 @@ import Page from './Page';
 // import { DbContext } from './firebase';
 import { db } from './firebase/db';
 
-import { onSnapshot, collection, addDoc } from "firebase/firestore";
+import { onSnapshot, collection, addDoc, orderBy, query } from "firebase/firestore";
 
 
 import './App.css';
@@ -21,7 +21,9 @@ function App() {
 
   // load pages
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'pages'), (pagesSnapshot) => {
+    const pagesRef = collection(db, 'pages');
+    const pagesQuery = query(pagesRef, orderBy('order'));
+    const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
       const newPages = [];
       pagesSnapshot.forEach((doc) => {
         const newPage = {id: doc.id, ...doc.data()}
