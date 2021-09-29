@@ -38,7 +38,12 @@ function App() {
     const newPage = {
       title: 'Untitled',
       icon: '',
-      content: '',
+      content: JSON.stringify(
+        [{
+          type: 'paragraph',
+          children: [{ text: 'Start typing.' }],
+        }]
+      ),
     };
 
     // add to firestore

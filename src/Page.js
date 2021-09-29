@@ -14,6 +14,18 @@ const Page = ( props ) => {
   // props
   const { id } = props;
 
+  // empty page
+  const blankPage = {
+    title: '',
+    icon: '',
+    content: JSON.stringify(
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      }
+    ),
+  };
+
   // state
   const [page, setPage] = useState({title: null, id: null, content: null, icon: null});
   const [docRef, setDocRef] = useState({});
@@ -108,7 +120,7 @@ const Page = ( props ) => {
         
         <div className="contentArea">
 
-          <LiveBlock handleContentChange={ handleContentChange } updateContent={ updateContent } textContent={ page.content } />
+          { page.content && <LiveBlock handleContentChange={ handleContentChange } updateContent={ updateContent } textContent={ page.content } /> }
 
           {/* <Block handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
           </Block> */}
