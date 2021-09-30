@@ -21,6 +21,7 @@ function App() {
 
   // load pages
   useEffect(() => {
+    // query - sort by user-defined 'order'
     const pagesRef = collection(db, 'pages');
     const pagesQuery = query(pagesRef, orderBy('order'));
     const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
@@ -34,6 +35,13 @@ function App() {
     return unsub;
   }, []);
 
+  // manage sort order
+  const getNextOrder = () => {
+    // get max of all page.order values
+    const orderVals = pages.map(page => page.order);
+    return Math.max(...orderVals) + 1;
+  }
+
   // addPage
   const addPage = async () => {
     // boilerplate
@@ -46,6 +54,7 @@ function App() {
           children: [{ text: 'Start typing.' }],
         }]
       ),
+      order: getNextOrder(),
     };
 
     // add to firestore
