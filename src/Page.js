@@ -14,18 +14,6 @@ const Page = ( props ) => {
   // props
   const { id } = props;
 
-  // empty page
-  const blankPage = {
-    title: '',
-    icon: '',
-    content: JSON.stringify(
-      {
-        type: 'paragraph',
-        children: [{ text: '' }],
-      }
-    ),
-  };
-
   // state
   const [page, setPage] = useState({title: null, id: null, content: null, icon: null});
   const [docRef, setDocRef] = useState({});
