@@ -6,10 +6,12 @@ import Sidebar from './Sidebar';
 import PageLink from './PageLink';
 import Page from './Page';
 
+import { rearrange } from './helpers';
+
 // import { DbContext } from './firebase';
 import { db } from './firebase/db';
 
-import { onSnapshot, collection, addDoc, orderBy, query } from "firebase/firestore";
+import { onSnapshot, collection, addDoc, orderBy, query, writeBatch, doc } from "firebase/firestore";
 
 
 import './App.css';
@@ -18,6 +20,7 @@ function App() {
   // state
   const [pages, setPages] = useState([]);
   const [newPage, setNewPage] = useState('');
+  const [dragFromId, setDragFromId] = useState('');
 
   // load pages
   useEffect(() => {
@@ -40,6 +43,32 @@ function App() {
     // get max of all page.order values
     const orderVals = pages.map(page => page.order);
     return Math.max(...orderVals) + 1;
+  }
+  // dragging
+  const handleSideBarPageDrag = (pageId) => {
+    setDragFromId(pageId);
+  }
+  // dropping
+  const handleSideBarPageDrop = (beforeId) => {
+    // calculate new order
+    const newOrder = rearrange(pages, dragFromId, beforeId);
+    // find pages to update
+    const pagesToUpdate = pages.filter(item => {
+      const newOrderForItem = newOrder.find( newOrderItem => newOrderItem.id === item.id ).newOrder;
+      return newOrderForItem !== item.order;
+    });
+    // make a batched call to firebase
+    // Get a new write batch
+    const batch = writeBatch(db);
+    pagesToUpdate.forEach(pageToUpdate => {
+      const pageRef = doc(db, 'pages', pageToUpdate.id);
+      const newOrderForPage = newOrder.find( newOrderItem => newOrderItem.id === pageToUpdate.id ).newOrder;
+      batch.update(pageRef, {order: newOrderForPage});
+    });
+
+    // Commit the batch
+    batch.commit();
+
   }
 
   // addPage
@@ -67,7 +96,7 @@ function App() {
     <Router>
       <div className="App">
         <Sidebar>
-          { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } />) }
+          { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } handleDrag={ handleSideBarPageDrag } handleDrop={ handleSideBarPageDrop } />) }
           <button onClick={ addPage }>Add page</button>
         </Sidebar>
 
