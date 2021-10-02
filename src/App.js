@@ -21,6 +21,7 @@ function App() {
   const [pages, setPages] = useState([]);
   const [newPage, setNewPage] = useState('');
   const [dragFromId, setDragFromId] = useState('');
+  const [lastDraggedOver, setLastDraggedOver] = useState('');
 
   // load pages
   useEffect(() => {
@@ -52,6 +53,20 @@ function App() {
     // tell App what's being dragged
     setDragFromId(pageId);
   }
+  const isSideBarPageDragLeaveReal = (pageId) => {
+    if (pageId !== lastDraggedOver) {
+      // console.log(`${pageId} !== ${lastDraggedOver}`)
+      // console.log(`Drag leave target: ${pageId}`)
+      // it's really leaving
+      setLastDraggedOver(pageId);
+
+      const pageBeingLeft = pages.find(page => page.id === pageId).title;
+      console.log(`Leaving page ${pageBeingLeft}`);
+
+      return true;
+    }
+  }
+
   // dropping
   const handleSideBarPageDrop = (beforeId) => {
     // calculate new order
@@ -61,6 +76,7 @@ function App() {
       const newOrderForItem = newOrder.find( newOrderItem => newOrderItem.id === item.id ).newOrder;
       return newOrderForItem !== item.order;
     });
+
     // make a batched call to firebase
     // Get a new write batch
     const batch = writeBatch(db);
@@ -72,6 +88,9 @@ function App() {
 
     // Commit the batch
     batch.commit();
+
+    // unset the lastDraggedOver so highlights work as expected on next drag
+    setLastDraggedOver('');
 
   }
 
@@ -100,7 +119,7 @@ function App() {
     <Router>
       <div className="App">
         <Sidebar>
-          { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } handleDrag={ handleSideBarPageDrag } handleDrop={ handleSideBarPageDrop } />) }
+          { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } handleDrag={ handleSideBarPageDrag } isDragLeaveReal={ isSideBarPageDragLeaveReal } handleDrop={ handleSideBarPageDrop } />) }
           <button onClick={ addPage }>Add page</button>
         </Sidebar>
 
