@@ -45,7 +45,11 @@ function App() {
     return Math.max(...orderVals) + 1;
   }
   // dragging
-  const handleSideBarPageDrag = (pageId) => {
+  const handleSideBarPageDrag = (event, pageId) => {
+    // don't allow dropping URL into page
+    event.dataTransfer.clearData();
+
+    // tell App what's being dragged
     setDragFromId(pageId);
   }
   // dropping

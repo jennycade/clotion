@@ -10,7 +10,7 @@ const PageLink = ( props ) => {
     return (
       <div
         draggable={true}
-        onDragStart={ () => props.handleDrag(id) }
+        onDragStart={ (event) => props.handleDrag(event, id) }
         onDragOver={ (event) => event.preventDefault() }
         onDrop={ () => props.handleDrop(id) }
       >
