@@ -13,6 +13,17 @@ const PageLink = ( props ) => {
   // state! for style
   const [style, setStyle] = useState({});
 
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    // const newStyle = {
+    //   borderTop: '3px solid Highlight',
+    //   marginTop: '-3px',
+    // };
+    // if (Object.keys(style).length === 0) { // currently empty
+    //   setStyle(newStyle);
+    // }
+  }
+
   const handleDragEnter = () => {
     // highlight!
     const newStyle = {
@@ -20,7 +31,12 @@ const PageLink = ( props ) => {
       marginTop: '-3px',
     };
 
-    setStyle(newStyle);
+    console.log(`Entering page ${title}`)
+
+    if (Object.keys(style).length === 0) { // currently empty
+      setStyle(newStyle);
+    }
+      
   }
 
   const handleDragLeave = () => {
@@ -31,6 +47,11 @@ const PageLink = ( props ) => {
     }
   }
 
+  const handleDrop = () => {
+    setStyle({});
+    props.handleDrop(id);
+  }
+
   if (draggable) {
     return (
       <div
@@ -38,9 +59,10 @@ const PageLink = ( props ) => {
         ref={ pageLinkRef }
         draggable={true}
         onDragStart={ (event) => props.handleDrag(event, id) }
+        onDragOver={ handleDragOver }
         onDragEnter={ handleDragEnter }
         onDragLeave={ handleDragLeave }
-        onDrop={ () => props.handleDrop(id) }
+        onDrop={ handleDrop }
       >
         <Link to={ `/${id}` } className="link" >
           <span className="linkIcon">
