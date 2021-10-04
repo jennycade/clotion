@@ -54,10 +54,8 @@ function App() {
     setDragFromId(pageId);
   }
   const isSideBarPageDragLeaveReal = (pageId) => {
+    // this doesn't quite work and I'm not sure why.
     if (pageId !== lastDraggedOver) {
-      // console.log(`${pageId} !== ${lastDraggedOver}`)
-      // console.log(`Drag leave target: ${pageId}`)
-      // it's really leaving
       setLastDraggedOver(pageId);
 
       const pageBeingLeft = pages.find(page => page.id === pageId).title;
@@ -68,7 +66,7 @@ function App() {
   }
 
   // dropping
-  const handleSideBarPageDrop = (beforeId) => {
+  const handleSideBarPageDrop = (beforeId = null) => {
     // calculate new order
     const newOrder = rearrange(pages, dragFromId, beforeId);
     // find pages to update
@@ -120,7 +118,14 @@ function App() {
       <div className="App">
         <Sidebar>
           { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } handleDrag={ handleSideBarPageDrag } isDragLeaveReal={ isSideBarPageDragLeaveReal } handleDrop={ handleSideBarPageDrop } />) }
-          <button onClick={ addPage }>Add page</button>
+          
+          <div className="endSort" >
+          </div>
+
+          <button onClick={ addPage }
+            onDrop={ () => handleSideBarPageDrop() } onDragOver={ (e) => e.preventDefault() } 
+          >Add page</button>
+          
         </Sidebar>
 
         { newPage !== '' &&

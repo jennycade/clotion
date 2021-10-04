@@ -48,20 +48,16 @@ const PageLink = ( props ) => {
   }
 
   const handleDrop = () => {
-    setStyle({});
+    // setStyle({});
     props.handleDrop(id);
   }
 
   if (draggable) {
     return (
       <div
-        style={ style }
-        ref={ pageLinkRef }
         draggable={true}
         onDragStart={ (event) => props.handleDrag(event, id) }
         onDragOver={ handleDragOver }
-        onDragEnter={ handleDragEnter }
-        onDragLeave={ handleDragLeave }
         onDrop={ handleDrop }
       >
         <Link to={ `/${id}` } className="link" >
