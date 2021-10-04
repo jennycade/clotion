@@ -9,10 +9,10 @@ import Page from './Page';
 import { rearrange } from './helpers';
 
 // import { DbContext } from './firebase';
-import { db } from './firebase/db';
+import { db, auth } from './firebase/db';
 
 import { onSnapshot, collection, addDoc, orderBy, query, writeBatch, doc } from "firebase/firestore";
-
+import { onAuthStateChanged } from 'firebase/auth';
 
 import './App.css';
 
@@ -22,6 +22,19 @@ function App() {
   const [newPage, setNewPage] = useState('');
   const [dragFromId, setDragFromId] = useState('');
   const [lastDraggedOver, setLastDraggedOver] = useState('');
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  // sign-in
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('Signed in');
+      } else {
+        console.log('Not signed in');
+      }
+    });
+    return () => unsub();
+  }, []);
 
   // load pages
   useEffect(() => {
