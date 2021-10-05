@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import Sidebar from './Sidebar';
 import PageLink from './PageLink';
 import Page from './Page';
+import Login from './Login';
 
 import { rearrange } from './helpers';
 
@@ -124,6 +125,12 @@ function App() {
     const docRef = await addDoc(collection(db, 'pages'), newPage);
     setNewPage(docRef.id);
 
+  }
+
+  if (!isSignedIn) {
+    return (
+      <Login />
+    );
   }
 
   return (
