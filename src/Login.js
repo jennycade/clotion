@@ -3,6 +3,9 @@ import './Login.css';
 import { useState } from 'react';
 
 const Login = (props) => {
+  // props
+  const { createNewEmailUser, signInEmailUser } = props;
+
   // state
   const [showSignUp, setShowSignUp] = useState(false);
   const [email, setEmail] = useState('');
@@ -31,6 +34,14 @@ const Login = (props) => {
   }
   const handleUnforgotPassword = (event) => {
     setForgotPassword(false);
+  }
+
+  // form submission
+  const handleSubmitEmailSignup = (event) => {
+    createNewEmailUser(email, password);
+  }
+  const handleSubmitEmailLogin = (event) => {
+    signInEmailUser(email, password);
   }
 
 
@@ -67,7 +78,10 @@ const Login = (props) => {
       <input id="passwordInput" type="password" value={ password } onChange={ handlePasswordChange } />
       }
       { !forgotEmail && 
-      <button className="emailSignIn">
+      <button
+        className="emailSignIn"
+        onClick={ showSignUp ? handleSubmitEmailSignup : handleSubmitEmailLogin }
+      >
         Continue with email
       </button>
       }

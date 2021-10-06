@@ -13,7 +13,9 @@ import { rearrange } from './helpers';
 import { db, auth } from './firebase/db';
 
 import { onSnapshot, collection, addDoc, orderBy, query, writeBatch, doc } from "firebase/firestore";
-import { onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut } from 'firebase/auth';
 
 import './App.css';
 
@@ -24,6 +26,7 @@ function App() {
   const [dragFromId, setDragFromId] = useState('');
   const [lastDraggedOver, setLastDraggedOver] = useState('');
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [userDisplayName, setUserDisplayName] = useState('');
 
   //////////
   // AUTH //
@@ -33,9 +36,14 @@ function App() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log('Signed in');
+        if (user.displayName) {
+          setUserDisplayName(user.displayName);
+        } else {
+          setUserDisplayName(user.email);
+        }
+        setIsSignedIn(true);
       } else {
-        console.log('Not signed in');
+        setIsSignedIn(false);
       }
     });
     return () => unsub();
@@ -51,10 +59,30 @@ function App() {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      throw new Error(`Firebase auth error ${errorCode}: ${errorMessage}`);
+      console.log(`Firebase auth error ${errorCode}: ${errorMessage}`);
     });
-
   }
+  const signInEmailUser = (email, password) => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      setIsSignedIn(true);
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(`Firebase auth error ${errorCode}: ${errorMessage}`);
+    });
+  }
+
+  const signOutUser = () => {
+    signOut(auth);
+  }
+
+  ///////////
+  // PAGES //
+  ///////////
 
   // load pages
   useEffect(() => {
@@ -152,7 +180,10 @@ function App() {
 
   if (!isSignedIn) {
     return (
-      <Login />
+      <Login
+        createNewEmailUser={createNewEmailUser}
+        signInEmailUser={signInEmailUser}
+      />
     );
   }
 
@@ -160,6 +191,9 @@ function App() {
     <Router>
       <div className="App">
         <Sidebar>
+          <p>{userDisplayName}'s Clotion</p>
+          <button onClick={ signOutUser }>Sign out</button>
+
           { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } handleDrag={ handleSideBarPageDrag } isDragLeaveReal={ isSideBarPageDragLeaveReal } handleDrop={ handleSideBarPageDrop } />) }
           
           <div className="endSort" >
