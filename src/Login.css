@@ -45,7 +45,8 @@
   line-height: 1.5;
   font-size: 12px;
   color: rgba(55, 53, 47, 0.6);
-
+}
+.login label:first-of-type {
   border-top: 1px solid rgb(237, 236, 233);
   padding-top: 14px;
 }
