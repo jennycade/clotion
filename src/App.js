@@ -32,6 +32,7 @@ function App() {
   const [lastDraggedOver, setLastDraggedOver] = useState('');
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [userDisplayName, setUserDisplayName] = useState('');
+  const [uid, setUid] = useState('');
 
   //////////
   // AUTH //
@@ -41,6 +42,7 @@ function App() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
+        setUid(user.uid);
         if (user.isAnonymous) {
           setUserDisplayName('Anonymous');
         } else if (user.displayName) {
@@ -130,6 +132,28 @@ function App() {
     return unsub;
   }, []);
 
+    // addPage
+    const addPage = async () => {
+      // boilerplate
+      const newPage = {
+        title: 'Untitled',
+        icon: '',
+        content: JSON.stringify(
+          [{
+            type: 'paragraph',
+            children: [{ text: 'Start typing.' }],
+          }]
+        ),
+        order: getNextOrder(),
+        uid: uid,
+      };
+  
+      // add to firestore
+      const docRef = await addDoc(collection(db, 'pages'), newPage);
+      setNewPage(docRef.id);
+  
+    }
+
   /////////////
   // SIDEBAR //
   /////////////
@@ -187,26 +211,9 @@ function App() {
 
   }
 
-  // addPage
-  const addPage = async () => {
-    // boilerplate
-    const newPage = {
-      title: 'Untitled',
-      icon: '',
-      content: JSON.stringify(
-        [{
-          type: 'paragraph',
-          children: [{ text: 'Start typing.' }],
-        }]
-      ),
-      order: getNextOrder(),
-    };
-
-    // add to firestore
-    const docRef = await addDoc(collection(db, 'pages'), newPage);
-    setNewPage(docRef.id);
-
-  }
+  ////////////
+  // RENDER //
+  ////////////
 
   if (!isSignedIn) {
     return (
