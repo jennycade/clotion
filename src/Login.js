@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const Login = (props) => {
   // props
-  const { createNewEmailUser, signInEmailUser, signInGoogleUser } = props;
+  const { createNewEmailUser, signInEmailUser, signInGoogleUser, signInAsAnon } = props;
 
   // state
   const [showSignUp, setShowSignUp] = useState(false);
@@ -58,7 +58,7 @@ const Login = (props) => {
       </nav>
 
       <button className="googleSignIn" onClick={ signInGoogleUser }>Continue with Google</button>
-      <button className="anonSignIn">Continue anonymously</button>
+      <button className="anonSignIn" onClick={ signInAsAnon }>Continue anonymously</button>
 
       <label htmlFor="emailInput">Email</label>
       <input id="emailInput" type="text" placeholder="Enter your email address…" value={ email } onChange={ handleEmailChange } />

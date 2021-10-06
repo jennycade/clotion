@@ -13,11 +13,14 @@ import { rearrange } from './helpers';
 import { db, auth, googleProvider } from './firebase/db';
 
 import { onSnapshot, collection, addDoc, orderBy, query, writeBatch, doc } from "firebase/firestore";
-import { onAuthStateChanged,
-  createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  GoogleAuthProvider,
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signInWithPopup,
-  signOut } from 'firebase/auth';
+  signInAnonymously,
+  signOut
+} from 'firebase/auth';
 
 import './App.css';
 
@@ -89,6 +92,18 @@ function App() {
         const errorMessage = error.message;
         console.log(`Google sign in auth error ${errorCode}: ${errorMessage}`);
       });
+  }
+  const signInAsAnon = () => {
+      signInAnonymously(auth)
+    .then(() => {
+      setIsSignedIn(true);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(`Anonymous sign in auth error ${errorCode}: ${errorMessage}`);
+    });
+
   }
 
   const signOutUser = () => {
@@ -199,6 +214,7 @@ function App() {
         createNewEmailUser={createNewEmailUser}
         signInEmailUser={signInEmailUser}
         signInGoogleUser={signInGoogleUser}
+        signInAsAnon={signInAsAnon}
       />
     );
   }
