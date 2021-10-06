@@ -10,11 +10,13 @@ import Login from './Login';
 import { rearrange } from './helpers';
 
 // import { DbContext } from './firebase';
-import { db, auth } from './firebase/db';
+import { db, auth, googleProvider } from './firebase/db';
 
 import { onSnapshot, collection, addDoc, orderBy, query, writeBatch, doc } from "firebase/firestore";
 import { onAuthStateChanged,
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
   signOut } from 'firebase/auth';
 
 import './App.css';
@@ -36,7 +38,9 @@ function App() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
-        if (user.displayName) {
+        if (user.isAnonymous) {
+          setUserDisplayName('Anonymous');
+        } else if (user.displayName) {
           setUserDisplayName(user.displayName);
         } else {
           setUserDisplayName(user.email);
@@ -74,6 +78,17 @@ function App() {
       const errorMessage = error.message;
       console.log(`Firebase auth error ${errorCode}: ${errorMessage}`);
     });
+  }
+  const signInGoogleUser = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        setIsSignedIn(true);
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(`Google sign in auth error ${errorCode}: ${errorMessage}`);
+      });
   }
 
   const signOutUser = () => {
@@ -183,6 +198,7 @@ function App() {
       <Login
         createNewEmailUser={createNewEmailUser}
         signInEmailUser={signInEmailUser}
+        signInGoogleUser={signInGoogleUser}
       />
     );
   }

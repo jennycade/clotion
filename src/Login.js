@@ -4,14 +4,13 @@ import { useState } from 'react';
 
 const Login = (props) => {
   // props
-  const { createNewEmailUser, signInEmailUser } = props;
+  const { createNewEmailUser, signInEmailUser, signInGoogleUser } = props;
 
   // state
   const [showSignUp, setShowSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [forgotEmail, setForgotPassword] = useState(false);
-
 
   // display switching
   const handleLoginClick = (event) => {
@@ -58,7 +57,7 @@ const Login = (props) => {
         >Sign up</div>
       </nav>
 
-      <button className="googleSignIn">Continue with Google</button>
+      <button className="googleSignIn" onClick={ signInGoogleUser }>Continue with Google</button>
       <button className="anonSignIn">Continue anonymously</button>
 
       <label htmlFor="emailInput">Email</label>
