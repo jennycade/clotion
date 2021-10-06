@@ -121,7 +121,8 @@ function App() {
     if (uid !== '') {
       // query - sort by user-defined 'order'
       const pagesRef = collection(db, 'pages');
-      const pagesQuery = query(pagesRef, where('uid', '==', uid), orderBy('order'));
+      // const pagesQuery = query(pagesRef, where('uid', '==', uid), orderBy('order'));
+      const pagesQuery = query(pagesRef, orderBy('order'));
       const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
         const newPages = [];
         pagesSnapshot.forEach((doc) => {
@@ -164,7 +165,12 @@ function App() {
   const getNextOrder = () => {
     // get max of all page.order values
     const orderVals = pages.map(page => page.order);
-    return Math.max(...orderVals) + 1;
+    const nextOrder = Math.max(...orderVals) + 1;
+    if (nextOrder === -Infinity) { // e.g. if pages is empty
+      return 1;
+    } else {
+      return nextOrder;
+    }
   }
   // dragging
   const handleSideBarPageDrag = (event, pageId) => {
