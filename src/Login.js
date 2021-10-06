@@ -1,32 +1,29 @@
 import './Login.css';
 
 import { useState } from 'react';
-import { useEffect } from 'react/cjs/react.development';
 
 const Login = (props) => {
   // state
-  const [submittedEmail, setSubmittedEmail] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [forgotEmail, setForgotPassword] = useState(false);
 
-  // clear out password if submittedEmail changes
-  useEffect(() => {
-    setPassword('')
-  }, [submittedEmail, setPassword]);
+
+  // display switching
+  const handleLoginClick = (event) => {
+    setShowSignUp(false);
+  }
+  const handleSignupClick = (event) => {
+    setShowSignUp(true);
+  }
 
   // controlled input
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
-    // un-submit the email (if it's already been set)
-    setSubmittedEmail(false);
   }
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-  }
-
-  const submitEmail = (event) => {
-    setSubmittedEmail(true);
   }
 
   const handleForgotPassword = (event) => {
@@ -39,19 +36,22 @@ const Login = (props) => {
 
   return (
     <div className="login">
-      <h1>Log in</h1>
+      <nav className="tabs">
+        <div
+          className={ `tab ${!showSignUp ? 'active' : ''}` }
+          onClick={ handleLoginClick }
+        >Log in</div>
+        <div
+          className={ `tab ${showSignUp ? 'active' : ''}` }
+          onClick={ handleSignupClick }
+        >Sign up</div>
+      </nav>
 
       <button className="googleSignIn">Continue with Google</button>
       <button className="anonSignIn">Continue anonymously</button>
 
       <label htmlFor="emailInput">Email</label>
       <input id="emailInput" type="text" placeholder="Enter your email address…" value={ email } onChange={ handleEmailChange } />
-      
-      { !submittedEmail && !forgotEmail &&
-      <button className="emailSignIn" onClick={ submitEmail }>
-        Continue with email
-      </button>
-      }
 
       {
         forgotEmail &&
@@ -60,26 +60,25 @@ const Login = (props) => {
         </button>
       }
 
-      { submittedEmail &&
+      { !forgotEmail &&
       <label htmlFor="passwordInput">Password</label> }
-      { submittedEmail && 
+
+      { !forgotEmail && 
       <input id="passwordInput" type="password" value={ password } onChange={ handlePasswordChange } />
       }
-      { submittedEmail && 
+      { !forgotEmail && 
       <button className="emailSignIn">
         Continue with email
       </button>
       }
 
-      { !forgotEmail &&
+      { !forgotEmail && !showSignUp &&
       <button className="nonButton" onClick={ handleForgotPassword }>Forgot password?</button>
       }
 
       { forgotEmail &&
         <button className="nonButton" onClick={ handleUnforgotPassword }>Continue with email</button>
       }
-
-
 
     </div>
   )

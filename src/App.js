@@ -13,7 +13,7 @@ import { rearrange } from './helpers';
 import { db, auth } from './firebase/db';
 
 import { onSnapshot, collection, addDoc, orderBy, query, writeBatch, doc } from "firebase/firestore";
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
 
 import './App.css';
 
@@ -24,6 +24,10 @@ function App() {
   const [dragFromId, setDragFromId] = useState('');
   const [lastDraggedOver, setLastDraggedOver] = useState('');
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  //////////
+  // AUTH //
+  //////////
 
   // sign-in
   useEffect(() => {
@@ -36,6 +40,21 @@ function App() {
     });
     return () => unsub();
   }, []);
+
+  const createNewEmailUser = (email, password) => {
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      // const user = userCredential.user;
+      setIsSignedIn(true);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      throw new Error(`Firebase auth error ${errorCode}: ${errorMessage}`);
+    });
+
+  }
 
   // load pages
   useEffect(() => {
@@ -52,6 +71,10 @@ function App() {
   });
     return unsub;
   }, []);
+
+  /////////////
+  // SIDEBAR //
+  /////////////
 
   // manage sort order
   const getNextOrder = () => {
