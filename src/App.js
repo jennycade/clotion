@@ -12,7 +12,7 @@ import { rearrange } from './helpers';
 // import { DbContext } from './firebase';
 import { db, auth, googleProvider } from './firebase/db';
 
-import { onSnapshot, collection, addDoc, orderBy, query, writeBatch, doc } from "firebase/firestore";
+import { onSnapshot, collection, addDoc, orderBy, query, where, writeBatch, doc } from "firebase/firestore";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -118,19 +118,21 @@ function App() {
 
   // load pages
   useEffect(() => {
-    // query - sort by user-defined 'order'
-    const pagesRef = collection(db, 'pages');
-    const pagesQuery = query(pagesRef, orderBy('order'));
-    const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
-      const newPages = [];
-      pagesSnapshot.forEach((doc) => {
-        const newPage = {id: doc.id, ...doc.data()}
-        newPages.push(newPage);
+    if (uid !== '') {
+      // query - sort by user-defined 'order'
+      const pagesRef = collection(db, 'pages');
+      const pagesQuery = query(pagesRef, where('uid', '==', uid), orderBy('order'));
+      const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
+        const newPages = [];
+        pagesSnapshot.forEach((doc) => {
+          const newPage = {id: doc.id, ...doc.data()}
+          newPages.push(newPage);
+        });
+        setPages(newPages);
       });
-      setPages(newPages);
-  });
-    return unsub;
-  }, []);
+      return unsub;
+    }
+  }, [uid]);
 
     // addPage
     const addPage = async () => {
