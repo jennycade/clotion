@@ -16,6 +16,7 @@ import { onSnapshot, collection, addDoc, orderBy, query, where, writeBatch, doc 
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signInAnonymously,
@@ -83,6 +84,17 @@ function App() {
       const errorMessage = error.message;
       console.log(`Firebase auth error ${errorCode}: ${errorMessage}`);
     });
+  }
+  const sendForgottenPasswordEmail = (email) => {
+    sendPasswordResetEmail(auth, email)
+  .then(() => {
+    alert('Sent password reset email');
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(`Firebase auth error ${errorCode}: ${errorMessage}`);
+  });
   }
   const signInGoogleUser = () => {
     signInWithPopup(auth, googleProvider)
@@ -236,6 +248,7 @@ function App() {
       <Login
         createNewEmailUser={createNewEmailUser}
         signInEmailUser={signInEmailUser}
+        sendForgottenPasswordEmail={sendForgottenPasswordEmail}
         signInGoogleUser={signInGoogleUser}
         signInAsAnon={signInAsAnon}
       />

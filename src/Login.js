@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const Login = (props) => {
   // props
-  const { createNewEmailUser, signInEmailUser, signInGoogleUser, signInAsAnon } = props;
+  const { createNewEmailUser, signInEmailUser, sendForgottenPasswordEmail, signInGoogleUser, signInAsAnon } = props;
 
   // state
   const [showSignUp, setShowSignUp] = useState(false);
@@ -42,6 +42,9 @@ const Login = (props) => {
   const handleSubmitEmailLogin = (event) => {
     signInEmailUser(email, password);
   }
+  const handleSubmitSendResetLink = (event) => {
+    sendForgottenPasswordEmail(email);
+  }
 
 
   return (
@@ -65,7 +68,7 @@ const Login = (props) => {
 
       {
         forgotEmail &&
-        <button className="emailSignIn">
+        <button className="emailSignIn" onClick={ handleSubmitSendResetLink }>
           Send reset link
         </button>
       }
