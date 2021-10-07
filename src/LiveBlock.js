@@ -53,6 +53,13 @@ const CustomEditor = {
 
     return !!match
   },
+  isHeadingOneBlockActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: n => n.type === 'h1',
+    })
+
+    return !!match
+  },
 
 
   ////////////
@@ -102,15 +109,22 @@ const CustomEditor = {
     )
   },
 
-  // blocks
-
-  toggleCodeBlock(editor) {
-    const isActive = CustomEditor.isCodeBlockActive(editor)
+  ////////////////
+  // SET BLOCKS //
+  ////////////////
+  setBlock(editor, type) {
     Transforms.setNodes(
       editor,
-      { type: isActive ? null : 'code' },
+      { type: type },
       { match: n => Editor.isBlock(editor, n) }
     )
+  },
+  setTodo(editor) {
+    Transforms.setNodes(
+      editor,
+      { type: 'todo', done: false },
+      { match: n => Editor.isBlock(editor, n)}
+    );
   },
 }
 
@@ -135,6 +149,18 @@ const LiveBlock = (props) => {
     switch(props.element.type) {
       case 'h1':
         return <HeadingOneElement {...props} />
+      case 'h2':
+        return <HeadingTwoElement {...props} />
+      case 'h3':
+        return <HeadingThreeElement {...props} />
+      case 'h4':
+        return <HeadingFourElement {...props} />
+      case 'h5':
+        return <HeadingFiveElement {...props} />
+      case 'h6':
+        return <HeadingSixElement {...props} />
+      case 'todo':
+        return <TodoElement {...props} />
       case 'code':
         return <CodeElement {...props} />
       default:
@@ -177,46 +203,81 @@ const LiveBlock = (props) => {
             return;
           }
 
-          switch (event.key) {
-            ////////////
-            // BLOCKS //
-            ////////////
-            case '`': {
-              // prevent the '`' from being inserted by default.
-              event.preventDefault();
-              CustomEditor.toggleCodeBlock(editor);
-              break;
-            }
-            ///////////
-            // SPANS //
-            ///////////
-            case 'b': {
-              event.preventDefault();
-              CustomEditor.toggleBoldMark(editor);
-              break;
-            }
-            case 'i': {
-              event.preventDefault();
-              CustomEditor.toggleItalicMark(editor);
-              break;
-            }
-            case 'u': {
-              event.preventDefault();
-              CustomEditor.toggleUnderlineMark(editor);
-              break;
-            }
-            case 's': {
-              event.preventDefault();
-              CustomEditor.toggleStrikethroughMark(editor);
-              break;
-            }
-            case 'e': {
-              event.preventDefault();
-              CustomEditor.toggleCodeMark(editor);
-              break;
-            }
-            default: {
-              return;
+          ///////////
+          // SPANS //
+          ///////////
+          if (event.key === 'b') {
+            event.preventDefault();
+            CustomEditor.toggleBoldMark(editor);
+          }
+          if (event.key === 'i') {
+            event.preventDefault();
+            CustomEditor.toggleItalicMark(editor);
+          }
+          if (event.key === 'u') {
+            event.preventDefault();
+            CustomEditor.toggleUnderlineMark(editor);
+          }
+          if (event.key === 'S') {
+            event.preventDefault();
+            CustomEditor.toggleStrikethroughMark(editor);
+          }
+          if (event.key === 'k') {
+            // TODO: link
+          }
+          if (event.key === 'e') {
+            event.preventDefault();
+            CustomEditor.toggleCodeMark(editor);
+          }
+
+          ////////////
+          // BLOCKS //
+          ////////////
+
+          if (event.altKey) {
+            switch (event.code) {
+              case 'Digit1' || 'Numpad1':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'h1');
+                break;
+              case 'Digit2' || 'Numpad2':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'h2');
+                break;
+              case 'Digit3' || 'Numpad3':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'h3');
+                break;
+              case 'Digit4' || 'Numpad4':
+                event.preventDefault();
+                CustomEditor.setTodo(editor);
+                break;
+              case 'Digit5' || 'Numpad5':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'bullet');
+                break;
+              case 'Digit6' || 'Numpad6':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'numbered-li');
+                break;
+              case 'Digit7' || 'Numpad7':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'toggle');
+                break;
+              case 'Digit8' || 'Numpad8':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'code');
+                break;
+              case 'Digit9' || 'Numpad9':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'page');
+                break;
+              case 'Digit0' || 'Numpad0':
+                event.preventDefault();
+                CustomEditor.setBlock(editor, 'paragraph');
+                break;
+              default:
+                break;
             }
           }
         }}
@@ -249,6 +310,50 @@ const HeadingOneElement = (props) => {
       {props.children}
     </h1>
   )
+}
+const HeadingTwoElement = (props) => {
+  return (
+    <h2 {...props.attributes}>
+      {props.children}
+    </h2>
+  )
+}
+const HeadingThreeElement = (props) => {
+  return (
+    <h3 {...props.attributes}>
+      {props.children}
+    </h3>
+  )
+}
+const HeadingFourElement = (props) => {
+  return (
+    <h4 {...props.attributes}>
+      {props.children}
+    </h4>
+  )
+}
+const HeadingFiveElement = (props) => {
+  return (
+    <h5 {...props.attributes}>
+      {props.children}
+    </h5>
+  )
+}
+const HeadingSixElement = (props) => {
+  return (
+    <h2 {...props.attributes}>
+      {props.children}
+    </h2>
+  )
+}
+const TodoElement = (props) => {
+  return (
+    <ul className="todoList">
+      <li className="todoItem" {...props.attributes}>
+        {props.children}
+      </li>
+    </ul>
+  );
 }
 
 ///////////
