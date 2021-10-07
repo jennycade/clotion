@@ -44,6 +44,7 @@ const Login = (props) => {
   }
   const handleSubmitSendResetLink = (event) => {
     sendForgottenPasswordEmail(email);
+    setForgotPassword(false);
   }
 
 
