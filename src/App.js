@@ -121,8 +121,8 @@ function App() {
     if (uid !== '') {
       // query - sort by user-defined 'order'
       const pagesRef = collection(db, 'pages');
-      // const pagesQuery = query(pagesRef, where('uid', '==', uid), orderBy('order'));
-      const pagesQuery = query(pagesRef, orderBy('order'));
+      const pagesQuery = query(pagesRef, where('uid', '==', uid), orderBy('order'));
+      // const pagesQuery = query(pagesRef, orderBy('order'));
       const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
         const newPages = [];
         pagesSnapshot.forEach((doc) => {
@@ -135,27 +135,27 @@ function App() {
     }
   }, [uid]);
 
-    // addPage
-    const addPage = async () => {
-      // boilerplate
-      const newPage = {
-        title: 'Untitled',
-        icon: '',
-        content: JSON.stringify(
-          [{
-            type: 'paragraph',
-            children: [{ text: 'Start typing.' }],
-          }]
-        ),
-        order: getNextOrder(),
-        uid: uid,
-      };
-  
-      // add to firestore
-      const docRef = await addDoc(collection(db, 'pages'), newPage);
-      setNewPage(docRef.id);
-  
-    }
+  // addPage
+  const addPage = async () => {
+    // boilerplate
+    const newPage = {
+      title: 'Untitled',
+      icon: '',
+      content: JSON.stringify(
+        [{
+          type: 'paragraph',
+          children: [{ text: 'Start typing.' }],
+        }]
+      ),
+      order: getNextOrder(),
+      uid: uid,
+    };
+
+    // add to firestore
+    const docRef = await addDoc(collection(db, 'pages'), newPage);
+    setNewPage(docRef.id);
+
+  }
 
   /////////////
   // SIDEBAR //
@@ -262,7 +262,7 @@ function App() {
           { pages.map((page) => {
             return (
               <Route path={ `/${page.id}/` } key={ page.id } exact>
-                <Page id={ page.id } />
+                <Page id={ page.id } uid={ uid } />
               </Route>
             )
           }) }

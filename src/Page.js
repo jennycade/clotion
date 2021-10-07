@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { doc, onSnapshot, updateDoc, deleteDoc } from 'firebase/firestore';
+import { doc, collection, onSnapshot, updateDoc, deleteDoc, query, where, orderBy, } from 'firebase/firestore';
 import { db } from './firebase/db';
 
 import './Page.css';
@@ -12,14 +12,15 @@ import LiveBlock from './LiveBlock';
 
 const Page = ( props ) => {
   // props
-  const { id } = props;
+  const { uid, id } = props;
 
   // state
-  const [page, setPage] = useState({title: null, id: null, content: null, icon: null});
+  const [page, setPage] = useState({title: null, id: null, icon: null});
   const [docRef, setDocRef] = useState({});
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [blocks, setBlocks] = useState([]);
 
-  // get page info/content
+  // get page object
   useEffect( () => {
     const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
       setPage(doc.data());
@@ -30,17 +31,48 @@ const Page = ( props ) => {
   // get the docRef from firestore
   useEffect(() => {
     setDocRef(doc(db, 'pages', id));
-  }, [id])
+  }, [id]);
 
-  // input
-  const handleContentChange = ( event ) => {
-    const newVal = event.target.value;
-    const oldPage = {...page};
-    oldPage.content = newVal;
+  ////////////
+  // BLOCKS //
+  ////////////
 
-    setPage(oldPage);
-    // setContent(newVal);
+  useEffect(() => {
+    if (uid !== '') {
+      const blocksRef = collection(db, 'pages', id, 'blocks');
+      const blocksQuery = query(blocksRef, where('uid', '==', uid), orderBy('order'));
+      const unsub = onSnapshot(blocksQuery, (blocksSnapshot) => {
+        const newBlocks = [];
+        blocksSnapshot.forEach((doc) => {
+          const newBlock = {id: doc.id, ...doc.data()}
+          newBlocks.push(newBlock);
+        });
+        setBlocks(newBlocks);
+      })
+      return unsub;
+    }
+  }, [uid, id]);
+
+  const updateBlock = (blockId, newContent) => {
+    // update db
+    const blockRef = doc(db, 'pages', id, 'blocks', blockId);
+    updateDoc(blockRef, {
+      content: newContent,
+    });
+
+    // update state
+    const newBlocks = [...blocks]; // does it matter that this is a shallow copy?
+    const index = blocks.findIndex(block => block.id === blockId);
+    const newBlock = {...blocks[index]};
+    newBlock.content = newContent;
+    newBlocks.splice(index, 1, newBlock);
+    setBlocks(newBlocks);
   }
+
+
+  ///////////
+  // TITLE //
+  ///////////
 
   const handleTitleChange = ( event ) => {
     const newVal = event.target.value;
@@ -48,27 +80,18 @@ const Page = ( props ) => {
     oldPage.title = newVal;
 
     setPage(oldPage);
-    // setContent(newVal);
   }
 
   // save changes to db
-
-  const updateContent = ( newContent ) => {
-    // save state
-    const newPage = {...page};
-    newPage.content = newContent;
-    setPage(newPage);
-
-    // save to firebase
-    updateDoc(docRef, {
-      content: newContent,
-    });
-  }
   const updateTitle = () => {
     updateDoc(docRef, {
       title: page.title,
     });
   }
+
+  //////////
+  // ICON //
+  //////////
   const updateIcon = ( newIcon ) => {
     updateDoc(docRef, {
       icon: newIcon,
@@ -80,6 +103,9 @@ const Page = ( props ) => {
     setShowIconPicker(false);
   }
 
+  ////////////
+  // DELETE //
+  ////////////
   const deletePage = () => {
     deleteDoc(docRef);
   }
@@ -107,12 +133,7 @@ const Page = ( props ) => {
         
         
         <div className="contentArea">
-
-          { page.content && <LiveBlock handleContentChange={ handleContentChange } updateContent={ updateContent } textContent={ page.content } /> }
-
-          {/* <Block handleContentChange={ handleContentChange } updateContent={ updateContent } content={ page.content }>
-          </Block> */}
-      
+          {blocks.map(block => <LiveBlock key={block.id} id={block.id} content={block.content} updateContent={ updateBlock } />)}
         </div>
       </div>
     </div>

@@ -4,14 +4,14 @@ import { createEditor } from 'slate';
 
 const LiveBlock = (props) => {
   // props
-  const { updateContent } = props;
+  const { id, updateContent } = props;
 
   // state
   const editor = useMemo(() => withReact(createEditor()), []);
 
   // pull value from props
   const [value, setValue] = useState(
-    JSON.parse(props.textContent)
+    JSON.parse(props.content)
   //   JSON.parse(props.textContent) || [
   //   {
   //     type: 'paragraph',
@@ -33,7 +33,7 @@ const LiveBlock = (props) => {
         if (isAstChange) {
           // save the value to the database
           const content = JSON.stringify(value);
-          updateContent(content);
+          updateContent(id, content);
         }
       }
       }
