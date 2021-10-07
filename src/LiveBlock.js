@@ -12,18 +12,13 @@ const LiveBlock = (props) => {
   // pull value from props
   const [value, setValue] = useState(
     JSON.parse(props.content)
-  //   JSON.parse(props.textContent) || [
-  //   {
-  //     type: 'paragraph',
-  //     children: [{ text: 'A line of text in a paragraph.' }],
-  //   },
-  // ]
   );
 
   return (
     <Slate
       editor={editor}
       value={value}
+      placeholder="Type something"
       onChange={value => {
         setValue(value);
 

@@ -141,12 +141,12 @@ function App() {
     const newPage = {
       title: 'Untitled',
       icon: '',
-      content: JSON.stringify(
-        [{
-          type: 'paragraph',
-          children: [{ text: 'Start typing.' }],
-        }]
-      ),
+      // content: JSON.stringify(
+      //   [{
+      //     type: 'paragraph',
+      //     children: [{ text: 'Start typing.' }],
+      //   }]
+      // ),
       order: getNextOrder(),
       uid: uid,
     };
@@ -154,6 +154,14 @@ function App() {
     // add to firestore
     const docRef = await addDoc(collection(db, 'pages'), newPage);
     setNewPage(docRef.id);
+
+    // add blocks subcollection with an empty block?
+    const newBlock = {
+      uid: uid,
+      order: 1,
+      content: JSON.stringify([{type: 'paragraph', children:[{text: ''}]}])
+    };
+    addDoc(collection(db, 'pages', docRef.id, 'blocks'), newBlock);
 
   }
 
