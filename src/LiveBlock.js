@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Slate, Editable, withReact } from 'slate-react';
-import { createEditor, Editor, Transforms, Text } from 'slate';
+import { createEditor, Editor, Transforms, Text, Element as SlateElement } from 'slate';
 
 const CustomEditor = {
   ///////////////
@@ -113,16 +113,52 @@ const CustomEditor = {
   // SET BLOCKS //
   ////////////////
   setBlock(editor, type) {
+    const listTypes = ['todoList', 'orderedList', 'bulletList'];
+    let subType = type; // convert to li for list items
+    Transforms.unwrapNodes(editor, {
+      match: n =>
+        !Editor.isEditor(n) &&
+        SlateElement.isElement(n) &&
+        listTypes.includes(n.type),
+      split: true,
+    });
+    // lists: wrap node
+    if (listTypes.includes(type)) {
+      const block = { type: type, children: [] }
+      Transforms.wrapNodes(editor, block);
+      subType = 'li'; 
+    }
+    // for all: set node
     Transforms.setNodes(
       editor,
-      { type: type },
+      { type: subType },
       { match: n => Editor.isBlock(editor, n) }
     )
   },
   setTodo(editor) {
+    const block = { type: 'todoList', children: [] }
+    Transforms.wrapNodes(editor, block);
     Transforms.setNodes(
       editor,
-      { type: 'todo', done: false },
+      { type: 'li', done: false },
+      { match: n => Editor.isBlock(editor, n)}
+    );
+  },
+  setOrderedListItem(editor) {
+    const block = { type: 'orderedList', children: [] }
+    Transforms.wrapNodes(editor, block);
+    Transforms.setNodes(
+      editor,
+      { type: 'li', done: false },
+      { match: n => Editor.isBlock(editor, n)}
+    );
+  },
+  setBulletListItem(editor) {
+    const block = { type: 'bulletList', children: [] }
+    Transforms.wrapNodes(editor, block);
+    Transforms.setNodes(
+      editor,
+      { type: 'li', done: false },
       { match: n => Editor.isBlock(editor, n)}
     );
   },
@@ -159,8 +195,14 @@ const LiveBlock = (props) => {
         return <HeadingFiveElement {...props} />
       case 'h6':
         return <HeadingSixElement {...props} />
-      case 'todo':
-        return <TodoElement {...props} />
+      case 'li':
+        return <ListItemElement {...props} />
+      case 'todoList':
+        return <TodoListElement {...props} />
+      case 'orderedList':
+        return <OrderedListElement {...props} />
+      case 'bulletList':
+        return <BulletListElement {...props} />
       case 'code':
         return <CodeElement {...props} />
       default:
@@ -254,15 +296,15 @@ const LiveBlock = (props) => {
                 break;
               case 'Digit5' || 'Numpad5':
                 event.preventDefault();
-                CustomEditor.setBlock(editor, 'bullet');
+                CustomEditor.setBulletListItem(editor);
                 break;
               case 'Digit6' || 'Numpad6':
                 event.preventDefault();
-                CustomEditor.setBlock(editor, 'numbered-li');
+                CustomEditor.setOrderedListItem(editor);
                 break;
               case 'Digit7' || 'Numpad7':
                 event.preventDefault();
-                CustomEditor.setBlock(editor, 'toggle');
+                CustomEditor.setBlock(editor, 'toggle'); // TODO: implement!
                 break;
               case 'Digit8' || 'Numpad8':
                 event.preventDefault();
@@ -346,14 +388,31 @@ const HeadingSixElement = (props) => {
     </h2>
   )
 }
-const TodoElement = (props) => {
+const TodoListElement = (props) => {
   return (
-    <ul className="todoList">
-      <li className="todoItem" {...props.attributes}>
-        {props.children}
-      </li>
+    <ul className="todoList"{...props.attributes}>
+      {props.children}
     </ul>
   );
+}
+const OrderedListElement = (props) => {
+  return (
+    <ol {...props.attributes}>
+      {props.children}
+    </ol>
+  );
+}
+const BulletListElement = (props) => {
+  return (
+    <ul {...props.attributes}>
+      {props.children}
+    </ul>
+  );
+}
+const ListItemElement = (props) => {
+  return (
+    <li>{props.children}</li>
+  )
 }
 
 ///////////
