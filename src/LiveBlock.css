@@ -1,0 +1,6 @@
+.todoList li {
+  list-style-type: '☐';
+}
+.todoList .done {
+  list-style-type: '☑︎';
+}

@@ -1,6 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Slate, Editable, withReact } from 'slate-react';
+import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { createEditor, Editor, Transforms, Text, Element as SlateElement } from 'slate';
+
+import './LiveBlock.css';
+
+// block components
+import Todo from './Todo';
 
 const CustomEditor = {
   ///////////////
@@ -114,7 +119,9 @@ const CustomEditor = {
   ////////////////
   setBlock(editor, type) {
     const listTypes = ['todoList', 'orderedList', 'bulletList'];
-    let subType = type; // convert to li for list items
+
+    let options = {type: type}; // pass as-is for simple blocks. modify for lists and todos
+    
     Transforms.unwrapNodes(editor, {
       match: n =>
         !Editor.isEditor(n) &&
@@ -126,42 +133,30 @@ const CustomEditor = {
     if (listTypes.includes(type)) {
       const block = { type: type, children: [] }
       Transforms.wrapNodes(editor, block);
-      subType = 'li'; 
+      options.type = 'li';
+
+      // special: todo list items!
+      if (type === 'todoList') {
+        options.type = 'todoListItem';
+        options.completed = false;
+      }
     }
     // for all: set node
     Transforms.setNodes(
       editor,
-      { type: subType },
+      options,
       { match: n => Editor.isBlock(editor, n) }
     )
   },
-  setTodo(editor) {
-    const block = { type: 'todoList', children: [] }
-    Transforms.wrapNodes(editor, block);
+
+  handleTodoClick(editor, checked, element) {
+    const path = ReactEditor.findPath(editor, element);
     Transforms.setNodes(
       editor,
-      { type: 'li', done: false },
-      { match: n => Editor.isBlock(editor, n)}
-    );
-  },
-  setOrderedListItem(editor) {
-    const block = { type: 'orderedList', children: [] }
-    Transforms.wrapNodes(editor, block);
-    Transforms.setNodes(
-      editor,
-      { type: 'li', done: false },
-      { match: n => Editor.isBlock(editor, n)}
-    );
-  },
-  setBulletListItem(editor) {
-    const block = { type: 'bulletList', children: [] }
-    Transforms.wrapNodes(editor, block);
-    Transforms.setNodes(
-      editor,
-      { type: 'li', done: false },
-      { match: n => Editor.isBlock(editor, n)}
-    );
-  },
+      { completed: checked },
+      { at: path }
+    )
+  }
 }
 
 
@@ -199,6 +194,14 @@ const LiveBlock = (props) => {
         return <ListItemElement {...props} />
       case 'todoList':
         return <TodoListElement {...props} />
+      case 'todoListItem':
+        return (<Todo
+          completed={props.completed}
+          handleTodoClick={CustomEditor.handleTodoClick}
+          {...props.attributes}
+          {...props}
+        >
+        </Todo>);
       case 'orderedList':
         return <OrderedListElement {...props} />
       case 'bulletList':
@@ -292,15 +295,15 @@ const LiveBlock = (props) => {
                 break;
               case 'Digit4' || 'Numpad4':
                 event.preventDefault();
-                CustomEditor.setTodo(editor);
+                CustomEditor.setBlock(editor, 'todoList');
                 break;
               case 'Digit5' || 'Numpad5':
                 event.preventDefault();
-                CustomEditor.setBulletListItem(editor);
+                CustomEditor.setBlock(editor, 'bulletList');
                 break;
               case 'Digit6' || 'Numpad6':
                 event.preventDefault();
-                CustomEditor.setOrderedListItem(editor);
+                CustomEditor.setBlock(editor, 'orderedList');
                 break;
               case 'Digit7' || 'Numpad7':
                 event.preventDefault();
@@ -390,7 +393,7 @@ const HeadingSixElement = (props) => {
 }
 const TodoListElement = (props) => {
   return (
-    <ul className="todoList"{...props.attributes}>
+    <ul className="todoList" {...props.attributes}>
       {props.children}
     </ul>
   );
@@ -411,7 +414,20 @@ const BulletListElement = (props) => {
 }
 const ListItemElement = (props) => {
   return (
-    <li>{props.children}</li>
+    <li {...props.attributes}>
+      {props.children}
+    </li>
+  );
+}
+const TodoListItemElement = (props) => {
+  return (
+    <Todo
+      completed={props.completed}
+      handleTodoClick={CustomEditor.handleTodoClick}
+      {...props.attributes}
+    >
+      {props.children}
+    </Todo>
   )
 }
 
