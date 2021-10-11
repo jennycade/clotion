@@ -7,6 +7,9 @@ import './LiveBlock.css';
 // block components
 import Todo from './Todo';
 
+// toolbars
+import BlockToolbar from './BlockToolbar';
+
 const CustomEditor = {
   ///////////////
   // IS ACTIVE //
@@ -159,6 +162,7 @@ const CustomEditor = {
   }
 }
 
+export { CustomEditor };
 
 const LiveBlock = (props) => {
   // props
@@ -218,8 +222,11 @@ const LiveBlock = (props) => {
   }, [])
 
   /////////////
-  // HOTKEYS //
+  // TOOLBAR //
   /////////////
+  const handleBlockToolbarClick = (blockType) => {
+    CustomEditor.setBlock(editor, blockType);
+  }
 
   return (
     <Slate
@@ -240,6 +247,7 @@ const LiveBlock = (props) => {
       }
       }
     >
+      <BlockToolbar chooseBlock={ handleBlockToolbarClick } />
       <Editable
         renderElement={ renderElement }
         renderLeaf={ renderLeaf }
