@@ -1,4 +1,4 @@
-import { CustomEditor } from './LiveBlock.js'
+import './BlockToolbar.css';
 
 const blockMenu = [
   {
