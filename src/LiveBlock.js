@@ -170,6 +170,7 @@ const LiveBlock = (props) => {
 
   // state
   const editor = useMemo(() => withReact(createEditor()), []);
+  const showBlockToolbar = useState(false);
 
   // pull value from props
   const [value, setValue] = useState(
