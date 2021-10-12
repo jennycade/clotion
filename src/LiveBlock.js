@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
-import { createEditor, Editor, Transforms, Text, Element as SlateElement } from 'slate';
+import { createEditor, Editor, Transforms, Text, Element as SlateElement, Range } from 'slate';
 
 import './LiveBlock.css';
 
@@ -152,13 +152,27 @@ const CustomEditor = {
     )
   },
 
-  handleTodoClick(editor, checked, element) {
-    const path = ReactEditor.findPath(editor, element);
-    Transforms.setNodes(
-      editor,
-      { completed: checked },
-      { at: path }
-    )
+  ///////////////////////
+  // TEXT MANIPULATION //
+  ///////////////////////
+  deleteToLastSlash(editor) {
+    while (CustomEditor.getLastCharacter(editor) !== '/') {
+      Editor.deleteBackward(editor);
+    }
+    Editor.deleteBackward(editor);
+  },
+
+
+
+  /////////////
+  // HELPERS //
+  /////////////
+  getLastCharacter(editor) {
+    const cursorLocation = Range.start(editor.selection);
+    const prevCharLoc = Editor.before(editor, editor.selection, {unit: 'character'});
+    const prevCharRange = Editor.range(editor, prevCharLoc, cursorLocation);
+    const prevChar = Editor.string(editor, prevCharRange);
+    return prevChar;
   }
 }
 
@@ -171,6 +185,7 @@ const LiveBlock = (props) => {
   // state
   const editor = useMemo(() => withReact(createEditor()), []);
   const [showBlockToolbar, setShowBlockToolbar] = useState(false);
+  const [blockToolbarFromSlash, setBlockToolbarFromSlash] = useState(false);
 
   // pull value from props
   const [value, setValue] = useState(
@@ -227,7 +242,12 @@ const LiveBlock = (props) => {
   /////////////
   const handleBlockToolbarClick = (blockType) => {
     CustomEditor.setBlock(editor, blockType);
-    // TODO: Delete to last '/'
+
+    if (blockToolbarFromSlash) {
+      CustomEditor.deleteToLastSlash(editor);
+      // reset for next time
+      setBlockToolbarFromSlash(false);
+    }
   }
 
   return (
@@ -265,6 +285,7 @@ const LiveBlock = (props) => {
 
           if (event.key === '/') {
             setShowBlockToolbar(true);
+            setBlockToolbarFromSlash(true);
           }
 
           //////////////

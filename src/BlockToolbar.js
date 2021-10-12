@@ -111,7 +111,6 @@ const BlockToolbar = (props) => {
     }
   });
 
-
   return (
     <div className="blockToolbar"
       ref={ ref }
@@ -119,6 +118,7 @@ const BlockToolbar = (props) => {
       { blockMenu.map((block) => {
         return (
           <div
+            key={ block.type }
             className="blockType"
             onMouseDown={ (event) => handleClick(event, block.type) }
           >
