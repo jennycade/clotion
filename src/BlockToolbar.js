@@ -56,36 +56,21 @@ const blockMenu = [
 
 const BlockToolbar = (props) => {
   // props
-  const { chooseBlock } = props;
+  const { chooseBlock, hideToolbar } = props;
 
   // click
   const handleClick = (event, blockType) => {
     event.preventDefault();
     chooseBlock(blockType);
+    hideToolbar();
   }
 
   // for positioning
   const ref = useRef(null);
-  const editor = useSlate();
 
   // effect to manage caret position
   useEffect(() => {
     const el = ref.current
-    const { selection } = editor
-
-    if (!el) {
-      return
-    }
-
-    if (
-      !selection ||
-      !ReactEditor.isFocused(editor) ||
-      Range.isCollapsed(selection) ||
-      Editor.string(editor, selection) === ''
-    ) {
-      el.removeAttribute('style')
-      return
-    }
 
     const domSelection = window.getSelection()
     const domRange = domSelection.getRangeAt(0)

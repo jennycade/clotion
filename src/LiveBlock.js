@@ -170,7 +170,7 @@ const LiveBlock = (props) => {
 
   // state
   const editor = useMemo(() => withReact(createEditor()), []);
-  const showBlockToolbar = useState(false);
+  const [showBlockToolbar, setShowBlockToolbar] = useState(false);
 
   // pull value from props
   const [value, setValue] = useState(
@@ -248,11 +248,28 @@ const LiveBlock = (props) => {
       }
       }
     >
-      <BlockToolbar chooseBlock={ handleBlockToolbarClick } />
+      { showBlockToolbar && 
+        <BlockToolbar
+          hideToolbar={ () => setShowBlockToolbar(false) }
+          chooseBlock={ handleBlockToolbarClick }
+        />
+      }
       <Editable
         renderElement={ renderElement }
         renderLeaf={ renderLeaf }
         onKeyDown={event => {
+          ///////////////////
+          // BLOCK TOOLBAR //
+          ///////////////////
+
+          if (event.key === '/') {
+            setShowBlockToolbar(true);
+          }
+
+          //////////////
+          // COMMANDS //
+          //////////////
+
           if (!event.metaKey) {
             return;
           }
