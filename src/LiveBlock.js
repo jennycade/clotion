@@ -227,6 +227,7 @@ const LiveBlock = (props) => {
   /////////////
   const handleBlockToolbarClick = (blockType) => {
     CustomEditor.setBlock(editor, blockType);
+    // TODO: Delete to last '/'
   }
 
   return (
