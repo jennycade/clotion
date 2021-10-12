@@ -1,16 +1,33 @@
 .blockToolbar {
   width: 324px;
-  height: 687px;
+  height: 267px;
   overflow-y: scroll;
 
+  position: absolute;
+  z-index: 1;
+  top: -10000px;
+  left: -10000px;
+  opacity: 0;
+
   border-radius: 3px;
+  background-color: white;
   box-shadow: rgb(15 15 15 / 5%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 3px 6px, rgb(15 15 15 / 20%) 0px 9px 24px;
 }
+.blockType {
+  padding: 0.5rem 1rem;
+}
+.blockType:hover {
+  background-color: rgb(239, 239, 239);
+}
+
 .blockToolbar h2 {
   font-size: inherit;
   font-weight: normal;
-  margin-bottom: 0;
+  font-size: 14px;
+  margin: 0;
 }
 .blockToolbar p {
   color: rgb(141, 140, 137);
+  margin: 2px 0 0 0;
+  font-size: 12px;
 }
