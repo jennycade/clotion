@@ -111,6 +111,20 @@ const BlockToolbar = (props) => {
     }
   });
 
+  // navigate with up and down arrows
+  useEffect(() => {
+    const arrowKeyValues = ['Up', 'ArrowUp', 'Down', 'ArrowDown', 'Left', 'ArrowLeft', 'Right', 'ArrowRight'];
+    const onKeyDown = (event) => {
+      if (arrowKeyValues.includes(event.key)) {
+        event.preventDefault();
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    }
+  });
+
   return (
     <div className="blockToolbar"
       ref={ ref }
