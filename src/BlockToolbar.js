@@ -1,6 +1,6 @@
 import './BlockToolbar.css';
 
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const blockMenu = [
   {
@@ -54,6 +54,9 @@ const BlockToolbar = (props) => {
   // props
   const { chooseBlock, hideToolbar } = props;
 
+  // state
+  const [selectedType, setSelectedType] = useState(blockMenu[0].type);
+
   // selecting a block type
   const handleClick = (event, blockType) => {
     event.preventDefault();
@@ -98,6 +101,7 @@ const BlockToolbar = (props) => {
       window.removeEventListener('click', onClick);
     }
   });
+
   // hide on typing escape
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -116,7 +120,15 @@ const BlockToolbar = (props) => {
     const arrowKeyValues = ['Up', 'ArrowUp', 'Down', 'ArrowDown', 'Left', 'ArrowLeft', 'Right', 'ArrowRight'];
     const onKeyDown = (event) => {
       if (arrowKeyValues.includes(event.key)) {
-        event.preventDefault();
+        let direction;
+        event.preventDefault(); // NOTE: Doesn't prevent navigating left or right. May result in a bunch of lost data (when LiveBlock deletes to last slash)
+        if (event.key === 'Up' || event.key === 'ArrowUp') {
+          direction = 'up';
+        } else if (event.key === 'Down' || event.key === 'ArrowDown') {
+          direction = 'down';
+        }
+        // call navigateTypes to change the direction
+        navigateTypes(direction);
       }
     }
     window.addEventListener('keydown', onKeyDown);
@@ -124,6 +136,30 @@ const BlockToolbar = (props) => {
       window.removeEventListener('keydown', onKeyDown);
     }
   });
+
+  const navigateTypes = (direction) => {
+    // get current index
+    const selectedBlockIndex = blockMenu.findIndex(blockType => blockType.type === selectedType);
+    
+    // calculate next index
+    let newIndex;
+    if (direction === 'up') {
+      newIndex = selectedBlockIndex - 1;
+    } else if (direction === 'down') {
+      newIndex = selectedBlockIndex + 1;
+    } else {
+      throw new Error('Called navigateTypes() with invalid direction: ' + direction);
+    }
+
+    // is newIndex in the array?
+    if (typeof blockMenu[newIndex] !== 'undefined') {
+      // index exists
+      // update state
+      setSelectedType(blockMenu[newIndex].type);
+    }
+
+    // not in array --> at top or bottom of menu. Don't do anything.
+  }
 
   return (
     <div className="blockToolbar"
@@ -133,7 +169,8 @@ const BlockToolbar = (props) => {
         return (
           <div
             key={ block.type }
-            className="blockType"
+            className={`blockType${block.type === selectedType ? ' selected' : ''}`}
+            onMouseOver={ () => setSelectedType(block.type) }
             onMouseDown={ (event) => handleClick(event, block.type) }
           >
             <h2>{ block.displayName }</h2>
