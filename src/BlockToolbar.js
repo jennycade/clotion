@@ -61,7 +61,6 @@ const BlockToolbar = (props) => {
   const handleClick = (event, blockType) => {
     event.preventDefault();
     chooseBlock(blockType);
-    hideToolbar();
   }
 
   // for positioning at the caret
@@ -129,6 +128,22 @@ const BlockToolbar = (props) => {
         }
         // call navigateTypes to change the direction
         navigateTypes(direction);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    }
+  });
+
+  // choose with enter/return key
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        // don't type enter!
+        event.preventDefault();
+        // choose the type
+        chooseBlock(selectedType);
       }
     }
     window.addEventListener('keydown', onKeyDown);

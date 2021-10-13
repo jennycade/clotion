@@ -240,7 +240,7 @@ const LiveBlock = (props) => {
   /////////////
   // TOOLBAR //
   /////////////
-  const handleBlockToolbarClick = (blockType) => {
+  const handleBlockToolbarChoice = (blockType) => {
     CustomEditor.setBlock(editor, blockType);
 
     if (blockToolbarFromSlash) {
@@ -248,6 +248,9 @@ const LiveBlock = (props) => {
       // reset for next time
       setBlockToolbarFromSlash(false);
     }
+
+    // hide toolbar
+    setShowBlockToolbar(false);
   }
 
   return (
@@ -272,7 +275,7 @@ const LiveBlock = (props) => {
       { showBlockToolbar && 
         <BlockToolbar
           hideToolbar={ () => setShowBlockToolbar(false) }
-          chooseBlock={ handleBlockToolbarClick }
+          chooseBlock={ handleBlockToolbarChoice }
         />
       }
       <Editable
