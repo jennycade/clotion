@@ -117,6 +117,25 @@ const CustomEditor = {
     )
   },
 
+
+  ///////////////
+  // SET SPANS //
+  ///////////////
+  setSpanColor(editor, color) {
+    Transforms.setNodes(
+      editor,
+      { color: color },
+      { match: n => Text.isText(n), split: true}
+    );
+  },
+  setSpanBackgroundColor(editor, color) {
+    Transforms.setNodes(
+      editor,
+      { backgroundColor: color },
+      { match: n => Text.isText(n), split: true}
+    );
+  },
+
   ////////////////
   // SET BLOCKS //
   ////////////////
@@ -194,6 +213,37 @@ const CustomEditor = {
     const prevCharRange = Editor.range(editor, prevCharLoc, cursorLocation);
     const prevChar = Editor.string(editor, prevCharRange);
     return prevChar;
+  },
+
+  getColorCode(colorName, type) {
+    const COLORS = {
+      gray: 'rgba(96, 96, 98, 0.93)',
+      brown: 'rgba(174, 102, 29, 1)',
+      orange: 'rgba(210, 82, 22, 1)',
+      yellow: 'rgba(203, 145, 47, 1)',
+      green: 'rgba(62, 143, 53, 1)',
+      blue: 'rgba(33, 131, 190, 1)',
+      purple: 'rgba(151, 93, 190, 1)',
+      pink: 'rgba(203, 62, 132, 1)',
+      red: 'rgba(208, 60, 60, 1)',
+    }
+    const BGCOLORS = {
+      gray: 'rgba(234, 234, 235, 0.93)',
+      brown: 'rgba(213, 130, 38, 0.13)',
+      orange: 'rgba(252, 103, 27, 0.13)',
+      yellow: 'rgba(253, 183, 63, 0.13)',
+      green: 'rgba(76, 169, 66, 0.13)',
+      blue: 'rgba(45, 159, 226, 0.13)',
+      purple: 'rgba(187, 123, 230, 0.13)',
+      pink: 'rgba(255, 85, 163, 0.13)',
+      red: 'rgba(255, 82, 71, 0.13)',
+    }
+
+    if (type === 'color') {
+      return COLORS[colorName];
+    } else if (type === 'background') {
+      return BGCOLORS[colorName];
+    }
   }
 }
 
@@ -519,6 +569,8 @@ const Leaf = props => {
           textDecoration: props.leaf.underline ? 'underline' : 
             props.leaf.strikethrough ? 'line-through' : 'normal',
           fontFamily: props.leaf.code ? 'monospace' : 'inherit',
+          color: 'inherit' || props.leaf.color,
+          backgroundColor: 'inherit' || props.leaf.backgroundColor,
         }
       }
     >
