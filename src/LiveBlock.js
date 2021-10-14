@@ -9,6 +9,7 @@ import Todo from './Todo';
 
 // toolbars
 import BlockToolbar from './BlockToolbar';
+import SpanToolbar from './SpanToolbar';
 
 const CustomEditor = {
   ///////////////
@@ -240,9 +241,17 @@ const CustomEditor = {
     }
 
     if (type === 'color') {
-      return COLORS[colorName];
+      if (Object.keys(COLORS).includes(colorName)) {
+        return COLORS[colorName];
+      } else {
+        return 'inherit';
+      }
     } else if (type === 'background') {
-      return BGCOLORS[colorName];
+      if (Object.keys(BGCOLORS).includes(colorName)) {
+        return BGCOLORS[colorName];
+      } else {
+        return 'inherit';
+      }
     }
   }
 }
@@ -350,6 +359,7 @@ const LiveBlock = (props) => {
           getTextAfterLastSlash={ () => CustomEditor.getTextAfterLastSlash(editor)}
         />
       }
+      <SpanToolbar />
       <Editable
         renderElement={ renderElement }
         renderLeaf={ renderLeaf }

@@ -6,62 +6,27 @@ import { useEffect, useRef } from 'react';
 import { useSlate, ReactEditor } from 'slate-react';
 import { Editor, Range } from 'slate';
 
-const blockMenu = [
-  {
-    displayName: 'Text',
-    type: 'paragraph',
-    description: 'Just start writing with plain text.',
-  },
-  {
-    displayName: 'Page', ////////////////////////////////////// TODO
-    type: 'page',
-    description: 'Embed a sub-page inside this page.',
-  },
-  {
-    displayName: 'Heading 1',
-    type: 'h1',
-    description: 'Big section heading.',
-  },
-  {
-    displayName: 'Heading 2',
-    type: 'h2',
-    description: 'Medium section heading.',
-  },
-  {
-    displayName: 'Heading 3',
-    type: 'h3',
-    description: 'Small section heading.',
-  },
-  {
-    displayName: 'Bulleted list',
-    type: 'bulletList',
-    description: 'Create a simple bulleted list.',
-  },
-  {
-    displayName: 'Numbered list',
-    type: 'orderedList',
-    description: 'Create a list with numbering.',
-  },
-  {
-    displayName: 'Divider', ////////////////////////////////////// TODO
-    type: 'divider',
-    description: 'Visually divide blocks',
-  },
-  {
-    displayName: 'Callout', ////////////////////////////////////// TODO
-    type: 'callout',
-    description: 'Make writing stand out.',
-  },
+const COLORNAMES = [
+  'default',
+  'gray',
+  'brown',
+  'orange',
+  'yellow',
+  'green',
+  'blue',
+  'purple',
+  'pink',
+  'red',
 ];
 
-const BlockToolbar = (props) => {
+const SpanToolbar = (props) => {
   // props
-  const { chooseBlock } = props;
+  const { chooseSpan } = props;
 
   // click
-  const handleClick = (event, blockType) => {
+  const handleClick = (event, type, colorName) => {
     event.preventDefault();
-    chooseBlock(blockType);
+    chooseSpan(type, colorName); // TODO: Hook this up!
   }
 
   // for positioning
@@ -103,14 +68,23 @@ const BlockToolbar = (props) => {
     <div className="blockToolbar"
       ref={ ref }
     >
-      { blockMenu.map((block) => {
+      { COLORNAMES.map((colorName) => {
         return (
           <div
-            className="blockType"
-            onMouseDown={ (event) => handleClick(event, block.type) }
+            className="color"
+            onMouseDown={ (event) => handleClick(event, 'color', colorName) }
           >
-            <h2>{ block.displayName }</h2>
-            <p>{ block.description }</p>
+            <p>{ `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)}` }</p>
+          </div>
+        );
+      }) }
+      { COLORNAMES.map((colorName) => {
+        return (
+          <div
+            className="color"
+            onMouseDown={ (event) => handleClick(event, 'bgColor', colorName) }
+          >
+            <p>{ `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)} background` }</p>
           </div>
         );
       }) }
@@ -118,4 +92,4 @@ const BlockToolbar = (props) => {
   );
 }
 
-export default BlockToolbar;
+export default SpanToolbar;
