@@ -2,7 +2,7 @@ import './BlockToolbar.css';
 
 import { useState, useEffect, useRef } from 'react';
 
-const blockMenu = [
+const BLOCKMENU = [
   {
     displayName: 'Text',
     type: 'paragraph',
@@ -52,10 +52,17 @@ const blockMenu = [
 
 const BlockToolbar = (props) => {
   // props
-  const { chooseBlock, hideToolbar } = props;
+  const { chooseBlock, hideToolbar, getTextAfterLastSlash } = props;
 
   // state
-  const [selectedType, setSelectedType] = useState(blockMenu[0].type);
+  const [selectedType, setSelectedType] = useState(BLOCKMENU[0].type);
+  const [searchText, setSearchText] = useState('');
+  // const [blockMenu, setBlockMenu] = useState(BLOCKMENU);
+
+  // not state? eh?
+  const blockMenu = BLOCKMENU.filter(c =>
+    c.displayName.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   // selecting a block type
   const handleClick = (event, blockType) => {
@@ -136,7 +143,7 @@ const BlockToolbar = (props) => {
     }
   });
 
-  // choose with enter/return key
+  // effect to choose with enter/return key
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key === 'Enter') {
@@ -149,6 +156,21 @@ const BlockToolbar = (props) => {
     window.addEventListener('keydown', onKeyDown);
     return () => {
       window.removeEventListener('keydown', onKeyDown);
+    }
+  });
+
+  // effect to listen for typing
+  useEffect(() => {
+    const onKeyUp = () => {
+      const newText = getTextAfterLastSlash();
+      if (newText !== searchText) {
+        // update search test
+        setSearchText(newText);
+      }
+    }
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('keyup', onKeyUp);
     }
   });
 

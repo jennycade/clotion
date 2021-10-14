@@ -162,6 +162,27 @@ const CustomEditor = {
     Editor.deleteBackward(editor);
   },
 
+  getTextAfterLastSlash(editor) {
+    const cursorLocation = Range.start(editor.selection);
+    let rangeStart = Editor.before(editor, cursorLocation, {unit: 'character'});
+
+    while (rangeStart) {
+      let range = Editor.range(editor, rangeStart, cursorLocation);
+      let text = Editor.string(editor, range);
+
+      if (text.match(/\/.*/)) {
+        return text.slice(1);
+      }
+
+      // step one character back
+      rangeStart = Editor.before(editor, rangeStart, {unit: 'character'});
+    }
+
+    // didn't find it
+    throw new Error (`Could not find slash before selection in LiveBlock.`);
+    // console.log(`Could not find slash before selection in LiveBlock.`);
+  },
+
 
 
   /////////////
@@ -276,6 +297,7 @@ const LiveBlock = (props) => {
         <BlockToolbar
           hideToolbar={ () => setShowBlockToolbar(false) }
           chooseBlock={ handleBlockToolbarChoice }
+          getTextAfterLastSlash={ () => CustomEditor.getTextAfterLastSlash(editor)}
         />
       }
       <Editable
