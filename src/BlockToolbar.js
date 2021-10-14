@@ -162,10 +162,15 @@ const BlockToolbar = (props) => {
   // effect to listen for typing
   useEffect(() => {
     const onKeyUp = () => {
-      const newText = getTextAfterLastSlash();
-      if (newText !== searchText) {
-        // update search test
-        setSearchText(newText);
+      try {
+        const newText = getTextAfterLastSlash();
+        if (newText !== searchText) {
+          // update search test
+          setSearchText(newText);
+        }
+      } catch {
+        // doesn't work --> slash was deleted. Close the toolbar
+        hideToolbar();
       }
     }
     window.addEventListener('keyup', onKeyUp);
