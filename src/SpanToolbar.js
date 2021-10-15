@@ -21,12 +21,12 @@ const COLORNAMES = [
 
 const SpanToolbar = (props) => {
   // props
-  const { chooseSpan } = props;
+  const { chooseColor } = props;
 
   // click
   const handleClick = (event, type, colorName) => {
     event.preventDefault();
-    chooseSpan(type, colorName); // TODO: Hook this up!
+    chooseColor(type, colorName); // TODO: Hook this up!
   }
 
   // for positioning

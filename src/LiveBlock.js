@@ -122,14 +122,16 @@ const CustomEditor = {
   ///////////////
   // SET SPANS //
   ///////////////
-  setSpanColor(editor, color) {
+  setSpanColor(editor, colorName) {
+    const color = CustomEditor.getColorCode(colorName, 'color');
     Transforms.setNodes(
       editor,
       { color: color },
       { match: n => Text.isText(n), split: true}
     );
   },
-  setSpanBackgroundColor(editor, color) {
+  setSpanBackgroundColor(editor, colorName) {
+    const color = CustomEditor.getColorCode(colorName, 'bgColor');
     Transforms.setNodes(
       editor,
       { backgroundColor: color },
@@ -246,12 +248,14 @@ const CustomEditor = {
       } else {
         return 'inherit';
       }
-    } else if (type === 'background') {
+    } else if (type === 'bgColor') {
       if (Object.keys(BGCOLORS).includes(colorName)) {
         return BGCOLORS[colorName];
       } else {
         return 'inherit';
       }
+    } else {
+      throw new Error(`getColorCode called with invalid type 'type'. (Should be 'color' or 'bgColor')`);
     }
   }
 }
@@ -317,9 +321,9 @@ const LiveBlock = (props) => {
     return <Leaf {...props} />
   }, [])
 
-  /////////////
-  // TOOLBAR //
-  /////////////
+  //////////////
+  // TOOLBARS //
+  //////////////
   const handleBlockToolbarChoice = (blockType) => {
     CustomEditor.setBlock(editor, blockType);
 
@@ -331,6 +335,17 @@ const LiveBlock = (props) => {
 
     // hide toolbar
     setShowBlockToolbar(false);
+  }
+
+  const handleColorChoice = (type, colorName) => {
+    if (type === 'color') {
+      CustomEditor.setSpanColor(editor, colorName);
+    } else if (type === 'bgColor') {
+      CustomEditor.setSpanBackgroundColor(editor, colorName);
+    } else {
+      throw new Error(`Invalid color type supplied to handleColorChoice: ${type} (should be 'color' or 'bgColor')`);
+    }
+    // hide toolbar... or not?
   }
 
   return (
@@ -359,7 +374,7 @@ const LiveBlock = (props) => {
           getTextAfterLastSlash={ () => CustomEditor.getTextAfterLastSlash(editor)}
         />
       }
-      <SpanToolbar />
+      <SpanToolbar chooseColor={ handleColorChoice } />
       <Editable
         renderElement={ renderElement }
         renderLeaf={ renderLeaf }
@@ -579,8 +594,8 @@ const Leaf = props => {
           textDecoration: props.leaf.underline ? 'underline' : 
             props.leaf.strikethrough ? 'line-through' : 'normal',
           fontFamily: props.leaf.code ? 'monospace' : 'inherit',
-          color: 'inherit' || props.leaf.color,
-          backgroundColor: 'inherit' || props.leaf.backgroundColor,
+          color: props.leaf.color || 'inherit',
+          backgroundColor: props.leaf.backgroundColor || 'inherit',
         }
       }
     >
