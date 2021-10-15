@@ -1,32 +1,29 @@
-import './BlockToolbar.css';
+import './SpanToolbar.css';
 
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // slateJS
 import { useSlate, ReactEditor } from 'slate-react';
 import { Editor, Range } from 'slate';
-
-const COLORNAMES = [
-  'default',
-  'gray',
-  'brown',
-  'orange',
-  'yellow',
-  'green',
-  'blue',
-  'purple',
-  'pink',
-  'red',
-];
+import ColorToolbar from './ColorToolbar';
 
 const SpanToolbar = (props) => {
   // props
   const { chooseColor } = props;
 
+  // state
+  const [showColorToolbar, setShowColorToolbar] = useState(false);
+
   // click
-  const handleClick = (event, type, colorName) => {
+  const handleClick = (event) => {
     event.preventDefault();
-    chooseColor(type, colorName); // TODO: Hook this up!
+
+  }
+
+  // toolbars
+  const handleColorToolbarClick = (event) => {
+    event.preventDefault();
+    setShowColorToolbar(true);
   }
 
   // for positioning
@@ -65,29 +62,21 @@ const SpanToolbar = (props) => {
 
 
   return (
-    <div className="blockToolbar"
+    <div className="toolbarContainer"
       ref={ ref }
     >
-      { COLORNAMES.map((colorName) => {
-        return (
-          <div
-            className="color"
-            onMouseDown={ (event) => handleClick(event, 'color', colorName) }
-          >
-            <p>{ `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)}` }</p>
-          </div>
-        );
-      }) }
-      { COLORNAMES.map((colorName) => {
-        return (
-          <div
-            className="color"
-            onMouseDown={ (event) => handleClick(event, 'bgColor', colorName) }
-          >
-            <p>{ `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)} background` }</p>
-          </div>
-        );
-      }) }
+      <div className="spanToolbar">
+        <button className="boldButton" onClick={handleClick}>B</button>
+        <button className="italicButton" onClick={handleClick}>i</button>
+        <button className="underlineButton" onClick={handleClick}>U</button>
+        <button className="strikethroughButton" onClick={handleClick}>S</button>
+        <button className="codeButton" onClick={handleClick}>&lt;&gt;</button>
+        <button className="colorButton" onClick={handleColorToolbarClick}>A</button>
+      </div>
+      {/* DROPDOWN MENUS */}
+      { showColorToolbar &&
+          <ColorToolbar chooseColor={chooseColor} hideToolbar={() => setShowColorToolbar(false)} />
+        }
     </div>
   );
 }

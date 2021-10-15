@@ -1,0 +1,39 @@
+.toolbarContainer {
+  position: absolute;
+  z-index: 1;
+  top: -10000px;
+  left: -10000px;
+  opacity: 0;
+}
+.spanToolbar {
+  display: flex;
+  height: 32px;
+  margin-bottom: 12px;
+
+  background-color: white;
+  border-radius: 3px;
+  color: rgb(55, 53, 47);
+
+  box-shadow: rgb(15 15 15 / 5%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 3px 6px, rgb(15 15 15 / 20%) 0px 9px 24px;
+}
+.spanToolbar button {
+  border: none;
+  background-color: transparent;
+}
+.spanToolbar button:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+}
+
+/* button-specific styles */
+.boldButton {
+  font-weight: bold;
+}
+.italicButton {
+  font-style: italic;
+}
+.underlineButton {
+  text-decoration: underline;
+}
+.strikethroughButton {
+  text-decoration: line-through;
+}
