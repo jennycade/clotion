@@ -15,6 +15,19 @@ const CustomEditor = {
   ///////////////
   // IS ACTIVE //
   ///////////////
+  TOGGLEMARKS: ['bold', 'italic', 'underline', 'strikethrough', 'code'],
+
+  isMarkActive(editor, mark) {
+    if (!this.TOGGLEMARKS.includes(mark)) {
+      throw new Error(`CustomEditor.isMarkActive called with invalid mark: ${mark}.`);
+    }
+    const [match] = Editor.nodes(editor, {
+      match: n => n[mark] === true,
+      universal: true,
+    });
+
+    return !!match;
+  },
 
   // spans
   isBoldMarkActive(editor) {
@@ -76,6 +89,23 @@ const CustomEditor = {
   ////////////
 
   // spans
+  toggleMark(editor, mark) {
+    const TOGGLEMARKS = ['bold', 'italic', 'underline', 'strikethrough', 'code'];
+    if (!TOGGLEMARKS.includes(mark)) {
+      throw new Error(`CustomEditor.toggleMark called with invalid mark: ${mark}.`);
+    }
+
+    const isActive = CustomEditor.isMarkActive(editor, mark);
+    
+    const newObj = {};
+    newObj[mark] = isActive ? null : true;
+
+    Transforms.setNodes(
+      editor,
+      newObj,
+      { match: n => Text.isText(n), split: true }
+    );
+  },
 
   toggleBoldMark(editor) {
     const isActive = CustomEditor.isBoldMarkActive(editor)
@@ -374,7 +404,11 @@ const LiveBlock = (props) => {
           getTextAfterLastSlash={ () => CustomEditor.getTextAfterLastSlash(editor)}
         />
       }
-      <SpanToolbar chooseColor={ handleColorChoice } />
+      <SpanToolbar
+        chooseColor={ handleColorChoice }
+        toggleMark={ (mark) => CustomEditor.toggleMark(editor, mark) }
+        isMarkActive={ (mark) => CustomEditor.isMarkActive(editor, mark) }
+      />
       <Editable
         renderElement={ renderElement }
         renderLeaf={ renderLeaf }
@@ -566,17 +600,6 @@ const ListItemElement = (props) => {
       {props.children}
     </li>
   );
-}
-const TodoListItemElement = (props) => {
-  return (
-    <Todo
-      completed={props.completed}
-      handleTodoClick={CustomEditor.handleTodoClick}
-      {...props.attributes}
-    >
-      {props.children}
-    </Todo>
-  )
 }
 
 ///////////

@@ -9,15 +9,16 @@ import ColorToolbar from './ColorToolbar';
 
 const SpanToolbar = (props) => {
   // props
-  const { chooseColor } = props;
+  const { chooseColor, toggleMark, isMarkActive } = props;
 
   // state
   const [showColorToolbar, setShowColorToolbar] = useState(false);
 
   // click
-  const handleClick = (event) => {
+  const handleClick = (event, mark) => {
     event.preventDefault();
 
+    toggleMark(mark);
   }
 
   // toolbars
@@ -66,12 +67,12 @@ const SpanToolbar = (props) => {
       ref={ ref }
     >
       <div className="spanToolbar">
-        <button className="boldButton" onClick={handleClick}>B</button>
-        <button className="italicButton" onClick={handleClick}>i</button>
-        <button className="underlineButton" onClick={handleClick}>U</button>
-        <button className="strikethroughButton" onClick={handleClick}>S</button>
-        <button className="codeButton" onClick={handleClick}>&lt;&gt;</button>
-        <button className="colorButton" onClick={handleColorToolbarClick}>A</button>
+        <button className="boldButton" onMouseDown={ (event) => handleClick(event, 'bold') }>B</button>
+        <button className="italicButton" onMouseDown={ (event) => handleClick(event, 'italic') }>i</button>
+        <button className="underlineButton" onMouseDown={ (event) => handleClick(event, 'underline') }>U</button>
+        <button className="strikethroughButton" onMouseDown={ (event) => handleClick(event, 'strikethrough') }>S</button>
+        <button className="codeButton" onMouseDown={ (event) => handleClick(event, 'code') }>&lt;&gt;</button>
+        <button className="colorButton" onMouseDown={handleColorToolbarClick}>A</button>
       </div>
       {/* DROPDOWN MENUS */}
       { showColorToolbar &&
