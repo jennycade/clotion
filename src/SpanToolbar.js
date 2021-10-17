@@ -1,11 +1,16 @@
+// css
 import './SpanToolbar.css';
 
+// react
 import { useState, useEffect, useRef } from 'react';
 
 // slateJS
 import { useSlate, ReactEditor } from 'slate-react';
 import { Editor, Range } from 'slate';
 import ColorToolbar from './ColorToolbar';
+
+// components
+import SpanButton from './SpanButton';
 
 const SpanToolbar = (props) => {
   // props
@@ -59,7 +64,7 @@ const SpanToolbar = (props) => {
       window.pageXOffset -
       el.offsetWidth / 2 +
       rect.width / 2}px`
-  })
+  });
 
 
   return (
@@ -67,12 +72,18 @@ const SpanToolbar = (props) => {
       ref={ ref }
     >
       <div className="spanToolbar">
-        <button className="boldButton" onMouseDown={ (event) => handleClick(event, 'bold') }>B</button>
-        <button className="italicButton" onMouseDown={ (event) => handleClick(event, 'italic') }>i</button>
-        <button className="underlineButton" onMouseDown={ (event) => handleClick(event, 'underline') }>U</button>
-        <button className="strikethroughButton" onMouseDown={ (event) => handleClick(event, 'strikethrough') }>S</button>
-        <button className="codeButton" onMouseDown={ (event) => handleClick(event, 'code') }>&lt;&gt;</button>
-        <button className="colorButton" onMouseDown={handleColorToolbarClick}>A</button>
+        <SpanButton mark='bold' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>B</SpanButton>
+
+        <SpanButton mark='italic' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>i</SpanButton>
+
+        <SpanButton mark='underline' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>U</SpanButton>
+
+        <SpanButton mark='strikethrough' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>S</SpanButton>
+
+        <SpanButton mark='code' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>&lt;&gt;</SpanButton>
+
+        <SpanButton mark='colorButton' isMarkActive={ () => false } handleMouseDown={ handleColorToolbarClick }>A</SpanButton>
+
       </div>
       {/* DROPDOWN MENUS */}
       { showColorToolbar &&

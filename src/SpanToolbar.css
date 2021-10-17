@@ -37,3 +37,8 @@
 .strikethroughButton {
   text-decoration: line-through;
 }
+
+/* active marks */
+.activeMark {
+  color: rgb(55, 174, 219);
+}
