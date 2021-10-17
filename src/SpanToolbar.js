@@ -26,11 +26,17 @@ const SpanToolbar = (props) => {
     toggleMark(mark);
   }
 
-  // toolbars
+  // sub-toolbars
   const handleColorToolbarClick = (event) => {
     event.preventDefault();
     setShowColorToolbar(!showColorToolbar);
   }
+  const dropdownIcon = (
+    <svg
+      viewBox="0 0 30 30" className="chevronDown">
+        <polygon points="15,17.4 4.8,7 2,9.8 15,23 28,9.8 25.2,7 "></polygon>
+    </svg>
+  );
 
   // for positioning
   const containerRef = useRef(null);
@@ -86,7 +92,10 @@ const SpanToolbar = (props) => {
 
         <SpanButton mark='code' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>&lt;&gt;</SpanButton>
 
-        <SpanButton mark='colorButton' isMarkActive={ () => false } handleMouseDown={ handleColorToolbarClick }>A</SpanButton>
+        <SpanButton mark='colorButton' isMarkActive={ () => false } handleMouseDown={ handleColorToolbarClick } dropdown={true}>
+          A
+          { dropdownIcon }
+        </SpanButton>
 
       </div>
       {/* DROPDOWN MENUS */}

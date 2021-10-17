@@ -20,6 +20,8 @@
 .spanToolbar button {
   border: none;
   background-color: transparent;
+  display: flex;
+  align-items: center;
 }
 .spanToolbar button:hover {
   background-color: rgba(55, 53, 47, 0.08);
@@ -42,4 +44,15 @@
 /* active marks */
 .activeMark {
   color: rgb(55, 174, 219);
+}
+
+/* dropdown menus */
+.chevronDown {
+  width: 10px;
+  height: 100%;
+  display: block;
+  fill: rgba(55, 53, 47, 0.3);
+  flex-shrink: 0;
+  backface-visibility: hidden;
+  margin-left: 3px;
 }
