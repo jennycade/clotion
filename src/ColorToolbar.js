@@ -27,23 +27,28 @@ const ColorToolbar = (props) => {
   return (
     <div className="colorToolbar"
     >
+      <h2>COLOR</h2>
       { COLORNAMES.map((colorName) => {
         return (
           <div
+            key={colorName}
             className="color"
             onMouseDown={ (event) => handleClick(event, 'color', colorName) }
           >
-            <p>{ `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)}` }</p>
+            { `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)}` }
           </div>
         );
       }) }
+
+      <h2>BACKGROUND</h2>
       { COLORNAMES.map((colorName) => {
         return (
           <div
+            key={colorName + 'background'}
             className="color"
             onMouseDown={ (event) => handleClick(event, 'bgColor', colorName) }
           >
-            <p>{ `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)} background` }</p>
+            { `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)} background` }
           </div>
         );
       }) }
