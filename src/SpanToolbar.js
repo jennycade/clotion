@@ -33,15 +33,17 @@ const SpanToolbar = (props) => {
   }
 
   // for positioning
-  const ref = useRef(null);
+  const containerRef = useRef(null);
+  const spanToolbarRef = useRef(null);
   const editor = useSlate();
 
   // effect to manage caret position
   useEffect(() => {
-    const el = ref.current
-    const { selection } = editor
+    const containerElement = containerRef.current;
+    const toolbarElement = spanToolbarRef.current;
+    const { selection } = editor;
 
-    if (!el) {
+    if (!containerElement) {
       return
     }
 
@@ -51,27 +53,29 @@ const SpanToolbar = (props) => {
       Range.isCollapsed(selection) ||
       Editor.string(editor, selection) === ''
     ) {
-      el.removeAttribute('style')
+      containerElement.removeAttribute('style')
       return
     }
 
     const domSelection = window.getSelection()
     const domRange = domSelection.getRangeAt(0)
     const rect = domRange.getBoundingClientRect()
-    el.style.opacity = '1'
-    el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`
-    el.style.left = `${rect.left +
+    containerElement.style.opacity = '1'
+    containerElement.style.top = `${rect.top + window.pageYOffset - toolbarElement.offsetHeight}px`
+    containerElement.style.left = `${rect.left +
       window.pageXOffset -
-      el.offsetWidth / 2 +
+      toolbarElement.offsetWidth / 2 +
       rect.width / 2}px`
   });
 
 
   return (
     <div className="toolbarContainer"
-      ref={ ref }
+      ref={ containerRef }
     >
-      <div className="spanToolbar">
+      <div className="spanToolbar"
+        ref={ spanToolbarRef }
+      >
         <SpanButton mark='bold' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>B</SpanButton>
 
         <SpanButton mark='italic' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>i</SpanButton>

@@ -1,6 +1,6 @@
 .colorToolbar {
-  position: relative;
-  top: 500px;
+  /* position: relative;
+  top: 40px; */
   z-index: 1;
 
   min-width: 180px;
