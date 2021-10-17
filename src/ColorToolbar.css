@@ -25,8 +25,25 @@
 .colorToolbar .color {
   font-size: 14px;
   line-height: 120%;
-  padding: 6px 14px;
+  padding: 3px 14px;
+  display: flex;
+  align-items: center;
 }
 .colorToolbar .color:hover {
   background-color: rgba(55, 53, 47, 0.08);
+}
+
+.colorThumbnail {
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+  border-radius: 3px;
+  font-weight: 500;
+  box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
 }

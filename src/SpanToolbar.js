@@ -14,7 +14,7 @@ import SpanButton from './SpanButton';
 
 const SpanToolbar = (props) => {
   // props
-  const { chooseColor, toggleMark, isMarkActive } = props;
+  const { chooseColor, toggleMark, isMarkActive, getColorCode } = props;
 
   // state
   const [showColorToolbar, setShowColorToolbar] = useState(false);
@@ -87,7 +87,7 @@ const SpanToolbar = (props) => {
       </div>
       {/* DROPDOWN MENUS */}
       { showColorToolbar &&
-          <ColorToolbar chooseColor={chooseColor} hideToolbar={() => setShowColorToolbar(false)} />
+          <ColorToolbar chooseColor={chooseColor} getColorCode={getColorCode} hideToolbar={() => setShowColorToolbar(false)} />
         }
     </div>
   );

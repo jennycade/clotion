@@ -15,7 +15,7 @@ const COLORNAMES = [
 
 const ColorToolbar = (props) => {
   // props
-  const { chooseColor, hideToolbar } = props;
+  const { chooseColor, hideToolbar, getColorCode } = props;
 
   // click
   const handleClick = (event, type, colorName) => {
@@ -35,6 +35,7 @@ const ColorToolbar = (props) => {
             className="color"
             onMouseDown={ (event) => handleClick(event, 'color', colorName) }
           >
+            { <ColorThumbnail color={ getColorCode(colorName, 'color') } backgroundColor='inherit' /> }
             { `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)}` }
           </div>
         );
@@ -48,10 +49,29 @@ const ColorToolbar = (props) => {
             className="color"
             onMouseDown={ (event) => handleClick(event, 'bgColor', colorName) }
           >
+            { <ColorThumbnail color='inherit' backgroundColor={ getColorCode(colorName, 'bgColor') } /> }
             { `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)} background` }
           </div>
         );
       }) }
+    </div>
+  );
+}
+
+const ColorThumbnail = (props) => {
+  // props
+  const { color, backgroundColor } = props;
+
+  // style
+  const style = {
+    
+    color: color,
+    backgroundColor: backgroundColor,
+  }
+
+  return (
+    <div className='colorThumbnail' style={style}>
+      A
     </div>
   );
 }
