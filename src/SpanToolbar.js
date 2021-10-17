@@ -29,7 +29,7 @@ const SpanToolbar = (props) => {
   // toolbars
   const handleColorToolbarClick = (event) => {
     event.preventDefault();
-    setShowColorToolbar(true);
+    setShowColorToolbar(!showColorToolbar);
   }
 
   // for positioning
