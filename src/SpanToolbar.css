@@ -9,7 +9,7 @@
   display: flex;
   height: 32px;
   margin-bottom: 12px;
-  width: min-content;
+  width: fit-content;
 
   background-color: white;
   border-radius: 3px;

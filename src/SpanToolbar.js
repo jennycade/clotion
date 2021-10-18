@@ -7,10 +7,11 @@ import { useState, useEffect, useRef } from 'react';
 // slateJS
 import { useSlate, ReactEditor } from 'slate-react';
 import { Editor, Range } from 'slate';
-import ColorToolbar from './ColorToolbar';
 
 // components
 import SpanButton from './SpanButton';
+import ColorToolbar from './ColorToolbar';
+import MiniBlockToolbar from './MiniBlockToolbar';
 
 const SpanToolbar = (props) => {
   // props
@@ -18,6 +19,7 @@ const SpanToolbar = (props) => {
 
   // state
   const [showColorToolbar, setShowColorToolbar] = useState(false);
+  const [showBlockToolbar, setShowBlockToolbar] = useState(false);
 
   // click
   const handleClick = (event, mark) => {
@@ -31,6 +33,11 @@ const SpanToolbar = (props) => {
     event.preventDefault();
     setShowColorToolbar(!showColorToolbar);
   }
+  const handleBlockToolbarClick = (event) => {
+    event.preventDefault();
+    setShowBlockToolbar(!showBlockToolbar);
+    console.log(`showBlockToolbar set to ${!showBlockToolbar}`);
+  }
   const dropdownIcon = (
     <svg
       viewBox="0 0 30 30" className="chevronDown">
@@ -43,7 +50,7 @@ const SpanToolbar = (props) => {
   const spanToolbarRef = useRef(null);
   const editor = useSlate();
 
-  // effect to manage caret position
+  // effect to manage position
   useEffect(() => {
     const containerElement = containerRef.current;
     const toolbarElement = spanToolbarRef.current;
@@ -82,6 +89,11 @@ const SpanToolbar = (props) => {
       <div className="spanToolbar"
         ref={ spanToolbarRef }
       >
+        <SpanButton mark='blockButton' isMarkActive={ () => false } handleMouseDown={ handleBlockToolbarClick } dropdown={true}>
+          Turn into
+          { dropdownIcon }
+        </SpanButton>
+
         <SpanButton mark='bold' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>B</SpanButton>
 
         <SpanButton mark='italic' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>i</SpanButton>
@@ -99,8 +111,19 @@ const SpanToolbar = (props) => {
 
       </div>
       {/* DROPDOWN MENUS */}
+      { showBlockToolbar && 
+        <MiniBlockToolbar
+          chooseBlock={() => null}
+          hideToolbar={() => setShowBlockToolbar(false) }
+        />
+      }
+
       { showColorToolbar &&
-          <ColorToolbar chooseColor={chooseColor} getColorCode={getColorCode} hideToolbar={() => setShowColorToolbar(false)} />
+          <ColorToolbar
+            chooseColor={chooseColor}
+            getColorCode={getColorCode}
+            hideToolbar={() => setShowColorToolbar(false)}
+          />
         }
     </div>
   );
