@@ -15,7 +15,7 @@ import MiniBlockToolbar from './MiniBlockToolbar';
 
 const SpanToolbar = (props) => {
   // props
-  const { chooseColor, toggleMark, isMarkActive, getColorCode } = props;
+  const { chooseBlock, chooseColor, toggleMark, isMarkActive, getColorCode } = props;
 
   // state
   const [showColorToolbar, setShowColorToolbar] = useState(false);
@@ -36,7 +36,6 @@ const SpanToolbar = (props) => {
   const handleBlockToolbarClick = (event) => {
     event.preventDefault();
     setShowBlockToolbar(!showBlockToolbar);
-    console.log(`showBlockToolbar set to ${!showBlockToolbar}`);
   }
   const dropdownIcon = (
     <svg
@@ -90,7 +89,7 @@ const SpanToolbar = (props) => {
         ref={ spanToolbarRef }
       >
         <SpanButton mark='blockButton' isMarkActive={ () => false } handleMouseDown={ handleBlockToolbarClick } dropdown={true}>
-          Turn into
+          Choose block
           { dropdownIcon }
         </SpanButton>
 
@@ -113,7 +112,7 @@ const SpanToolbar = (props) => {
       {/* DROPDOWN MENUS */}
       { showBlockToolbar && 
         <MiniBlockToolbar
-          chooseBlock={() => null}
+          chooseBlock={ chooseBlock }
           hideToolbar={() => setShowBlockToolbar(false) }
         />
       }

@@ -35,6 +35,16 @@ const BLOCKMENU = [
     description: 'Create a list with numbering.',
   },
   {
+    displayName: 'Code',
+    type: 'code',
+    description: 'Capture a code snippet.',
+  },
+  {
+    displayName: 'Quote',
+    type: 'quote',
+    description: 'Capture a quote.',
+  },
+  {
     displayName: 'Divider', ////////////////////////////////////// TODO
     type: 'divider',
     description: 'Visually divide blocks',

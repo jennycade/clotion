@@ -405,6 +405,7 @@ const LiveBlock = (props) => {
         />
       }
       <SpanToolbar
+        chooseBlock={ handleBlockToolbarChoice }
         chooseColor={ handleColorChoice }
         getColorCode={ CustomEditor.getColorCode }
         toggleMark={ (mark) => CustomEditor.toggleMark(editor, mark) }
