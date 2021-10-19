@@ -342,6 +342,10 @@ const LiveBlock = (props) => {
         return <BulletListElement {...props} />
       case 'code':
         return <CodeElement {...props} />
+      case 'quote':
+        return <QuoteElement {...props} />
+      case 'callout':
+        return <CalloutElement {...props} />
       default:
         return <DefaultElement {...props} />
     }
@@ -602,6 +606,20 @@ const ListItemElement = (props) => {
       {props.children}
     </li>
   );
+}
+const QuoteElement = (props) => {
+  return (
+    <blockquote {...props.attributes}>
+      {props.children}
+    </blockquote>
+  )
+}
+const CalloutElement = (props) => {
+  return (
+    <aside className="callout" {...props.attributes}>
+      {props.children}
+    </aside>
+  )
 }
 
 ///////////
