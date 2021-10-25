@@ -148,20 +148,19 @@ function App() {
   }, [uid]);
 
   // addPage
-  const addPage = async () => {
+  const addPage = async (parentPage = null) => {
     // boilerplate
     const newPage = {
       title: 'Untitled',
       icon: '',
-      // content: JSON.stringify(
-      //   [{
-      //     type: 'paragraph',
-      //     children: [{ text: 'Start typing.' }],
-      //   }]
-      // ),
       order: getNextOrder(),
       uid: uid,
     };
+
+    if (parentPage) {
+      newPage.parent = parentPage;
+      newPage.order = 0; // FIX THIS
+    }
 
     // add to firestore
     const docRef = await addDoc(collection(db, 'pages'), newPage);
@@ -175,6 +174,7 @@ function App() {
     };
     addDoc(collection(db, 'pages', docRef.id, 'blocks'), newBlock);
 
+    return docRef.id;
   }
 
   /////////////
@@ -262,12 +262,24 @@ function App() {
           <p>{userDisplayName}'s Clotion</p>
           <button onClick={ signOutUser }>Sign out</button>
 
-          { pages.map( (page) => <PageLink key={ page.id } id={ page.id } title={ page.title } icon={ page.icon } handleDrag={ handleSideBarPageDrag } isDragLeaveReal={ isSideBarPageDragLeaveReal } handleDrop={ handleSideBarPageDrop } />) }
+          { pages.map( (page) => {
+            return (
+              <PageLink
+                key={ page.id }
+                id={ page.id }
+                title={ page.title }
+                icon={ page.icon }
+
+                handleDrag={ handleSideBarPageDrag }
+                isDragLeaveReal={ isSideBarPageDragLeaveReal }
+                handleDrop={ handleSideBarPageDrop } />
+            );
+          }) }
           
           <div className="endSort" >
           </div>
 
-          <button onClick={ addPage }
+          <button onClick={ () => addPage() }
             onDrop={ () => handleSideBarPageDrop() } onDragOver={ (e) => e.preventDefault() } 
           >Add page</button>
           
