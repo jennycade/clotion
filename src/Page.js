@@ -16,6 +16,7 @@ const Page = ( props ) => {
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null});
+  const [subPages, setSubPages] = useState([]);
   const [docRef, setDocRef] = useState({});
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [blocks, setBlocks] = useState([]);

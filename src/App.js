@@ -155,6 +155,7 @@ function App() {
       icon: '',
       order: getNextOrder(),
       uid: uid,
+      parent: '',
     };
 
     if (parentPage) {
@@ -272,7 +273,8 @@ function App() {
 
                 handleDrag={ handleSideBarPageDrag }
                 isDragLeaveReal={ isSideBarPageDragLeaveReal }
-                handleDrop={ handleSideBarPageDrop } />
+                handleDrop={ handleSideBarPageDrop }
+              />
             );
           }) }
           

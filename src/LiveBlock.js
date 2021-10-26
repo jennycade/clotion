@@ -6,10 +6,12 @@ import './LiveBlock.css';
 
 // block components
 import Todo from './Todo';
+import PageLink from './PageLink';
 
 // toolbars
 import BlockToolbar from './BlockToolbar';
 import SpanToolbar from './SpanToolbar';
+import Page from './Page';
 
 const CustomEditor = {
   ///////////////
@@ -297,7 +299,7 @@ const LiveBlock = (props) => {
   const { id, updateContent } = props;
 
   // state
-  const editor = useMemo(() => withReact(createEditor()), []);
+  const editor = useMemo(() => withPages(withReact(createEditor()), []));
   const [showBlockToolbar, setShowBlockToolbar] = useState(false);
   const [blockToolbarFromSlash, setBlockToolbarFromSlash] = useState(false);
 
@@ -330,7 +332,7 @@ const LiveBlock = (props) => {
         return <TodoListElement {...props} />
       case 'todoListItem':
         return (<Todo
-          completed={props.completed}
+          completed={props.element.completed}
           handleTodoClick={CustomEditor.handleTodoClick}
           {...props.attributes}
           {...props}
@@ -346,6 +348,13 @@ const LiveBlock = (props) => {
         return <QuoteElement {...props} />
       case 'callout':
         return <CalloutElement {...props} />
+      case 'page':
+        return (
+          <PageLinkElement
+            pageID={props.element.pageID}
+            {...props}
+          />
+        );
       default:
         return <DefaultElement {...props} />
     }
@@ -621,6 +630,17 @@ const CalloutElement = (props) => {
     </aside>
   )
 }
+const PageLinkElement = (props) => {
+  return (
+    <PageLink
+      id={props.pageID}
+      draggable={false}
+      {...props.attributes}
+    >
+      {props.children}
+    </PageLink>
+  )
+}
 
 ///////////
 // SPANS //
@@ -645,6 +665,24 @@ const Leaf = props => {
       {props.children}
     </span>
   )
+}
+
+
+///////////////////////////////////
+// withMentions --> withMentions //
+///////////////////////////////////
+const withPages = editor => {
+  const { isInline, isVoid } = editor
+
+  editor.isInline = element => {
+    return element.type === 'page' ? true : isInline(element)
+  }
+
+  editor.isVoid = element => {
+    return element.type === 'page' ? true : isVoid(element)
+  }
+
+  return editor
 }
 
 
