@@ -104,7 +104,10 @@ const PageLink = ( props ) => {
 
   } else {
     return (
-      <Link to={ `/${id}` } className="link" >
+      <Link to={ `/${id}` } className="link"
+        style={{ userSelect: "none" }} // for SlateJS
+        contentEditable={false}
+      >
         <span
           className="linkIcon"
           style={{ userSelect: "none" }}

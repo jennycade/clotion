@@ -635,6 +635,8 @@ const PageLinkElement = (props) => {
     <PageLink
       id={props.pageID}
       draggable={false}
+      style={{ userSelect: "none" }}
+      contentEditable={false}
       {...props.attributes}
     >
       {props.children}
@@ -668,9 +670,9 @@ const Leaf = props => {
 }
 
 
-///////////////////////////////////
-// withMentions --> withMentions //
-///////////////////////////////////
+////////////////////////////////
+// withMentions --> withPages //
+////////////////////////////////
 const withPages = editor => {
   const { isInline, isVoid } = editor
 
