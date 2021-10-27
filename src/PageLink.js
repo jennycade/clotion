@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // database
 import {doc, onSnapshot} from 'firebase/firestore';
@@ -10,13 +10,14 @@ import './PageLink.css';
 
 const PageLink = ( props ) => {
   // props
-  let { id, title, icon, draggable } = props;
-
-  // ref
-  const pageLinkRef = useRef(null);
+  let { id, draggable } = props;
 
   // state! for style
   const [style, setStyle] = useState({});
+
+  // and for title, icon
+  const [title, setTitle] = useState(props.title);
+  const [icon, setIcon] = useState(props.icon);
 
   //////////////////////////////
   // NO DATA -> FETCH FROM DB //
@@ -25,8 +26,8 @@ const PageLink = ( props ) => {
   useEffect( () => {
     if (typeof title === 'undefined') {
       const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
-        title = doc.data().title;
-        icon = doc.data().icon;
+        setTitle(doc.data().title);
+        setIcon(doc.data().icon);
       });
       return unsub;
     }
@@ -104,11 +105,19 @@ const PageLink = ( props ) => {
   } else {
     return (
       <Link to={ `/${id}` } className="link" >
-        <span className="linkIcon">
+        <span
+          className="linkIcon"
+          style={{ userSelect: "none" }}
+          contentEditable={false}
+        >
           { icon }
         </span>
   
-        <span className="pageLink">
+        <span
+          className="pageLink"
+          style={{ userSelect: "none" }}
+          contentEditable={false}
+        >
           { title }
         </span>
       </Link>
