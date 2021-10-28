@@ -174,10 +174,10 @@ const CustomEditor = {
   ////////////////
   // SET BLOCKS //
   ////////////////
-  setBlock(editor, type) {
+  setBlock(editor, type, blockParams = {}) {
     const listTypes = ['todoList', 'orderedList', 'bulletList'];
 
-    let options = {type: type}; // pass as-is for simple blocks. modify for lists and todos
+    let options = {type: type}; // pass as-is for simple blocks. modify for lists, todos, links...
     
     Transforms.unwrapNodes(editor, {
       match: n =>
@@ -198,6 +198,12 @@ const CustomEditor = {
         options.completed = false;
       }
     }
+
+    // pages
+    if (type === 'page') {
+      options.id = blockParams.pageId; 
+    }
+
     // for all: set node
     Transforms.setNodes(
       editor,
@@ -296,10 +302,11 @@ export { CustomEditor };
 
 const LiveBlock = (props) => {
   // props
-  const { id, updateContent } = props;
+  const { id, updateContent, addPage } = props;
 
   // state
-  const editor = useMemo(() => withPages(withReact(createEditor()), []));
+  // const editor = useMemo(() => withReact(withMentions(createEditor()), []));
+  const editor = useMemo(() => withReact(createEditor()), []);
   const [showBlockToolbar, setShowBlockToolbar] = useState(false);
   const [blockToolbarFromSlash, setBlockToolbarFromSlash] = useState(false);
 
@@ -364,11 +371,26 @@ const LiveBlock = (props) => {
     return <Leaf {...props} />
   }, [])
 
-  //////////////
-  // TOOLBARS //
-  //////////////
-  const handleBlockToolbarChoice = (blockType) => {
-    CustomEditor.setBlock(editor, blockType);
+  ///////////////////////
+  // TOOLBARS / BLOCKS //
+  ///////////////////////
+  const handleBlockToolbarChoice = async (blockType) => {
+    const overrideBlocks = ['page',];
+
+    if (overrideBlocks.includes(blockType)) {
+      switch (blockType) {
+        case 'page':
+          // add page
+          const newPageId = await addPage();
+          // setBlock
+          CustomEditor.setBlock(editor, blockType, {pageId: newPageId});
+          break;
+      }
+    } else {
+      // a normal block! Proceed.
+      CustomEditor.setBlock(editor, blockType);
+    }
+
 
     if (blockToolbarFromSlash) {
       CustomEditor.deleteToLastSlash(editor);
@@ -673,12 +695,8 @@ const Leaf = props => {
 ////////////////////////////////
 // withMentions --> withPages //
 ////////////////////////////////
-const withPages = editor => {
-  const { isInline, isVoid } = editor
-
-  editor.isInline = element => {
-    return element.type === 'page' ? true : isInline(element)
-  }
+const withMentions = editor => {
+  const { isVoid } = editor
 
   editor.isVoid = element => {
     return element.type === 'page' ? true : isVoid(element)

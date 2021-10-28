@@ -24,7 +24,7 @@ const PageLink = ( props ) => {
   //////////////////////////////
 
   useEffect( () => {
-    if (typeof title === 'undefined') {
+    if (typeof title === 'undefined' && !!id) {
       const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
         setTitle(doc.data().title);
         setIcon(doc.data().icon);

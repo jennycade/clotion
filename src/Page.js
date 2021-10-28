@@ -12,7 +12,7 @@ import LiveBlock from './LiveBlock';
 
 const Page = ( props ) => {
   // props
-  const { uid, id } = props;
+  const { uid, id, addPage, redirectToPage } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null});
@@ -33,6 +33,22 @@ const Page = ( props ) => {
   useEffect(() => {
     setDocRef(doc(db, 'pages', id));
   }, [id]);
+
+  //////////////
+  // SUBPAGES //
+  //////////////
+
+  const handleAddPage = () => {
+    // add page
+    const newPageId = addPage(id);
+
+    // redirect router to new page
+    // SHOULDN'T NEED TO DO THIS -- App.addPage() already redirects
+    // redirectToPage(newPageId);
+
+    // return the new id
+    return newPageId;
+  }
 
   ////////////
   // BLOCKS //
@@ -134,7 +150,15 @@ const Page = ( props ) => {
         
         
         <div className="contentArea">
-          {blocks.map(block => <LiveBlock key={block.id} id={block.id} content={block.content} updateContent={ updateBlock } />)}
+          {blocks.map(block => (
+            <LiveBlock
+              key={block.id}
+              id={block.id}
+              content={block.content}
+              updateContent={ updateBlock }
+              addPage={ handleAddPage }
+            />
+          ))}
         </div>
       </div>
     </div>

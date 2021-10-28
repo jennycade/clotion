@@ -165,7 +165,6 @@ function App() {
 
     // add to firestore
     const docRef = await addDoc(collection(db, 'pages'), newPage);
-    setNewPage(docRef.id);
 
     // add blocks subcollection with an empty block?
     const newBlock = {
@@ -174,6 +173,9 @@ function App() {
       content: JSON.stringify([{type: 'paragraph', children:[{text: ''}]}])
     };
     addDoc(collection(db, 'pages', docRef.id, 'blocks'), newBlock);
+
+    // redirect to new page
+    setNewPage(docRef.id);
 
     return docRef.id;
   }
@@ -297,7 +299,12 @@ function App() {
           { pages.map((page) => {
             return (
               <Route path={ `/${page.id}/` } key={ page.id } exact>
-                <Page id={ page.id } uid={ uid } />
+                <Page
+                  id={ page.id }
+                  uid={ uid }
+                  addPage={ addPage }
+                  redirectToPage={ setNewPage }
+                />
               </Route>
             )
           }) }
