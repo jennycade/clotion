@@ -302,7 +302,7 @@ export { CustomEditor };
 
 const LiveBlock = (props) => {
   // props
-  const { id, updateContent, addPage } = props;
+  const { id, updateContent, addPage, redirect } = props;
 
   // state
   // const editor = useMemo(() => withReact(withMentions(createEditor()), []));
@@ -377,11 +377,13 @@ const LiveBlock = (props) => {
   const handleBlockToolbarChoice = async (blockType) => {
     const overrideBlocks = ['page',];
 
+    let newPageId;
+
     if (overrideBlocks.includes(blockType)) {
       switch (blockType) {
         case 'page':
           // add page
-          const newPageId = await addPage();
+          newPageId = await addPage();
           // setBlock
           CustomEditor.setBlock(editor, blockType, {pageId: newPageId});
           break;
@@ -400,6 +402,11 @@ const LiveBlock = (props) => {
 
     // hide toolbar
     setShowBlockToolbar(false);
+
+    // made a new page? redirect
+    if (blockType === 'page') {
+      redirect(newPageId);
+    }
   }
 
   const handleColorChoice = (type, colorName) => {

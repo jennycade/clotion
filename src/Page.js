@@ -12,7 +12,7 @@ import LiveBlock from './LiveBlock';
 
 const Page = ( props ) => {
   // props
-  const { uid, id, addPage, redirectToPage } = props;
+  const { uid, id, addPage, redirect } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null});
@@ -157,6 +157,7 @@ const Page = ( props ) => {
               content={block.content}
               updateContent={ updateBlock }
               addPage={ handleAddPage }
+              redirect={ redirect }
             />
           ))}
         </div>

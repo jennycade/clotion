@@ -175,9 +175,16 @@ function App() {
     addDoc(collection(db, 'pages', docRef.id, 'blocks'), newBlock);
 
     // redirect to new page
-    setNewPage(docRef.id);
+    // setNewPage(docRef.id);
 
     return docRef.id;
+  }
+
+  const handleSideBarAddPage = () => {
+    // add it
+    const newPage = addPage();
+    // redirect
+    setNewPage(newPage);
   }
 
   /////////////
@@ -283,7 +290,7 @@ function App() {
           <div className="endSort" >
           </div>
 
-          <button onClick={ () => addPage() }
+          <button onClick={ handleSideBarAddPage }
             onDrop={ () => handleSideBarPageDrop() } onDragOver={ (e) => e.preventDefault() } 
           >Add page</button>
           
@@ -303,7 +310,7 @@ function App() {
                   id={ page.id }
                   uid={ uid }
                   addPage={ addPage }
-                  redirectToPage={ setNewPage }
+                  redirect={ setNewPage }
                 />
               </Route>
             )
