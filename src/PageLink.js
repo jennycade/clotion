@@ -10,28 +10,28 @@ import './PageLink.css';
 
 const PageLink = ( props ) => {
   // props
-  let { id, draggable } = props;
+  let { id, title, icon, draggable } = props;
 
   // state! for style
   const [style, setStyle] = useState({});
 
   // and for title, icon
-  const [title, setTitle] = useState(props.title);
-  const [icon, setIcon] = useState(props.icon);
+  // const [title, setTitle] = useState(props.title);
+  // const [icon, setIcon] = useState(props.icon);
 
   //////////////////////////////
   // NO DATA -> FETCH FROM DB //
   //////////////////////////////
 
-  useEffect( () => {
-    if (typeof title === 'undefined' && !!id) {
-      const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
-        setTitle(doc.data().title);
-        setIcon(doc.data().icon);
-      });
-      return unsub;
-    }
-  }, [id]);
+  // useEffect( () => {
+  //   if (typeof title === 'undefined' && !!id) {
+  //     const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
+  //       setTitle(doc.data().title);
+  //       setIcon(doc.data().icon);
+  //     });
+  //     return unsub;
+  //   }
+  // }, [id]);
 
 
 
