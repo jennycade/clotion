@@ -358,7 +358,7 @@ const LiveBlock = (props) => {
       case 'page':
         return (
           <PageLinkElement
-            pageID={props.element.pageID}
+            id={props.element.id}
             {...props}
           />
         );
@@ -662,7 +662,7 @@ const CalloutElement = (props) => {
 const PageLinkElement = (props) => {
   return (
     <DynamicPageLink
-      id={props.pageID}
+      id={props.id}
       style={{ userSelect: "none" }}
       contentEditable={false}
       {...props.attributes}

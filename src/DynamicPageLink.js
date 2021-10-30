@@ -38,8 +38,15 @@ const DynamicPageLink = (props) => {
   //   />
   // );
   return (
-    <span>page {id}</span>
-  )
+    <PageLink
+      id={id}
+      title='DUMMY TITLE'
+      icon=''
+      draggable={false}
+      style={{ userSelect: "none" }} // for SlateJS
+      contentEditable={false}
+    />
+  );
 }
 
 export default DynamicPageLink;
