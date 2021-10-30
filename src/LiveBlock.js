@@ -6,7 +6,7 @@ import './LiveBlock.css';
 
 // block components
 import Todo from './Todo';
-import PageLink from './PageLink';
+import DynamicPageLink from './DynamicPageLink';
 
 // toolbars
 import BlockToolbar from './BlockToolbar';
@@ -661,15 +661,14 @@ const CalloutElement = (props) => {
 }
 const PageLinkElement = (props) => {
   return (
-    <PageLink
+    <DynamicPageLink
       id={props.pageID}
-      draggable={false}
       style={{ userSelect: "none" }}
       contentEditable={false}
       {...props.attributes}
     >
       {props.children}
-    </PageLink>
+    </DynamicPageLink>
   )
 }
 

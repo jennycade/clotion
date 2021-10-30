@@ -15,26 +15,7 @@ const PageLink = ( props ) => {
   // state! for style
   const [style, setStyle] = useState({});
 
-  // and for title, icon
-  // const [title, setTitle] = useState(props.title);
-  // const [icon, setIcon] = useState(props.icon);
-
-  //////////////////////////////
-  // NO DATA -> FETCH FROM DB //
-  //////////////////////////////
-
-  // useEffect( () => {
-  //   if (typeof title === 'undefined' && !!id) {
-  //     const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
-  //       setTitle(doc.data().title);
-  //       setIcon(doc.data().icon);
-  //     });
-  //     return unsub;
-  //   }
-  // }, [id]);
-
-
-
+  
   /////////////////
   // DRAG & DROP //
   /////////////////
