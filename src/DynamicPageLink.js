@@ -19,29 +19,19 @@ const DynamicPageLink = (props) => {
   // NO DATA -> FETCH FROM DB //
   //////////////////////////////
 
-  // useEffect( () => {
-  //   const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
-  //     setTitle(doc.data().title);
-  //     setIcon(doc.data().icon);
-  //   });
-  //   return unsub;
-  // }, [id]);
+  useEffect( () => {
+    const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
+      setTitle(doc.data().title);
+      setIcon(doc.data().icon);
+    });
+    return unsub;
+  }, [id]);
 
-  // return (
-  //   <PageLink
-  //     id={id}
-  //     title={title}
-  //     icon={icon}
-  //     draggable={false}
-  //     style={{ userSelect: "none" }} // for SlateJS
-  //     contentEditable={false}
-  //   />
-  // );
   return (
     <PageLink
       id={id}
-      title='DUMMY TITLE'
-      icon=''
+      title={title}
+      icon={icon}
       draggable={false}
       style={{ userSelect: "none" }} // for SlateJS
       contentEditable={false}
