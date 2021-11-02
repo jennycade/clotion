@@ -37,7 +37,6 @@ const DynamicPageLink = (props) => {
       contentEditable={false}
       {...props.attributes}
     >
-      {props.children}
     </PageLink>
   );
 }
