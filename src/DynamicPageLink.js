@@ -35,7 +35,10 @@ const DynamicPageLink = (props) => {
       draggable={false}
       style={{ userSelect: "none" }} // for SlateJS
       contentEditable={false}
-    />
+      {...props.attributes}
+    >
+      {props.children}
+    </PageLink>
   );
 }
 
