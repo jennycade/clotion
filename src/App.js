@@ -273,6 +273,7 @@ function App() {
         id={ page.id }
         title={ page.title }
         icon={ page.icon }
+        draggable={true}
 
         handleDrag={ handleSideBarPageDrag }
         isDragLeaveReal={ isSideBarPageDragLeaveReal }

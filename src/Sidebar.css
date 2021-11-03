@@ -29,3 +29,7 @@
   color: rgb(170, 169, 165);
   font-weight: normal;
 }
+
+.sidebar div {
+  padding-left: 15px;
+}
