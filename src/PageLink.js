@@ -80,6 +80,7 @@ const PageLink = ( props ) => {
             { title }
           </span>
         </Link>
+        {props.children}
       </div>
     );
 

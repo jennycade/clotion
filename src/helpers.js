@@ -93,6 +93,7 @@ const rearrange = ( arr, fromId, beforeId = null ) => {
   return newArr;
 }
 
+
 export {
   countDuplicates,
   getTitles,

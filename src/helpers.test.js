@@ -1,5 +1,5 @@
 import { stringify } from '@firebase/util';
-import { countDuplicates, getTitles, rearrange } from './helpers';
+import { countDuplicates, getTitles, rearrange, organizePages } from './helpers';
 
 // countDuplicates
 test(`No duplicates in [1,2,3]`, () => {

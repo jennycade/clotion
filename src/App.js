@@ -265,6 +265,32 @@ function App() {
     );
   }
 
+  const getSidebarNode = (page) => {
+    // recursion!
+    const link = (
+      <PageLink
+        key={ page.id }
+        id={ page.id }
+        title={ page.title }
+        icon={ page.icon }
+
+        handleDrag={ handleSideBarPageDrag }
+        isDragLeaveReal={ isSideBarPageDragLeaveReal }
+        handleDrop={ handleSideBarPageDrop }
+      >
+        { // find child pages
+          pages.filter(
+            (otherPage) => otherPage.parent === page.id
+          ).map(
+            (child) => getSidebarNode(child)
+          )
+        }
+      </PageLink>
+    );
+
+    return link;
+  }
+
   return (
     <Router>
       <div className="App">
@@ -272,20 +298,7 @@ function App() {
           <p>{userDisplayName}'s Clotion</p>
           <button onClick={ signOutUser }>Sign out</button>
 
-          { pages.map( (page) => {
-            return (
-              <PageLink
-                key={ page.id }
-                id={ page.id }
-                title={ page.title }
-                icon={ page.icon }
-
-                handleDrag={ handleSideBarPageDrag }
-                isDragLeaveReal={ isSideBarPageDragLeaveReal }
-                handleDrop={ handleSideBarPageDrop }
-              />
-            );
-          }) }
+          { pages.filter((page) => page.parent === '').map( (page) => getSidebarNode(page)) }
           
           <div className="endSort" >
           </div>
