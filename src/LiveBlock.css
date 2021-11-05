@@ -19,7 +19,7 @@ blockquote {
   border-radius: 3px;
 }
 
-.pageLink {
+.contentArea .pageLink {
   font-weight: bold;
   /* text-decoration: underline; */
   border-bottom: 1px solid rgb(222,222,221);
