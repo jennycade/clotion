@@ -18,3 +18,9 @@ blockquote {
   background-color: rgba(247, 247, 245, 0.7);
   border-radius: 3px;
 }
+
+.pageLink {
+  font-weight: bold;
+  /* text-decoration: underline; */
+  border-bottom: 1px solid rgb(222,222,221);
+}

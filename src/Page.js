@@ -59,6 +59,7 @@ const Page = ( props ) => {
     if (uid !== '') {
       const blocksRef = collection(db, 'pages', id, 'blocks');
       const blocksQuery = query(blocksRef, where('uid', '==', uid), orderBy('order'));
+
       const unsub = onSnapshot(blocksQuery, (blocksSnapshot) => {
         const newBlocks = [];
         blocksSnapshot.forEach((doc) => {
