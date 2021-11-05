@@ -292,6 +292,21 @@ function App() {
     return link;
   }
 
+  const getLineage = (page, partialLineage = []) => {
+    // lineage = [great-grandparent, grandparent, parent]
+    // for top-level page, lineage = []
+    // parent = {id, title, icon}
+    if (page.parent === '') {
+      return [...partialLineage];
+    } else {
+      // find parent page
+      const parent = pages.find((p) => p.id === page.parent);
+      const parentInfo = { id: parent.id, title: parent.title, icon: parent.icon };
+      // add to beginning of lineage already assembled
+      return getLineage(parent, [parentInfo, ...partialLineage]);
+    }
+  }
+
   return (
     <Router>
       <div className="App">
@@ -323,6 +338,7 @@ function App() {
                 <Page
                   id={ page.id }
                   uid={ uid }
+                  lineage={ getLineage(page) }
                   addPage={ addPage }
                   redirect={ setNewPage }
                 />

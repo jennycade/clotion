@@ -5,6 +5,7 @@ import { db } from './firebase/db';
 
 import './Page.css';
 
+import Breadcrumb from './Breadcrumb';
 import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import PageLink from './PageLink';
@@ -12,7 +13,7 @@ import LiveBlock from './LiveBlock';
 
 const Page = ( props ) => {
   // props
-  const { uid, id, addPage, redirect } = props;
+  const { uid, id, addPage, redirect, lineage } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null});
@@ -24,7 +25,7 @@ const Page = ( props ) => {
   // get page object
   useEffect( () => {
     const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
-      setPage(doc.data());
+      setPage({id: doc.id, ...doc.data()});
     });
     return unsub;
   }, [id]);
@@ -130,7 +131,7 @@ const Page = ( props ) => {
   return (
     <div className="pageContainer">
       <nav>
-        <PageLink id={ id } title={ page.title } icon={ page.icon } />
+        <Breadcrumb lineage={lineage} page={page} />
         <button onClick={ deletePage } className="subtleButton">Delete</button>
       </nav>
       
