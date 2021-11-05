@@ -35,6 +35,7 @@ function App() {
   const [userDisplayName, setUserDisplayName] = useState('');
   const [uid, setUid] = useState('');
 
+
   //////////
   // AUTH //
   //////////
@@ -180,9 +181,9 @@ function App() {
     return docRef.id;
   }
 
-  const handleSideBarAddPage = () => {
+  const handleSideBarAddPage = async () => {
     // add it
-    const newPage = addPage();
+    const newPage = await addPage();
     // redirect
     setNewPage(newPage);
   }
@@ -249,21 +250,9 @@ function App() {
 
   }
 
-  ////////////
-  // RENDER //
-  ////////////
-
-  if (!isSignedIn) {
-    return (
-      <Login
-        createNewEmailUser={createNewEmailUser}
-        signInEmailUser={signInEmailUser}
-        sendForgottenPasswordEmail={sendForgottenPasswordEmail}
-        signInGoogleUser={signInGoogleUser}
-        signInAsAnon={signInAsAnon}
-      />
-    );
-  }
+  ////////////////////
+  // PAGE HIERARCHY //
+  ////////////////////
 
   const getSidebarNode = (page) => {
     // recursion!
@@ -305,6 +294,22 @@ function App() {
       // add to beginning of lineage already assembled
       return getLineage(parent, [parentInfo, ...partialLineage]);
     }
+  }
+
+  ////////////
+  // RENDER //
+  ////////////
+
+  if (!isSignedIn) {
+    return (
+      <Login
+        createNewEmailUser={createNewEmailUser}
+        signInEmailUser={signInEmailUser}
+        sendForgottenPasswordEmail={sendForgottenPasswordEmail}
+        signInGoogleUser={signInGoogleUser}
+        signInAsAnon={signInAsAnon}
+      />
+    );
   }
 
   return (
