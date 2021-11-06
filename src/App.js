@@ -12,7 +12,7 @@ import { rearrange } from './helpers';
 // import { DbContext } from './firebase';
 import { db, auth, googleProvider } from './firebase/db';
 
-import { onSnapshot, collection, addDoc, orderBy, query, where, writeBatch, doc } from "firebase/firestore";
+import { onSnapshot, collection, addDoc, deleteDoc, orderBy, query, where, writeBatch, doc } from "firebase/firestore";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -294,6 +294,42 @@ function App() {
       // add to beginning of lineage already assembled
       return getLineage(parent, [parentInfo, ...partialLineage]);
     }
+  }
+
+  const getDescendents = (page) => {
+    // descendents = [child, grandchild, great-grandchild]
+    // for page without subpages, descendents = []
+    // child = id
+
+    // find children
+    const children = pages.filter((p) => p.parent === page.id);
+
+    if (children.length === 0) {
+      return page.id;
+    } else {
+      // run on each child
+      let line = [page.id];
+      children.forEach(child => {
+        line.push(getDescendents(child));
+      });
+      // flatten
+      line = line.flat();
+      return line;
+    }
+  }
+
+  const deleteSubpages = (page) => {
+    // find subpages
+    const children = getDescendents(page);
+
+    // deleted!
+    children.forEach((child) => {
+      // get docRef
+      const docRef = doc(db, 'pages', child.id); // doesn't need to use await?
+      // delete it
+      deleteDoc(docRef);
+    });
+
   }
 
   ////////////

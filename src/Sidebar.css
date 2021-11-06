@@ -22,7 +22,7 @@
 }
 
 .sidebar a:hover {
-  background-color: rgba(55, 53, 47, 0.2);
+  background-color: rgba(55, 53, 47, 0.08);
 }
 
 .sidebar .toggle {
