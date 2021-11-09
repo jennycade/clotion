@@ -1,5 +1,5 @@
 import { stringify } from '@firebase/util';
-import { countDuplicates, getTitles, rearrange, organizePages } from './helpers';
+import { countDuplicates, getTitles, rearrange, getDescendents } from './helpers';
 
 // countDuplicates
 test(`No duplicates in [1,2,3]`, () => {
@@ -276,4 +276,164 @@ test(`Rearrange doesn't move anything if from and to are the same`, () => {
   }
 
   expect(resorted.length).not.toBe(0);
+});
+
+
+test(`getDescendents() returns empty array when page has no children`, () => {
+  const test = [
+    {
+      id: 'a',
+      parent: '',
+    },
+    {
+      id: 'b',
+      parent: '',
+    },
+  ];
+
+  const descendents = getDescendents(test, test[0]);
+
+  expect(descendents).toEqual(expect.any(Array));
+  expect(descendents.length).toBe(0);
+});
+
+test(`getDescendents() works with simple single-level hierarchy`, () => {
+  const test = [
+    {
+      id: 'a',
+      parent: '',
+    },
+    {
+      id: 'b',
+      parent: 'a',
+    },
+  ];
+
+  const descendents = getDescendents(test, test[0]);
+
+  expect(descendents).toEqual(['b']);
+});
+
+test(`getDescendents() works with a complex hierarchy—top of hierarchy`, () => {
+  const test = [
+    {
+      id: 'a',
+      parent: '',
+    },
+    {
+      id: 'b',
+      parent: 'a',
+    },
+    {
+      id: 'c',
+      parent: 'a',
+    },
+    {
+      id: 'd',
+      parent: 'b',
+    },
+    {
+      id: 'e',
+      parent: 'b',
+    },
+    {
+      id: 'f',
+      parent: 'c',
+    },
+    {
+      id: 'g',
+      parent: 'c',
+    },
+    {
+      id: 'h',
+      parent: 'd',
+    },
+    {
+      id: 'i',
+      parent: 'd',
+    },
+    {
+      id: 'j',
+      parent: 'e',
+    },
+    {
+      id: 'k',
+      parent: 'f',
+    },
+    {
+      id: 'l',
+      parent: 'g',
+    },
+    {
+      id: 'm',
+      parent: 'g',
+    },
+  ];
+
+  const descendents = getDescendents(test, test[0]);
+  const expected = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'];
+
+  expect(descendents.sort()).toEqual(expected.sort());
+});
+
+test(`getDescendents() works with a complex hierarchy—mid-hierarchy`, () => {
+  const test = [
+    {
+      id: 'a',
+      parent: '',
+    },
+    {
+      id: 'b',
+      parent: 'a',
+    },
+    {
+      id: 'c',
+      parent: 'a',
+    },
+    {
+      id: 'd',
+      parent: 'b',
+    },
+    {
+      id: 'e',
+      parent: 'b',
+    },
+    {
+      id: 'f',
+      parent: 'c',
+    },
+    {
+      id: 'g',
+      parent: 'c',
+    },
+    {
+      id: 'h',
+      parent: 'd',
+    },
+    {
+      id: 'i',
+      parent: 'd',
+    },
+    {
+      id: 'j',
+      parent: 'e',
+    },
+    {
+      id: 'k',
+      parent: 'f',
+    },
+    {
+      id: 'l',
+      parent: 'g',
+    },
+    {
+      id: 'm',
+      parent: 'g',
+    },
+  ];
+
+  const descendents = getDescendents(test, test[2]); // 'c'
+  const expected = ['f', 'g', 'k', 'l', 'm'];
+
+  expect(descendents.sort()).toEqual(expected.sort());
 });

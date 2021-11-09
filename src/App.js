@@ -7,7 +7,7 @@ import PageLink from './PageLink';
 import Page from './Page';
 import Login from './Login';
 
-import { rearrange } from './helpers';
+import { rearrange, getDescendents } from './helpers';
 
 // import { DbContext } from './firebase';
 import { db, auth, googleProvider } from './firebase/db';
@@ -296,31 +296,10 @@ function App() {
     }
   }
 
-  const getDescendents = (page) => {
-    // descendents = [child, grandchild, great-grandchild]
-    // for page without subpages, descendents = []
-    // child = id
-
-    // find children
-    const children = pages.filter((p) => p.parent === page.id);
-
-    if (children.length === 0) {
-      return page.id;
-    } else {
-      // run on each child
-      let line = [page.id];
-      children.forEach(child => {
-        line.push(getDescendents(child));
-      });
-      // flatten
-      line = line.flat();
-      return line;
-    }
-  }
 
   const deleteSubpages = (page) => {
     // find subpages
-    const children = getDescendents(page);
+    const children = getDescendents(pages, page);
 
     // deleted!
     children.forEach((child) => {
@@ -379,9 +358,10 @@ function App() {
                 <Page
                   id={ page.id }
                   uid={ uid }
-                  lineage={ getLineage(page) }
+                  getLineage={ getLineage }
                   addPage={ addPage }
                   redirect={ setNewPage }
+                  deleteSubpages={ (page) => deleteSubpages(pages, page) }
                 />
               </Route>
             )

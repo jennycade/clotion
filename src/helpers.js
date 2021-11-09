@@ -94,11 +94,39 @@ const rearrange = ( arr, fromId, beforeId = null ) => {
 }
 
 
+const getDescendents = (pages, page) => {
+  // descendents = [child, grandchild, great-grandchild]
+  // for page without subpages, descendents = []
+  // child = id
+
+  // find children
+  const children = pages.filter((p) => p.parent === page.id);
+
+  if (children.length === 0) {
+    return [];
+  } else {
+    // run on each child
+    let line = [];
+    children.forEach(child => {
+      // add the child
+      line.push(child.id);
+
+      // ... and its descendents
+      line.push(getDescendents(pages, child));
+    });
+    // flatten
+    line = line.flat();
+    return line;
+  }
+}
+
+
 export {
   countDuplicates,
   getTitles,
   createMarkup,
   rearrange,
+  getDescendents,
 };
 
 

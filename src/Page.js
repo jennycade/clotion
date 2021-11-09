@@ -8,16 +8,15 @@ import './Page.css';
 import Breadcrumb from './Breadcrumb';
 import Content from './Content';
 import EmojiPicker from './EmojiPicker';
-import PageLink from './PageLink';
 import LiveBlock from './LiveBlock';
 
 const Page = ( props ) => {
   // props
-  const { uid, id, addPage, redirect, lineage } = props;
+  const { uid, id, addPage, redirect, getLineage, deleteSubpages } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null});
-  const [subPages, setSubPages] = useState([]);
+  const [lineage, setLineage] = useState([]);
   const [docRef, setDocRef] = useState({});
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [blocks, setBlocks] = useState([]);
@@ -34,6 +33,13 @@ const Page = ( props ) => {
   useEffect(() => {
     setDocRef(doc(db, 'pages', id));
   }, [id]);
+
+  // set the lineage once the page is set
+  useEffect(() => {
+    if (page.parent) {
+      setLineage(getLineage(page));
+    }
+  }, [page]);
 
   //////////////
   // SUBPAGES //
@@ -126,6 +132,9 @@ const Page = ( props ) => {
   // DELETE //
   ////////////
   const deletePage = () => {
+    // subpages first
+    deleteSubpages(page)
+    // this page
     deleteDoc(docRef);
   }
 
