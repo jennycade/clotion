@@ -120,6 +120,32 @@ const getDescendents = (pages, page) => {
   }
 }
 
+const splicePageLinkInBlock = (blockJson, pageID) => {
+  // convert to array
+  let arr = JSON.parse(blockJson);
+
+  // filter out node(s) with type === page and id === pageID
+  arr = arr.filter(node => (node.type !== 'page' || node.id !== pageID));
+
+  // empty array? add an empty node
+  if (arr.length === 0) {
+    const emptyNode = {
+      type: 'paragraph',
+      children: [
+        {text: ''}
+      ]
+    };
+
+    arr.push(emptyNode);
+  }
+
+  // convert back to JSON string
+  const jsonResult = JSON.stringify(arr);
+
+  // return string
+  return jsonResult;
+}
+
 
 export {
   countDuplicates,
@@ -127,6 +153,7 @@ export {
   createMarkup,
   rearrange,
   getDescendents,
+  splicePageLinkInBlock,
 };
 
 

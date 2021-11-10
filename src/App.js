@@ -296,18 +296,40 @@ function App() {
     }
   }
 
-
   const deleteSubpages = async (page) => {
     // find subpages
     const children = getDescendents(pages, page);
-    
-    console.log('Children to delete: ');
-    console.table(children);
 
-    // deleted!
+    // delete from SlateJS pagelinks
+
+    // delete from firestore
     for (const childID of children) {
       console.log('Deleting page ID ' + childID);
       await deleteDoc(doc(db, 'pages', childID));
+    }
+  }
+
+  const deletePage = (page) => {
+    // delete subpages
+    deleteSubpages(page);
+
+    // redirect
+    setNewPage(findPageUp(page));
+
+    // delete the page
+    deleteDoc(doc(db, 'pages', page.id));
+  }
+
+  const findPageUp = (page) => {
+    // return either parent page ID or...
+    const lineage = getLineage(page);
+    if (lineage.length > 0) {
+      // last element = direct parent
+      // return id
+      return lineage[lineage.length - 1].id;
+    } else {
+      // try routing to id=''
+      return '';
     }
   }
 
@@ -361,7 +383,7 @@ function App() {
                   getLineage={ getLineage }
                   addPage={ addPage }
                   redirect={ setNewPage }
-                  deleteSubpages={ (page) => deleteSubpages(page) }
+                  deletePage={ () => deletePage(page) }
                 />
               </Route>
             )

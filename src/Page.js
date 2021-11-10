@@ -13,7 +13,7 @@ import Warning from './Warning';
 
 const Page = ( props ) => {
   // props
-  const { uid, id, addPage, redirect, getLineage, deleteSubpages } = props;
+  const { uid, id, addPage, redirect, getLineage, deletePage } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null});
@@ -133,12 +133,6 @@ const Page = ( props ) => {
   ////////////
   // DELETE //
   ////////////
-  const deletePage = () => {
-    // subpages first
-    deleteSubpages(page);
-    // this page
-    deleteDoc(docRef);
-  }
 
   const handleClickDelete = () => {
     const newWarning = {

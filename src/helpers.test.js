@@ -1,5 +1,5 @@
 import { stringify } from '@firebase/util';
-import { countDuplicates, getTitles, rearrange, getDescendents } from './helpers';
+import { countDuplicates, getTitles, rearrange, getDescendents, splicePageLinkInBlock } from './helpers';
 
 // countDuplicates
 test(`No duplicates in [1,2,3]`, () => {
@@ -437,3 +437,39 @@ test(`getDescendents() works with a complex hierarchy—mid-hierarchy`, () => {
 
   expect(descendents.sort()).toEqual(expected.sort());
 });
+
+test(`splicePageLinkInBlock() returns the non-pagelink member of a two-node slatejs record.`, () => {
+  const testRecord = '[{"type":"paragraph","children":[{"text":"Text"}]},{"type":"page","children":[{"text":""}],"id":"iU6YiNm8K91LsnUXgk8g"}]';
+
+  const result = splicePageLinkInBlock(testRecord, 'iU6YiNm8K91LsnUXgk8g');
+
+  expect(result).toBe('[{"type":"paragraph","children":[{"text":"Text"}]}]');
+});
+
+test(`splicePageLinkInBlock() doesn't splice out other pagelinks.`, () => {
+  const testRecord = '[{"type":"paragraph","children":[{"text":"Text"}]},{"type":"page","children":[{"text":""}],"id":"iU6YiNm8K91LsnUXgk8g"}]';
+
+  const result = splicePageLinkInBlock(testRecord, 'boop');
+
+  expect(result).toBe(testRecord);
+});
+
+test(`splicePageLinkInBlock() replaces pagelink node with empty text node if there are no siblings`, () => {
+  const testRecord = '[{"type":"page","children":[{"text":""}],"id":"iU6YiNm8K91LsnUXgk8g"}]';
+
+  const result = splicePageLinkInBlock(testRecord, 'iU6YiNm8K91LsnUXgk8g');
+
+  const expectedResult = '[{"type":"paragraph","children":[{"text":""}]}]';
+
+  expect(result).toBe(expectedResult);
+});
+
+// test(`splicePageLinkInBlock() splices out a pageLink inside a list.`, () => {
+//   const testRecord = '[{"type":"bulletList","children":[{"type":"li","children":[{"text":"A list item"}]},{"type":"li","children":[{"type":"page","children":[{"text":""}],"id":"o6NOgt2w9V0DxU3HCWio"}]}]}]';
+
+//   const result = splicePageLinkInBlock(testRecord, 'o6NOgt2w9V0DxU3HCWio');
+
+//   const expectedResult = '[{"type":"bulletList","children":[{"type":"li","children":[{"text":"A list item"}]},{"type":"li","children":[{"text":""],"id":"o6NOgt2w9V0DxU3HCWio"}]}]}]';
+
+//   expect(result).toBe(expectedResult);
+// });
