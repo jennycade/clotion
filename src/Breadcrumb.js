@@ -9,12 +9,11 @@ const Breadcrumb = (props) => {
   return (
     <div className='breadcrumb'>
       { lineage.map((parent) => (
-        <div className='wrapper'>
+        <div className='wrapper' key={parent.id}>
           <PageLink
             id={parent.id}
             title={parent.title}
             icon={parent.icon}
-            key={parent.id}
           />
           <span className='spacer'>
             /

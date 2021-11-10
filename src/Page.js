@@ -9,6 +9,7 @@ import Breadcrumb from './Breadcrumb';
 import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
+import Warning from './Warning';
 
 const Page = ( props ) => {
   // props
@@ -20,6 +21,7 @@ const Page = ( props ) => {
   const [docRef, setDocRef] = useState({});
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [blocks, setBlocks] = useState([]);
+  const [warning, setWarning] = useState(false);
 
   // get page object
   useEffect( () => {
@@ -133,16 +135,36 @@ const Page = ( props ) => {
   ////////////
   const deletePage = () => {
     // subpages first
-    deleteSubpages(page)
+    deleteSubpages(page);
     // this page
     deleteDoc(docRef);
   }
 
+  const handleClickDelete = () => {
+    const newWarning = {
+      text: 'Are you sure you want to delete this page and all sub-pages permanently?',
+      continueText: 'Yes, Delete this page',
+      continueFunction: deletePage,
+      cancelText: 'Cancel',
+    };
+
+    setWarning(newWarning);
+  }
+
   return (
     <div className="pageContainer">
+      { warning &&
+        <Warning
+          text={warning.text}
+          continueText={warning.continueText}
+          continueFunction={warning.continueFunction}
+          cancelText={warning.cancelText}
+          cancelFunction={ () => setWarning(false) }
+        />
+      }
       <nav>
         <Breadcrumb lineage={lineage} page={page} />
-        <button onClick={ deletePage } className="subtleButton">Delete</button>
+        <button onClick={ handleClickDelete } className="subtleButton">Delete</button>
       </nav>
       
       <div className="page">

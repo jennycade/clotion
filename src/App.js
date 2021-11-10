@@ -297,18 +297,18 @@ function App() {
   }
 
 
-  const deleteSubpages = (page) => {
+  const deleteSubpages = async (page) => {
     // find subpages
     const children = getDescendents(pages, page);
+    
+    console.log('Children to delete: ');
+    console.table(children);
 
     // deleted!
-    children.forEach((child) => {
-      // get docRef
-      const docRef = doc(db, 'pages', child.id); // doesn't need to use await?
-      // delete it
-      deleteDoc(docRef);
-    });
-
+    for (const childID of children) {
+      console.log('Deleting page ID ' + childID);
+      await deleteDoc(doc(db, 'pages', childID));
+    }
   }
 
   ////////////
@@ -361,7 +361,7 @@ function App() {
                   getLineage={ getLineage }
                   addPage={ addPage }
                   redirect={ setNewPage }
-                  deleteSubpages={ (page) => deleteSubpages(pages, page) }
+                  deleteSubpages={ (page) => deleteSubpages(page) }
                 />
               </Route>
             )
