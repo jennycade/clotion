@@ -7,12 +7,12 @@ import PageLink from './PageLink';
 import Page from './Page';
 import Login from './Login';
 
-import { rearrange, getDescendents } from './helpers';
+import { rearrange, getDescendents, splicePageLinkInBlock } from './helpers';
 
 // import { DbContext } from './firebase';
 import { db, auth, googleProvider } from './firebase/db';
 
-import { onSnapshot, collection, addDoc, deleteDoc, orderBy, query, where, writeBatch, doc } from "firebase/firestore";
+import { onSnapshot, collection, addDoc, updateDoc, deleteDoc, orderBy, query, where, writeBatch, doc, getDocs } from "firebase/firestore";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -300,24 +300,76 @@ function App() {
     // find subpages
     const children = getDescendents(pages, page);
 
-    // delete from SlateJS pagelinks
+    // delete from SlateJS pagelinks before deleting any pages
+    for (const childID of children) {
+      
+
+    }
 
     // delete from firestore
     for (const childID of children) {
       console.log('Deleting page ID ' + childID);
-      await deleteDoc(doc(db, 'pages', childID));
+      
     }
   }
 
-  const deletePage = (page) => {
-    // delete subpages
-    deleteSubpages(page);
+  const removePageLinkFromParent = async (pageID) => {
+    // find parent
+    const child = pages.find(p => p.id === pageID);
+
+    // is there a parent?
+    if (child.parent !== '') {
+      const parentID = child.parent;
+
+      // go through the blocks
+      const blocksRef = collection(db, 'pages', parentID, 'blocks');
+      const blocksQuery  = query(blocksRef, where('uid', '==', uid));
+      const querySnapshot = await getDocs(blocksQuery);
+
+      console.log(querySnapshot);
+
+      querySnapshot.forEach((doc) => { // empty... why?
+        // get the JSON string with slateJS nodes
+        const content = doc.get('content');
+  
+        // splice it
+        const newContent = splicePageLinkInBlock(content, pageID);
+  
+        // replace if different
+        if (content !== newContent) {
+          // update database
+          updateDoc(doc.ref, {
+            content: newContent,
+          });
+        }
+      });
+    }
+    
+  }
+
+  const deletePageFromFirestore = async (pageID) => {
+    await deleteDoc(doc(db, 'pages', pageID));
+  }
+
+  const deletePageAndSubpages = async (page) => {
+    // find subpages
+    const children = getDescendents(pages, page);
+    const pagesToDelete = [page.id, ...children];
+
+    // remove pagelinks
+    for (const id of pagesToDelete) {
+      await removePageLinkFromParent(id);
+    }
 
     // redirect
     setNewPage(findPageUp(page));
 
-    // delete the page
-    deleteDoc(doc(db, 'pages', page.id));
+    // delete from firestore
+    for (const id of pagesToDelete) {
+      await deletePageFromFirestore(id);
+    }
+
+    console.log('It is done');
   }
 
   const findPageUp = (page) => {
@@ -383,7 +435,7 @@ function App() {
                   getLineage={ getLineage }
                   addPage={ addPage }
                   redirect={ setNewPage }
-                  deletePage={ () => deletePage(page) }
+                  deletePage={ () => deletePageAndSubpages(page) }
                 />
               </Route>
             )
