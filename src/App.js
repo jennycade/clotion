@@ -175,9 +175,6 @@ function App() {
     };
     addDoc(collection(db, 'pages', docRef.id, 'blocks'), newBlock);
 
-    // redirect to new page
-    // setNewPage(docRef.id);
-
     return docRef.id;
   }
 
@@ -296,22 +293,28 @@ function App() {
     }
   }
 
-  const deleteSubpages = async (page) => {
-    // find subpages
-    const children = getDescendents(pages, page);
-
-    // delete from SlateJS pagelinks before deleting any pages
-    for (const childID of children) {
-      
-
-    }
-
-    // delete from firestore
-    for (const childID of children) {
-      console.log('Deleting page ID ' + childID);
-      
+  const findPageUp = (page) => {
+    // return either parent page ID or...
+    const lineage = getLineage(page);
+    if (lineage.length > 0) {
+      // last element = direct parent
+      // return id
+      return lineage[lineage.length - 1].id;
+    } else {
+      // try routing to first top-level page
+      try {
+        const firstPageID = pages.filter(p => p.parent === '')[0]['id'];
+        return firstPageID;
+      } catch (e) {
+        // no top-level page
+        return 'nopages';
+      }
     }
   }
+
+  //////////////
+  // DELETING //
+  //////////////
 
   const removePageLinkFromParent = async (pageID) => {
     // find parent
@@ -325,8 +328,6 @@ function App() {
       const blocksRef = collection(db, 'pages', parentID, 'blocks');
       const blocksQuery  = query(blocksRef, where('uid', '==', uid));
       const querySnapshot = await getDocs(blocksQuery);
-
-      console.log(querySnapshot);
 
       querySnapshot.forEach((doc) => { // empty... why?
         // get the JSON string with slateJS nodes
@@ -367,21 +368,6 @@ function App() {
     // delete from firestore
     for (const id of pagesToDelete) {
       await deletePageFromFirestore(id);
-    }
-
-    console.log('It is done');
-  }
-
-  const findPageUp = (page) => {
-    // return either parent page ID or...
-    const lineage = getLineage(page);
-    if (lineage.length > 0) {
-      // last element = direct parent
-      // return id
-      return lineage[lineage.length - 1].id;
-    } else {
-      // try routing to id=''
-      return '';
     }
   }
 
