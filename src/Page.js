@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { doc, collection, onSnapshot, updateDoc, deleteDoc, query, where, orderBy, } from 'firebase/firestore';
+import { doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, query, where, orderBy, } from 'firebase/firestore';
 import { db } from './firebase/db';
 
 import './Page.css';
@@ -10,6 +10,7 @@ import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
+import NewPageMenu from './NewPageMenu';
 
 const Page = ( props ) => {
   // props
@@ -62,6 +63,15 @@ const Page = ( props ) => {
   ////////////
   // BLOCKS //
   ////////////
+
+  const addBlocks = () => {
+    const newBlock = {
+      uid: uid,
+      order: 1,
+      content: JSON.stringify([{type: 'paragraph', children:[{text: ''}]}])
+    };
+    addDoc(collection(db, 'pages', id, 'blocks'), newBlock);
+  }
 
   useEffect(() => {
     if (uid !== '') {
@@ -177,6 +187,20 @@ const Page = ( props ) => {
         
         
         <div className="contentArea">
+          { blocks.length === 0 &&
+            <div className="newPageMenu">
+              <p>Press Enter to continue with an empty page, or pick a template (↑↓ to select)</p>
+              
+              <p>Empty with icon</p>
+              <p>Empty</p>
+        
+              <h2>DATABASE</h2>
+              <p>Table</p>
+              <p>Board</p>
+              <p>List</p>
+              <p>Gallery</p>
+            </div>
+          }
           {blocks.map(block => (
             <LiveBlock
               key={block.id}

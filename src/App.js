@@ -168,12 +168,12 @@ function App() {
     const docRef = await addDoc(collection(db, 'pages'), newPage);
 
     // add blocks subcollection with an empty block?
-    const newBlock = {
-      uid: uid,
-      order: 1,
-      content: JSON.stringify([{type: 'paragraph', children:[{text: ''}]}])
-    };
-    addDoc(collection(db, 'pages', docRef.id, 'blocks'), newBlock);
+    // const newBlock = {
+    //   uid: uid,
+    //   order: 1,
+    //   content: JSON.stringify([{type: 'paragraph', children:[{text: ''}]}])
+    // };
+    // addDoc(collection(db, 'pages', docRef.id, 'blocks'), newBlock);
 
     return docRef.id;
   }
@@ -426,6 +426,10 @@ function App() {
               </Route>
             )
           }) }
+
+          <Route path='nopages' exact>
+            <p>Click the Add page button to add your first page.</p>
+          </Route>
           
         </Switch>
       </div>

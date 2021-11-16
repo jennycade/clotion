@@ -5,7 +5,7 @@ const BLOCKMENU = [
     description: 'Just start writing with plain text.',
   },
   {
-    displayName: 'Page', ////////////////////////////////////// TODO
+    displayName: 'Page',
     type: 'page',
     description: 'Embed a sub-page inside this page.',
   },
@@ -50,7 +50,7 @@ const BLOCKMENU = [
     description: 'Visually divide blocks',
   },
   {
-    displayName: 'Callout', ////////////////////////////////////// TODO
+    displayName: 'Callout',
     type: 'callout',
     description: 'Make writing stand out.',
   },

@@ -306,7 +306,7 @@ const LiveBlock = (props) => {
 
   // state
   // const editor = useMemo(() => withReact(withMentions(createEditor()), []));
-  const editor = useMemo(() => withReact(createEditor()), []);
+  const editor = useMemo(() => withReact(withPages(withDividers(createEditor()))), []);
   const [showBlockToolbar, setShowBlockToolbar] = useState(false);
   const [blockToolbarFromSlash, setBlockToolbarFromSlash] = useState(false);
 
@@ -353,6 +353,8 @@ const LiveBlock = (props) => {
         return <CodeElement {...props} />
       case 'quote':
         return <QuoteElement {...props} />
+      case 'divider':
+        return <DividerElement {...props} />
       case 'callout':
         return <CalloutElement {...props} />
       case 'page':
@@ -652,6 +654,14 @@ const QuoteElement = (props) => {
     </blockquote>
   )
 }
+const DividerElement = (props) => {
+  return (
+    <div {...props.attributes}>
+      {props.children}
+      <hr contentEditable={false} />
+    </div>
+  );
+}
 const CalloutElement = (props) => {
   return (
     <aside className="callout" {...props.attributes}>
@@ -661,14 +671,16 @@ const CalloutElement = (props) => {
 }
 const PageLinkElement = (props) => {
   return (
-    <DynamicPageLink
-      id={props.id}
-      style={{ userSelect: "none" }}
-      contentEditable={false}
-      {...props.attributes}
-    >
+    <div {...props.attributes}>
       {props.children}
-    </DynamicPageLink>
+      <DynamicPageLink
+        id={props.id}
+        style={{ userSelect: "none" }}
+        contentEditable={false}
+        {...props.attributes}
+      >
+      </DynamicPageLink>
+    </div>
   )
 }
 
@@ -701,14 +713,23 @@ const Leaf = props => {
 ////////////////////////////////
 // withMentions --> withPages //
 ////////////////////////////////
-const withMentions = editor => {
+const withPages = editor => {
   const { isVoid } = editor
 
   editor.isVoid = element => {
     return element.type === 'page' ? true : isVoid(element)
   }
 
-  return editor
+  return editor;
+}
+const withDividers = editor => {
+  const { isVoid } = editor
+
+  editor.isVoid = element => {
+    return element.type === 'divider' ? true : isVoid(element)
+  }
+
+  return editor;
 }
 
 
