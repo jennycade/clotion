@@ -16,7 +16,7 @@ import NewPageMenu from './NewPageMenu';
 
 const Page = ( props ) => {
   // props
-  const { uid, id, addPage, redirect, getLineage, deletePage } = props;
+  const { uid, id, addPage, redirect, getLineage, deletePage, addDatabase } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null});
@@ -226,7 +226,9 @@ const Page = ( props ) => {
               </button>
         
               <h2>DATABASE</h2>
-              <button className='linklike'>Table</button>
+              <button className='linklike'
+                onClick={ () => addDatabase(id) }
+              >Table</button>
               <button className='linklike'>Board</button>
               <button className='linklike'>List</button>
               <button className='linklike'>Gallery</button>

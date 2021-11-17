@@ -12,7 +12,7 @@ import { rearrange, getDescendents, splicePageLinkInBlock } from './helpers';
 // import { DbContext } from './firebase';
 import { db, auth, googleProvider } from './firebase/db';
 
-import { onSnapshot, collection, addDoc, updateDoc, deleteDoc, orderBy, query, where, writeBatch, doc, getDocs } from "firebase/firestore";
+import { onSnapshot, collection, addDoc, setDoc, updateDoc, deleteDoc, orderBy, query, where, writeBatch, doc, getDocs } from "firebase/firestore";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -149,7 +149,7 @@ function App() {
   }, [uid]);
 
   // addPage
-  const addPage = async (parentPage = null) => {
+  const addPage = async (parentPage = null, isDbRow = false) => {
     // boilerplate
     const newPage = {
       title: 'Untitled',
@@ -157,11 +157,16 @@ function App() {
       order: getNextOrder(),
       uid: uid,
       parent: '',
+      isDb: false,
     };
 
     if (parentPage) {
       newPage.parent = parentPage;
       newPage.order = 0; // FIX THIS
+    }
+
+    if (isDbRow) {
+      newPage.parentDb = parentPage;
     }
 
     // add to firestore
@@ -183,6 +188,66 @@ function App() {
     const newPage = await addPage();
     // redirect
     setNewPage(newPage);
+  }
+
+  ///////////////
+  // DATABASES //
+  ///////////////
+
+  const addDatabase = async (pageID, type = 'table') => {
+    // get page in firebase
+    const pageRef = doc(db, 'pages', pageID);
+
+    // change page.isDb to true
+    updateDoc(pageRef, {isDb: true});
+
+    // add properties map
+    updateDoc(pageRef, {
+      isDb: true,
+
+      // default properties
+      properties: {
+        'title': {
+          displayName: 'Name',
+          type: 'title',
+        },
+        'defaultTags': {
+          displayName: 'Tags',
+          type: 'multiselect',
+          selectOptions: {
+            // empty
+          }
+        },
+      },
+
+      // default view
+      views: {
+        'defaultTable': {
+          type: 'table',
+          visibleProperties: ['title', 'defaultTags'],
+          // filter: null,
+          // sort: null,
+        }
+      }
+    });
+
+    // add rows subcollection
+
+    // add three pages
+    const rowIDs = []
+    rowIDs.push(await addPage(pageID, true));
+    rowIDs.push(await addPage(pageID, true));
+    rowIDs.push(await addPage(pageID, true));
+
+    // add row for each new page
+    const blankRow = {
+      title: '',
+      defaultTags: '',
+      uid: uid,
+    }
+    for(const rowID of rowIDs) {
+      await setDoc(doc(db, 'pages', pageID, 'rows', rowID), blankRow);
+    }
   }
 
   /////////////
@@ -422,6 +487,7 @@ function App() {
                   addPage={ addPage }
                   redirect={ setNewPage }
                   deletePage={ () => deletePageAndSubpages(page) }
+                  addDatabase={ addDatabase }
                 />
               </Route>
             )
