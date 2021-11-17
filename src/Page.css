@@ -47,3 +47,31 @@ nav {
 
   font-size: 14px;
 }
+
+
+.newPageMenu {
+  color: rgba(55, 53, 47, 0.4);
+  font-size: 16px;
+}
+
+.newPageMenu button.linklike {
+  color: rgba(55, 53, 47, 0.4);
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  width: 100%;
+  height: 32px;
+  font-size: 16px;
+  text-align: left;
+}
+
+.newPageMenu button.linklike:hover {
+  background-color: rgba(46, 170, 220, 0.15);
+}
+
+.newPageMenu h2 {
+  margin-top: 24px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 500;
+}

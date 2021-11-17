@@ -5,6 +5,8 @@ import { db } from './firebase/db';
 
 import './Page.css';
 
+import emojiDb from './emoji.json';
+
 import Breadcrumb from './Breadcrumb';
 import Content from './Content';
 import EmojiPicker from './EmojiPicker';
@@ -43,6 +45,19 @@ const Page = ( props ) => {
       setLineage(getLineage(page));
     }
   }, [page]);
+
+  //////////////////////////
+  // BLANK PAGE TEMPLATES //
+  //////////////////////////
+
+  const handleEmptyPageClick = () => {
+    addBlocks();
+  }
+
+  const handleEmptyWithIconPageClick = () => {
+    chooseRandomIcon();
+    addBlocks();
+  }
 
   //////////////
   // SUBPAGES //
@@ -140,6 +155,14 @@ const Page = ( props ) => {
     setShowIconPicker(false);
   }
 
+  const chooseRandomIcon = () => {
+    // choose random icon
+    const n = Math.floor(Math.random() * emojiDb.length);
+    const randomEmoji = emojiDb[n]['emoji'];
+    // assign it
+    updateIcon(randomEmoji);
+  }
+
   ////////////
   // DELETE //
   ////////////
@@ -189,16 +212,24 @@ const Page = ( props ) => {
         <div className="contentArea">
           { blocks.length === 0 &&
             <div className="newPageMenu">
-              <p>Press Enter to continue with an empty page, or pick a template (↑↓ to select)</p>
+              <p>Press Enter to continue with an empty page, or pick a template (click to select)</p>
               
-              <p>Empty with icon</p>
-              <p>Empty</p>
+              <button className='linklike'
+                onClick={handleEmptyWithIconPageClick}
+              >
+                Empty with icon
+              </button>
+              <button className='linklike'
+                onClick={handleEmptyPageClick}
+              >
+                Empty
+              </button>
         
               <h2>DATABASE</h2>
-              <p>Table</p>
-              <p>Board</p>
-              <p>List</p>
-              <p>Gallery</p>
+              <button className='linklike'>Table</button>
+              <button className='linklike'>Board</button>
+              <button className='linklike'>List</button>
+              <button className='linklike'>Gallery</button>
             </div>
           }
           {blocks.map(block => (
