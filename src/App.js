@@ -222,6 +222,7 @@ function App() {
 
       // default view
       views: {
+        activeView: 'defaultTable',
         'defaultTable': {
           type: 'table',
           visibleProperties: ['title', 'defaultTags'],
@@ -234,7 +235,7 @@ function App() {
     // add rows subcollection
 
     // add three pages
-    const rowIDs = []
+    const rowIDs = [];
     rowIDs.push(await addPage(pageID, true));
     rowIDs.push(await addPage(pageID, true));
     rowIDs.push(await addPage(pageID, true));

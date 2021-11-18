@@ -75,3 +75,29 @@ nav {
   letter-spacing: 1px;
   font-weight: 500;
 }
+
+
+
+/* TABLES */
+.contentArea table {
+  border-bottom: 1px solid rgb(233, 233, 231);
+  width: 100%;
+  padding: 0;
+  border-collapse: collapse;
+}
+.contentArea table tr {
+  border-top: 1px solid rgb(233, 233, 231);
+  padding: 0;
+}
+
+.contentArea table tr * {
+  border-right: 1px solid rgb(233, 233, 231);
+}
+.contentArea table tr:last-child {
+  border-right: none;
+}
+
+.contentArea th, .contentArea td {
+  padding: 0;
+  margin: 0;
+}

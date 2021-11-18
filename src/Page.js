@@ -12,19 +12,19 @@ import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
-import NewPageMenu from './NewPageMenu';
 
 const Page = ( props ) => {
   // props
   const { uid, id, addPage, redirect, getLineage, deletePage, addDatabase } = props;
 
   // state
-  const [page, setPage] = useState({title: null, id: null, icon: null});
+  const [page, setPage] = useState({title: null, id: null, icon: null, isDb: false});
   const [lineage, setLineage] = useState([]);
   const [docRef, setDocRef] = useState({});
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [blocks, setBlocks] = useState([]);
   const [warning, setWarning] = useState(false);
+  const [rows, setRows] = useState([]);
 
   // get page object
   useEffect( () => {
@@ -88,6 +88,7 @@ const Page = ( props ) => {
     addDoc(collection(db, 'pages', id, 'blocks'), newBlock);
   }
 
+  // get blocks
   useEffect(() => {
     if (uid !== '') {
       const blocksRef = collection(db, 'pages', id, 'blocks');
@@ -178,6 +179,76 @@ const Page = ( props ) => {
     setWarning(newWarning);
   }
 
+  ///////////////
+  // DATABASES //
+  ///////////////
+
+  // get rows
+  useEffect(() => {
+    if (uid !== '' && page.isDb) {
+      const rowsRef = collection(db, 'pages', id, 'rows');
+      const rowsQuery = query(rowsRef, where('uid', '==', uid));
+
+      const unsub = onSnapshot(rowsQuery, (rowsSnapshot) => {
+        const newRows = [];
+        rowsSnapshot.forEach((doc) => {
+          const newBlock = {id: doc.id, ...doc.data()}
+          newRows.push(newBlock);
+        });
+        setRows(newRows);
+        console.log(newRows);
+      });
+      return unsub;
+    }
+  }, [uid, id]);
+
+  // heading
+  const renderDatabase = () => {
+    const activeViewID = page.views.activeView;
+    const type = page.views[activeViewID].type;
+    const propIDs = page.views[activeViewID].visibleProperties;
+
+    if (type === 'table') {
+      // table heading
+      const topRow = propIDs.map(propID => {
+        return (
+          <th key={ propID }>
+            { page.properties[propID].displayName }
+          </th>
+        );
+      });
+
+      // rows
+      const tableRows = rows.map(row => {
+        return (
+          <tr key={row.id}>
+            { propIDs.map(propID => {
+              return (
+                <td key={propID}>
+                  { row[propID] }
+                </td>
+              );
+            }) }
+          </tr>
+        );
+      });
+
+      return (
+        <table>
+          <tr>
+            {topRow}
+          </tr>
+          { tableRows }
+        </table>
+      );
+    }
+    
+  }
+
+  ////////////
+  // RENDER //
+  ////////////
+
   return (
     <div className="pageContainer">
       { warning &&
@@ -210,7 +281,9 @@ const Page = ( props ) => {
         
         
         <div className="contentArea">
-          { blocks.length === 0 &&
+
+          {/* NEW PAGE MENU */}
+          { blocks.length === 0 && !page.isDb &&
             <div className="newPageMenu">
               <p>Press Enter to continue with an empty page, or pick a template (click to select)</p>
               
@@ -234,6 +307,8 @@ const Page = ( props ) => {
               <button className='linklike'>Gallery</button>
             </div>
           }
+
+          {/* SLATE LIVEBLOCKS */}
           {blocks.map(block => (
             <LiveBlock
               key={block.id}
@@ -244,6 +319,12 @@ const Page = ( props ) => {
               redirect={ redirect }
             />
           ))}
+
+          {/* DATABASES */}
+          { page.isDb &&
+            renderDatabase()
+          }
+
         </div>
       </div>
     </div>
