@@ -12,6 +12,7 @@ import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
+import { set } from 'immutable';
 
 const Page = ( props ) => {
   // props
@@ -25,6 +26,7 @@ const Page = ( props ) => {
   const [blocks, setBlocks] = useState([]);
   const [warning, setWarning] = useState(false);
   const [rows, setRows] = useState([]);
+  const [dbPages, setDbPages] = useState([]);
 
   // get page object
   useEffect( () => {
@@ -201,6 +203,30 @@ const Page = ( props ) => {
     }
   }, [uid, id]);
 
+  // get page info from db rows
+  useEffect(() => {
+    if (uid !== '' && page.isDb) {
+      const pagesRef = collection(db, 'pages');
+
+      // find pages for rows in this database
+      const pagesQuery = query(
+        pagesRef,
+        where('uid', '==', uid),
+        where('parentDb', '==', id)
+      );
+
+      const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
+        const newDbPages = {};
+        pagesSnapshot.forEach((doc) => {
+          newDbPages[doc.id] = {...doc.data()};
+        });
+        setDbPages(newDbPages);
+      });
+
+      return unsub;
+    }
+  }, [uid, id]);
+
   // heading
   const renderDatabase = () => {
     const activeViewID = page.views.activeView;
@@ -221,6 +247,14 @@ const Page = ( props ) => {
       const tableRows = rows.map(row => {
         return (
           <tr key={row.id}>
+            {/* icon & title */}
+            {
+              <td className='title'>
+                { dbPages[row.id].icon }
+                { dbPages[row.id].title }
+              </td>
+            }
+
             { propIDs.map(propID => {
               return (
                 <td key={propID}>
