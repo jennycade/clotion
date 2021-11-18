@@ -84,20 +84,25 @@ nav {
   width: 100%;
   padding: 0;
   border-collapse: collapse;
+  font-size: 14px;
 }
 .contentArea table tr {
   border-top: 1px solid rgb(233, 233, 231);
   padding: 0;
 }
 
-.contentArea table tr * {
+.contentArea table tr *:not(:last-child) {
   border-right: 1px solid rgb(233, 233, 231);
-}
-.contentArea table tr:last-child {
-  border-right: none;
 }
 
 .contentArea th, .contentArea td {
-  padding: 0;
+  height: 32px;
+  padding: 0 8px;
   margin: 0;
+}
+
+.contentArea th {
+  color: rgba(55, 53, 47, 0.6);
+  font-weight: normal;
+  text-align: left;
 }

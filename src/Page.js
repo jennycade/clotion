@@ -196,7 +196,6 @@ const Page = ( props ) => {
           newRows.push(newBlock);
         });
         setRows(newRows);
-        console.log(newRows);
       });
       return unsub;
     }
@@ -235,10 +234,14 @@ const Page = ( props ) => {
 
       return (
         <table>
-          <tr>
-            {topRow}
-          </tr>
-          { tableRows }
+          <thead>
+            <tr>
+              {topRow}
+            </tr>
+          </thead>
+          <tbody>
+            { tableRows }
+          </tbody>
         </table>
       );
     }
