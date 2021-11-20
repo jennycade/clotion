@@ -201,7 +201,7 @@ const Page = ( props ) => {
       });
       return unsub;
     }
-  }, [uid, id]);
+  }, [uid, id, page]);
 
   // get page info from db rows
   useEffect(() => {
@@ -225,7 +225,7 @@ const Page = ( props ) => {
 
       return unsub;
     }
-  }, [uid, id]);
+  }, [uid, id, page]);
 
   // heading
   const renderDatabase = () => {
