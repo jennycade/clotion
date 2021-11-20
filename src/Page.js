@@ -12,7 +12,7 @@ import Content from './Content';
 import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
-import { set } from 'immutable';
+import Database from './Database';
 
 const Page = ( props ) => {
   // props
@@ -359,7 +359,7 @@ const Page = ( props ) => {
 
           {/* DATABASES */}
           { page.isDb &&
-            renderDatabase()
+            <Database page={page} rows={rows} dbPages={dbPages} />
           }
 
         </div>
