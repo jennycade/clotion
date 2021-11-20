@@ -12,14 +12,16 @@ const Content = ( props ) => {
     setEditing(true);
   }
 
-  const leaveEditingMode = () => {
+  const leaveEditingMode = (event) => {
     setEditing(false);
-    updateContent();
+    updateContent(event);
   }
+
+  const inputTextElements = [ 'span', ];
 
   return (
     <div className="content">
-      { editing && element !== 'h1' &&
+      { editing && element !== 'h1' && !inputTextElements.includes(element) &&
         <textarea
           onChange={ handleContentChange }
           onBlur={ leaveEditingMode }
@@ -34,6 +36,14 @@ const Content = ( props ) => {
           autoFocus={ true }
           value={ content }
         /></h1>
+      }
+      { editing && inputTextElements.includes(element) &&
+        <input type="text"
+          onChange={ handleContentChange }
+          onBlur={ leaveEditingMode }
+          autoFocus={ true }
+          value={ content }
+        />
       }
 
       { (!editing) &&

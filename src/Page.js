@@ -13,6 +13,7 @@ import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
 import Database from './Database';
+import { update } from 'immutable';
 
 const Page = ( props ) => {
   // props
@@ -227,59 +228,51 @@ const Page = ( props ) => {
     }
   }, [uid, id, page]);
 
-  // heading
-  const renderDatabase = () => {
-    const activeViewID = page.views.activeView;
-    const type = page.views[activeViewID].type;
-    const propIDs = page.views[activeViewID].visibleProperties;
-
-    if (type === 'table') {
-      // table heading
-      const topRow = propIDs.map(propID => {
-        return (
-          <th key={ propID }>
-            { page.properties[propID].displayName }
-          </th>
-        );
-      });
-
-      // rows
-      const tableRows = rows.map(row => {
-        return (
-          <tr key={row.id}>
-            {/* icon & title */}
-            {
-              <td className='title'>
-                { dbPages[row.id].icon }
-                { dbPages[row.id].title }
-              </td>
-            }
-
-            { propIDs.map(propID => {
-              return (
-                <td key={propID}>
-                  { row[propID] }
-                </td>
-              );
-            }) }
-          </tr>
-        );
-      });
-
-      return (
-        <table>
-          <thead>
-            <tr>
-              {topRow}
-            </tr>
-          </thead>
-          <tbody>
-            { tableRows }
-          </tbody>
-        </table>
-      );
-    }
+  const handleDBRowChange = ( event, rowPageID, fieldID ) => {
+    // get field type
+    const type = page.views[page.views.activeView].type;
     
+    const newVal = event.target.value;
+
+    if (type === 'title') {
+      // different
+    }
+    else {
+      // what a mess. adapted from https://stackoverflow.com/questions/29537299/react-how-to-update-state-item1-in-state-using-setstate
+
+      // shallow copy rows
+      const oldRows = [...rows];
+      // shallow copy THE row
+      const oldRowIndex = rows.findIndex(row => row.id === rowPageID);
+      const oldRow = {...oldRows[oldRowIndex]};
+      // update it
+      oldRow[fieldID] = newVal;
+      // stick it back in
+      oldRows[oldRowIndex] = oldRow;
+
+      setRows(oldRows);
+    }
+  }
+
+  // editing DBs
+  const updateDBRow = async (event, rowPageID, fieldID) => {
+    // get field type
+    const type = page.properties[fieldID].type;
+
+    // new value from event
+    const newVal = event.target.value;
+
+    if (type === 'title') {
+      // different
+    }
+    else if (type === 'text') {
+      const rowRef = doc(db, 'pages', id, 'rows', rowPageID);
+      const updateObj = {}
+      updateObj[fieldID] = newVal;
+
+      // update firebase
+      await updateDoc(rowRef, updateObj);
+    }
   }
 
   ////////////
@@ -310,9 +303,18 @@ const Page = ( props ) => {
         }
         <div className="pageIcon linklike" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
           
-        <Content element='h1' handleContentChange={ handleTitleChange } updateContent={ updateTitle } content={ page.title }>
-          { page.title === 'Untitled' && <h1 className="pageTitle titlePlaceholder">Untitled</h1>}
-          { page.title !== 'Untitled' && <h1 className="pageTitle">{ page.title }</h1>}
+        <Content
+          element='h1'
+          handleContentChange={ handleTitleChange }
+          updateContent={ updateTitle }
+          content={ page.title }
+        >
+          { page.title === 'Untitled' &&
+            <h1 className="pageTitle titlePlaceholder">Untitled</h1>
+          }
+          { page.title !== 'Untitled' &&
+            <h1 className="pageTitle">{ page.title }</h1>
+          }
         </Content>
 
         
@@ -359,7 +361,13 @@ const Page = ( props ) => {
 
           {/* DATABASES */}
           { page.isDb &&
-            <Database page={page} rows={rows} dbPages={dbPages} />
+            <Database
+              page={page}
+              rows={rows}
+              dbPages={dbPages}
+              handleDBRowChange={handleDBRowChange}
+              updateDBRow={updateDBRow}
+            />
           }
 
         </div>

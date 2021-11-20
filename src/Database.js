@@ -1,6 +1,8 @@
+import Content from './Content';
+
 const Database = (props) => {
   // props
-  const { page, rows, dbPages } = props;
+  const { page, rows, dbPages, handleDBRowChange, updateDBRow } = props;
 
   const activeViewID = page.views.activeView;
   const type = page.views[activeViewID].type;
@@ -24,7 +26,16 @@ const Database = (props) => {
           {
             <td className='title'>
               { dbPages[row.id].icon }
-              { dbPages[row.id].title }
+              <Content
+                handleContentChange={() => null}
+                updateContent={() => null}
+                content={ dbPages[row.id].title }
+                element='span'
+              >
+                <span>
+                  { dbPages[row.id].title }
+                </span>
+              </Content>
             </td>
           }
 
@@ -32,9 +43,20 @@ const Database = (props) => {
             if (propID !== 'title') {
               return (
                 <td key={propID}>
-                  { row[propID] }
+                  <Content
+                    handleContentChange={ (event) => handleDBRowChange(event, row.id, propID)}
+                    updateContent={ (event) => updateDBRow(event, row.id, propID)}
+                    content={ row[propID] }
+                    element='span'
+                  >
+                    <span>
+                      { row[propID] }
+                    </span>
+                  </Content>
                 </td>
               );
+            } else {
+              return null;
             }
           }) }
         </tr>
