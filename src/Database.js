@@ -27,8 +27,8 @@ const Database = (props) => {
             <td className='title'>
               { dbPages[row.id].icon }
               <Content
-                handleContentChange={() => null}
-                updateContent={() => null}
+                handleContentChange={(event) => handleDBRowChange(event, row.id, 'title')}
+                updateContent={() => updateDBRow(row.id, 'title')}
                 content={ dbPages[row.id].title }
                 element='span'
               >

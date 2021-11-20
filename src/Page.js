@@ -230,12 +230,22 @@ const Page = ( props ) => {
 
   const handleDBRowChange = ( event, rowPageID, fieldID ) => {
     // get field type
-    const type = page.views[page.views.activeView].type;
+    const type = page.properties[fieldID].type;
     
     const newVal = event.target.value;
 
     if (type === 'title') {
-      // different
+      // update dbPages
+      // shallow copy
+      const oldDbPages = {...dbPages};
+      // shallow copy THE page
+      const oldDbPage = {...oldDbPages[rowPageID]};
+      // update it
+      oldDbPage.title = newVal;
+      // stick it back in
+      oldDbPages[rowPageID] = oldDbPage;
+
+      setDbPages(oldDbPages);
     }
     else {
       // what a mess. adapted from https://stackoverflow.com/questions/29537299/react-how-to-update-state-item1-in-state-using-setstate
@@ -262,13 +272,21 @@ const Page = ( props ) => {
     // new value from event
     // const newVal = event.target.value;
 
-    // new value from state
-    const newVal = rows.find(row => row.id === rowPageID)[fieldID];
+    
 
     if (type === 'title') {
-      // different
+      const newVal = dbPages[rowPageID].title;
+      const pageRef = doc(db, 'pages', rowPageID);
+      const updateObj = { title: newVal };
+
+      // update firebase
+      await updateDoc(pageRef, updateObj);
+
     }
     else if (type === 'text') {
+      // new value from state
+      const newVal = rows.find(row => row.id === rowPageID)[fieldID];
+
       const rowRef = doc(db, 'pages', id, 'rows', rowPageID);
       const updateObj = {}
       updateObj[fieldID] = newVal;
