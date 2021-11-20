@@ -45,7 +45,7 @@ const Database = (props) => {
                 <td key={propID}>
                   <Content
                     handleContentChange={ (event) => handleDBRowChange(event, row.id, propID)}
-                    updateContent={ (event) => updateDBRow(event, row.id, propID)}
+                    updateContent={ () => updateDBRow(row.id, propID)}
                     content={ row[propID] }
                     element='span'
                   >

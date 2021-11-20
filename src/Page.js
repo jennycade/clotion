@@ -255,12 +255,15 @@ const Page = ( props ) => {
   }
 
   // editing DBs
-  const updateDBRow = async (event, rowPageID, fieldID) => {
+  const updateDBRow = async (rowPageID, fieldID) => {
     // get field type
     const type = page.properties[fieldID].type;
 
     // new value from event
-    const newVal = event.target.value;
+    // const newVal = event.target.value;
+
+    // new value from state
+    const newVal = rows.find(row => row.id === rowPageID)[fieldID];
 
     if (type === 'title') {
       // different
