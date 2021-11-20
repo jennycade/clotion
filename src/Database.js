@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom';
+
+// my components
 import Content from './Content';
 
 const Database = (props) => {
@@ -36,6 +39,8 @@ const Database = (props) => {
                   { dbPages[row.id].title }
                 </span>
               </Content>
+
+              <Link to={ `/${row.id}` } className="subtleButton" >⤢ OPEN</Link>
             </td>
           }
 
