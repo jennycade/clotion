@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 
+// style
+import './Database.css';
+
 // my components
 import Content from './Content';
 
@@ -28,19 +31,21 @@ const Database = (props) => {
           {/* icon & title */}
           {
             <td className='title'>
+              <div class='iconTitle'>
               { dbPages[row.id].icon }
-              <Content
-                handleContentChange={(event) => handleDBRowChange(event, row.id, 'title')}
-                updateContent={() => updateDBRow(row.id, 'title')}
-                content={ dbPages[row.id].title }
-                element='span'
-              >
-                <span>
-                  { dbPages[row.id].title }
-                </span>
-              </Content>
+                <Content
+                  handleContentChange={(event) => handleDBRowChange(event, row.id, 'title')}
+                  updateContent={() => updateDBRow(row.id, 'title')}
+                  content={ dbPages[row.id].title }
+                  element='span'
+                >
+                  <span>
+                    { dbPages[row.id].title }
+                  </span>
+                </Content>
+              </div>
 
-              <Link to={ `/${row.id}` } className="subtleButton" >⤢ OPEN</Link>
+              <Link to={ `/${row.id}` } className="openLink" >⤢ OPEN</Link>
             </td>
           }
 
