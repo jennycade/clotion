@@ -411,7 +411,13 @@ function App() {
         }
       });
     }
-    
+  }
+
+  const deleteRowFromDatabase = async (pageID) => {
+    const child = pages.find(p => p.id === pageID);
+    const parentPageID = child.parentDb;
+
+    await deleteDoc(doc(db, 'pages', parentPageID, 'rows', pageID));
   }
 
   const deletePageFromFirestore = async (pageID) => {
@@ -426,6 +432,11 @@ function App() {
     // remove pagelinks
     for (const id of pagesToDelete) {
       await removePageLinkFromParent(id);
+    }
+
+    // delete database row
+    if (page.parentDb) {
+      await deleteRowFromDatabase(page.id); // need to call this on subpages too?
     }
 
     // redirect
