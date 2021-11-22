@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, query, where, orderBy, } from 'firebase/firestore';
 import { db } from './firebase/db';
 
+import { convertEntry } from './databaseFunctions';
+
 import './Page.css';
 
 import emojiDb from './emoji.json';
@@ -13,7 +15,6 @@ import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
 import Database from './Database';
-import { update } from 'immutable';
 
 const Page = ( props ) => {
   // props
@@ -232,7 +233,8 @@ const Page = ( props ) => {
     // get field type
     const type = page.properties[fieldID].type;
     
-    const newVal = event.target.value;
+    // data validation/conversion
+    const newVal = convertEntry(event.target.value, type);
 
     if (type === 'title') {
       // update dbPages
@@ -248,8 +250,6 @@ const Page = ( props ) => {
       setDbPages(oldDbPages);
     }
     else {
-      // what a mess. adapted from https://stackoverflow.com/questions/29537299/react-how-to-update-state-item1-in-state-using-setstate
-
       // shallow copy rows
       const oldRows = [...rows];
       // shallow copy THE row
@@ -266,34 +266,38 @@ const Page = ( props ) => {
 
   // editing DBs
   const updateDBRow = async (rowPageID, fieldID) => {
+    // revalidate certain fields
+    const revalidateFields = ['number'];
+    
     // get field type
     const type = page.properties[fieldID].type;
 
-    // new value from event
-    // const newVal = event.target.value;
-
-    
+    let docRef, updateObj;
 
     if (type === 'title') {
+      // title isn't stored in the `rows` collection -- update in the page
       const newVal = dbPages[rowPageID].title;
-      const pageRef = doc(db, 'pages', rowPageID);
-      const updateObj = { title: newVal };
-
-      // update firebase
-      await updateDoc(pageRef, updateObj);
-
-    }
-    else if (type === 'text') {
+      docRef = doc(db, 'pages', rowPageID);
+      updateObj = { title: newVal };
+    } else {
       // new value from state
-      const newVal = rows.find(row => row.id === rowPageID)[fieldID];
+      let newVal = rows.find(row => row.id === rowPageID)[fieldID];
 
-      const rowRef = doc(db, 'pages', id, 'rows', rowPageID);
-      const updateObj = {}
+      // re-validate?
+      if (revalidateFields.includes(type)) {
+        newVal = convertEntry(
+          newVal,
+          type,
+          true
+        );
+      }
+
+      docRef = doc(db, 'pages', id, 'rows', rowPageID);
+      updateObj = {}
       updateObj[fieldID] = newVal;
-
-      // update firebase
-      await updateDoc(rowRef, updateObj);
     }
+    // update firebase
+    await updateDoc(docRef, updateObj);
   }
 
   ////////////
