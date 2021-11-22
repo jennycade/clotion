@@ -45,7 +45,9 @@ const Database = (props) => {
                 </Content>
               </div>
 
-              <Link to={ `/${row.id}` } className="openLink" >⤢ OPEN</Link>
+              <span className='openLinkContainer'>
+                <Link to={ `/${row.id}` } className="openLink" >⤢ OPEN</Link>
+              </span>
             </td>
           }
 

@@ -78,31 +78,3 @@ nav {
 
 
 
-/* TABLES */
-.contentArea table {
-  border-bottom: 1px solid rgb(233, 233, 231);
-  width: 100%;
-  padding: 0;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-.contentArea table tr {
-  border-top: 1px solid rgb(233, 233, 231);
-  padding: 0;
-}
-
-.contentArea table tr *:not(:last-child) {
-  border-right: 1px solid rgb(233, 233, 231);
-}
-
-.contentArea th, .contentArea td {
-  height: 32px;
-  padding: 0 8px;
-  margin: 0;
-}
-
-.contentArea th {
-  color: rgba(55, 53, 47, 0.6);
-  font-weight: normal;
-  text-align: left;
-}
