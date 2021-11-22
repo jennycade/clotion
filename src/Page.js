@@ -381,7 +381,7 @@ const Page = ( props ) => {
           ))}
 
           {/* DATABASES */}
-          { page.isDb &&
+          { page.isDb && page.views &&
             <Database
               page={page}
               rows={rows}
