@@ -8,14 +8,14 @@ import Content from './Content';
 
 const Database = (props) => {
   // props
-  const { page, rows, dbPages, handleDBRowChange, updateDBRow } = props;
+  const { page, rows, dbPages, handleDBRowChange, updateDBRow, handleClickChange } = props;
 
   const activeViewID = page.views.activeView;
   const type = page.views[activeViewID].type;
   const propIDs = page.views[activeViewID].visibleProperties;
 
   // property type icons
-  const icons = {
+  const ICONS = {
     title: '🆔', 
     text: '🔤',
     number: '#️⃣',
@@ -26,6 +26,25 @@ const Database = (props) => {
     url: '🔗',
     email: '✉️',
     phone: '📞',
+  };
+
+  const SPECIALTYPES = [
+    'title', 'checkbox',
+  ];
+
+  // get type
+  const getType = (propID) => {
+    return page.properties[propID].type;
+  }
+  const getPropName = (propID) => {
+    return page.properties[propID].displayName;
+  }
+
+  const handleCheckboxChange = async(event, rowID, propID) => {
+    // update state/verify
+    await handleDBRowChange(event, rowID, propID);
+    // update db
+    await updateDBRow(rowID, propID);
   }
 
   if (type === 'table') {
@@ -34,9 +53,8 @@ const Database = (props) => {
       return (
         <th key={ propID }>
           <span className='columnName'>
-            <span>{ icons[page.properties[propID].type] }</span>
-
-            <span>{ page.properties[propID].displayName }</span>
+            <span>{ ICONS[getType(propID)] }</span>
+            <span>{ getPropName(propID) }</span>
           </span>
         </th>
       );
@@ -73,6 +91,15 @@ const Database = (props) => {
             if (propID !== 'title') {
               return (
                 <td key={propID}>
+                  { getType(propID) === 'checkbox' &&
+                    <input
+                      type='checkbox'
+                      checked={ row[propID] }
+                      onChange={ (event) => handleClickChange(event, row.id, propID) }
+                    />
+                  }
+
+                  { !SPECIALTYPES.includes(getType(propID)) && // all other types
                   <Content
                     handleContentChange={ (event) => handleDBRowChange(event, row.id, propID)}
                     updateContent={ () => updateDBRow(row.id, propID)}
@@ -83,6 +110,7 @@ const Database = (props) => {
                       { row[propID] }
                     </span>
                   </Content>
+                  }
                 </td>
               );
             } else {

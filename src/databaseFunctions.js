@@ -20,6 +20,12 @@ const convertEntry = (entry, propType, finalSave = false) => {
       }
 
       return parseFloat(str);
+    case 'checkbox':
+      if (entry === 'true' || entry === true) {
+        return true;
+      } else {
+        return false;
+      }
     default:
       throw new Error(`Invalid property type: ${propType}`);
   }

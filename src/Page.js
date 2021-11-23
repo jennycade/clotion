@@ -234,7 +234,12 @@ const Page = ( props ) => {
     const type = page.properties[fieldID].type;
     
     // data validation/conversion
-    const newVal = convertEntry(event.target.value, type);
+    let newVal;
+    if (type === 'checkbox') {
+      newVal = convertEntry(event.target.checked, 'checkbox');
+    } else {
+      newVal = convertEntry(event.target.value, type);
+    }
 
     if (type === 'title') {
       // update dbPages
@@ -265,7 +270,7 @@ const Page = ( props ) => {
   }
 
   // editing DBs
-  const updateDBRow = async (rowPageID, fieldID) => {
+  const updateDBRow = async (rowPageID, fieldID, overrideVal = null) => {
     // revalidate certain fields
     const revalidateFields = ['number'];
     
@@ -280,9 +285,14 @@ const Page = ( props ) => {
       docRef = doc(db, 'pages', rowPageID);
       updateObj = { title: newVal };
     } else {
-      // new value from state
-      let newVal = rows.find(row => row.id === rowPageID)[fieldID];
-
+      let newVal;
+      if (overrideVal !== null) {
+        newVal = overrideVal;
+      } else {
+        // new value from state
+        newVal = rows.find(row => row.id === rowPageID)[fieldID];
+      }
+      
       // re-validate?
       if (revalidateFields.includes(type)) {
         newVal = convertEntry(
@@ -298,6 +308,18 @@ const Page = ( props ) => {
     }
     // update firebase
     await updateDoc(docRef, updateObj);
+  }
+
+  const handleClickChange = async (event, rowPageID, fieldID) => {
+    // for click events, where onChange triggers simultaneous state change and firestore database change
+
+    // get value
+    const newVal = convertEntry(event.target.checked, 'checkbox');
+    // update firestore
+    await updateDBRow(rowPageID, fieldID, newVal);
+
+    // update state
+    handleDBRowChange(event, rowPageID, fieldID);
   }
 
   ////////////
@@ -392,6 +414,7 @@ const Page = ( props ) => {
               dbPages={dbPages}
               handleDBRowChange={handleDBRowChange}
               updateDBRow={updateDBRow}
+              handleClickChange={handleClickChange}
             />
           }
 
