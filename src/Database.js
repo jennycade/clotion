@@ -14,12 +14,30 @@ const Database = (props) => {
   const type = page.views[activeViewID].type;
   const propIDs = page.views[activeViewID].visibleProperties;
 
+  // property type icons
+  const icons = {
+    title: '🆔', 
+    text: '🔤',
+    number: '#️⃣',
+    select: '▾',
+    multiselect: '≔',
+    date: '🗓',
+    checkbox: '☑︎',
+    url: '🔗',
+    email: '✉️',
+    phone: '📞',
+  }
+
   if (type === 'table') {
     // table heading
     const topRow = propIDs.map(propID => {
       return (
         <th key={ propID }>
-          { page.properties[propID].displayName }
+          <span className='columnName'>
+            <span>{ icons[page.properties[propID].type] }</span>
+
+            <span>{ page.properties[propID].displayName }</span>
+          </span>
         </th>
       );
     });
@@ -31,7 +49,7 @@ const Database = (props) => {
           {/* icon & title */}
           {
             <td className='title'>
-              <div class='iconTitle'>
+              <div className='iconTitle'>
               { dbPages[row.id].icon }
                 <Content
                   handleContentChange={(event) => handleDBRowChange(event, row.id, 'title')}

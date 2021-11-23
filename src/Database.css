@@ -22,9 +22,16 @@
 }
 
 .contentArea th {
-  color: rgba(55, 53, 47, 0.6);
-  font-weight: normal;
   text-align: left;
+}
+
+.columnName {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+
+  color: rgba(55, 53, 47, 0.6);
+  font-weight: 500;
 }
 
 
