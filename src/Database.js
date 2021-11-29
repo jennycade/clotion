@@ -5,6 +5,7 @@ import './Database.css';
 
 // my components
 import Content from './Content';
+import SelectOption from './SelectOption';
 
 const Database = (props) => {
   // props
@@ -29,7 +30,7 @@ const Database = (props) => {
   };
 
   const SPECIALTYPES = [
-    'title', 'checkbox',
+    'title', 'checkbox', 'select', 'multiselect',
   ];
 
   // get type
@@ -39,12 +40,10 @@ const Database = (props) => {
   const getPropName = (propID) => {
     return page.properties[propID].displayName;
   }
-
-  const handleCheckboxChange = async(event, rowID, propID) => {
-    // update state/verify
-    await handleDBRowChange(event, rowID, propID);
-    // update db
-    await updateDBRow(rowID, propID);
+  const getSelectDisplay = (propID, selectOptionID) => {
+    const displayInfo = page.properties[propID].selectOptions[selectOptionID];
+    // {color, displayName, sortOrder}
+    return displayInfo;
   }
 
   if (type === 'table') {
@@ -89,9 +88,15 @@ const Database = (props) => {
 
           { propIDs.map(propID => {
             if (propID !== 'title') {
+              const type = getType(propID);
+              let displayInfo;
+              if (type === 'select') {
+                displayInfo = getSelectDisplay(propID, row[propID]);
+              }
               return (
                 <td key={propID}>
-                  { getType(propID) === 'checkbox' &&
+                  {/* CHECKBOX */}
+                  { type === 'checkbox' &&
                     <input
                       type='checkbox'
                       checked={ row[propID] }
@@ -99,7 +104,14 @@ const Database = (props) => {
                     />
                   }
 
-                  { !SPECIALTYPES.includes(getType(propID)) && // all other types
+                  {/* SELECT */}
+                  { type === 'select' &&
+                    <SelectOption color={displayInfo.color}>
+                      { displayInfo.displayName }
+                    </SelectOption>
+                  }
+
+                  { !SPECIALTYPES.includes(type) && // all other types
                   <Content
                     handleContentChange={ (event) => handleDBRowChange(event, row.id, propID)}
                     updateContent={ () => updateDBRow(row.id, propID)}
