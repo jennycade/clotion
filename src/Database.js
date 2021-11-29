@@ -6,6 +6,7 @@ import './Database.css';
 // my components
 import Content from './Content';
 import SelectOption from './SelectOption';
+import SelectCell from './SelectCell';
 
 const Database = (props) => {
   // props
@@ -33,7 +34,7 @@ const Database = (props) => {
     'title', 'checkbox', 'select', 'multiselect',
   ];
 
-  // get type
+  // get property info
   const getType = (propID) => {
     return page.properties[propID].type;
   }
@@ -45,6 +46,9 @@ const Database = (props) => {
     // {color, displayName, sortOrder}
     return displayInfo;
   }
+
+
+  // RENDERING
 
   if (type === 'table') {
     // table heading
@@ -90,11 +94,14 @@ const Database = (props) => {
             if (propID !== 'title') {
               const type = getType(propID);
               let displayInfo;
+              let handleClick;
               if (type === 'select') {
                 displayInfo = getSelectDisplay(propID, row[propID]);
+                handleClick = () => null;
               }
               return (
-                <td key={propID}>
+                <td key={propID} onClick={ handleClick }>
+
                   {/* CHECKBOX */}
                   { type === 'checkbox' &&
                     <input
@@ -106,9 +113,12 @@ const Database = (props) => {
 
                   {/* SELECT */}
                   { type === 'select' &&
-                    <SelectOption color={displayInfo.color}>
+                    <SelectCell>
+                      <SelectOption color={displayInfo.color}>
                       { displayInfo.displayName }
-                    </SelectOption>
+                      </SelectOption>
+                    </SelectCell>
+                    
                   }
 
                   { !SPECIALTYPES.includes(type) && // all other types
