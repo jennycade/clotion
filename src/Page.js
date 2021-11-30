@@ -343,8 +343,20 @@ const Page = ( props ) => {
   let headers;
 
   if (page.parentDb) {
-    // get info!
-    const row = {};
+    headers = (
+      <div>
+        { Object.keys(row).map((key, index) => {
+          if (key === 'uid') {
+            return null;
+          }
+          return (
+            <div key={key}>
+              {key}: {row[key]}
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 
   ////////////
