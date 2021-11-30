@@ -28,6 +28,7 @@ const Page = ( props ) => {
   const [blocks, setBlocks] = useState([]);
   const [warning, setWarning] = useState(false);
   const [rows, setRows] = useState([]);
+  const [row, setRow] = useState({});
   const [dbPages, setDbPages] = useState([]);
 
   // get page object
@@ -229,6 +230,19 @@ const Page = ( props ) => {
     }
   }, [uid, id, page]);
 
+  // database page: get row info
+  useEffect(() => {
+    if (uid !== '' && page.parentDb && page.parentDb !== '') {
+
+      // get the row
+      const unsub = onSnapshot(doc(db, 'pages', page.parentDb, 'rows', id), (doc) => {
+        setRow({...doc.data()});
+      });
+      return unsub;
+
+    }
+  }, [uid, id, page]);
+
   const handleDBRowChange = ( event, rowPageID, fieldID ) => {
     // get field type
     const type = page.properties[fieldID].type;
@@ -322,6 +336,17 @@ const Page = ( props ) => {
     handleDBRowChange(event, rowPageID, fieldID);
   }
 
+  ///////////////////
+  // DATABASE PAGE //
+  ///////////////////
+
+  let headers;
+
+  if (page.parentDb) {
+    // get info!
+    const row = {};
+  }
+
   ////////////
   // RENDER //
   ////////////
@@ -350,6 +375,7 @@ const Page = ( props ) => {
         }
         <div className="pageIcon linklike" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
           
+        {/* TITLE */}
         <Content
           element='h1'
           handleContentChange={ handleTitleChange }
@@ -364,7 +390,7 @@ const Page = ( props ) => {
           }
         </Content>
 
-        
+        { headers }
         
         <div className="contentArea">
 
