@@ -344,17 +344,21 @@ const Page = ( props ) => {
 
   if (page.parentDb) {
     headers = (
-      <div>
-        { Object.keys(row).map((key, index) => {
+      <div className='pageDbInfo'>
+        { Object.keys(row).map((key) => {
           if (key === 'uid') {
             return null;
           }
-          return (
-            <div key={key}>
-              {key}: {row[key]}
+          return ([
+            <div key={`${key}`}>
+              {key}
+            </div>,
+            <div key={`${key}value`}>
+              {row[key]}
             </div>
-          );
+          ]);
         })}
+        <hr />
       </div>
     );
   }
