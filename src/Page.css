@@ -83,3 +83,9 @@ nav {
   display: grid;
   grid-template-columns: 160px 1fr;
 }
+hr {
+  border-top: 1px solid rgb(234, 234, 233);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}

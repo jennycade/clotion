@@ -30,6 +30,7 @@ const Page = ( props ) => {
   const [rows, setRows] = useState([]);
   const [row, setRow] = useState({});
   const [dbPages, setDbPages] = useState([]);
+  const [parentDbPage, setParentDbPage] = useState({});
 
   // get page object
   useEffect( () => {
@@ -230,19 +231,6 @@ const Page = ( props ) => {
     }
   }, [uid, id, page]);
 
-  // database page: get row info
-  useEffect(() => {
-    if (uid !== '' && page.parentDb && page.parentDb !== '') {
-
-      // get the row
-      const unsub = onSnapshot(doc(db, 'pages', page.parentDb, 'rows', id), (doc) => {
-        setRow({...doc.data()});
-      });
-      return unsub;
-
-    }
-  }, [uid, id, page]);
-
   const handleDBRowChange = ( event, rowPageID, fieldID ) => {
     // get field type
     const type = page.properties[fieldID].type;
@@ -340,26 +328,48 @@ const Page = ( props ) => {
   // DATABASE PAGE //
   ///////////////////
 
+  // database page: get row info
+  useEffect(() => {
+    if (uid !== '' && page.parentDb && page.parentDb !== '') {
+
+      // get the row
+      const unsub = onSnapshot(doc(db, 'pages', page.parentDb, 'rows', id), (doc) => {
+        setRow({id: doc.id, ...doc.data()});
+      });
+      return unsub;
+    }
+  }, [uid, id, page]);
+
+  // get parent db info
+  useEffect(() => {
+    if (uid !== '' && page.parentDb && page.parentDb !== '') {
+      // get the parent page
+      const unsub = onSnapshot(doc(db, 'pages', page.parentDb), (doc) => {
+        setParentDbPage({...doc.data()});
+      });
+      return unsub;
+    }
+  }, [uid, id, page]);
+
   let headers;
 
-  if (page.parentDb) {
+  if (page.parentDb && Object.keys(parentDbPage).length > 0 && Object.keys(row).length > 0) {
+    // make single version of Database props
+    const singleDbPage = {};
+    singleDbPage[id] = page;
+    
+    const singleRow = [];
+
     headers = (
-      <div className='pageDbInfo'>
-        { Object.keys(row).map((key) => {
-          if (key === 'uid') {
-            return null;
-          }
-          return ([
-            <div key={`${key}`}>
-              {key}
-            </div>,
-            <div key={`${key}value`}>
-              {row[key]}
-            </div>
-          ]);
-        })}
-        <hr />
-      </div>
+      <Database
+        page={parentDbPage}
+        rows={[row]}
+        dbPages={singleDbPage}
+        handleDBRowChange={() => null}
+        updateDBRow={() => null}
+        handleClickChange={() => null}
+        dbDisplay='header'
+      />
     );
   }
 
@@ -451,6 +461,7 @@ const Page = ( props ) => {
           {/* DATABASES */}
           { page.isDb && page.views &&
             <Database
+              dbDisplay={false}
               page={page}
               rows={rows}
               dbPages={dbPages}
