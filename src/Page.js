@@ -28,7 +28,7 @@ const Page = ( props ) => {
   const [blocks, setBlocks] = useState([]);
   const [warning, setWarning] = useState(false);
   const [rows, setRows] = useState([]);
-  const [row, setRow] = useState({});
+  const [row, setRow] = useState([{}]);
   const [dbPages, setDbPages] = useState([]);
   const [parentDbPage, setParentDbPage] = useState({});
 
@@ -231,7 +231,7 @@ const Page = ( props ) => {
     }
   }, [uid, id, page]);
 
-  const handleDBRowChange = ( event, rowPageID, fieldID ) => {
+  const handleDBRowChange = ( event, rowPageID, fieldID, page, rows, setRows ) => {
     // get field type
     const type = page.properties[fieldID].type;
     
@@ -272,7 +272,7 @@ const Page = ( props ) => {
   }
 
   // editing DBs
-  const updateDBRow = async (rowPageID, fieldID, overrideVal = null) => {
+  const updateDBRow = async (rowPageID, fieldID, page, rows, overrideVal = null) => {
     // revalidate certain fields
     const revalidateFields = ['number'];
     
@@ -304,7 +304,7 @@ const Page = ( props ) => {
         );
       }
 
-      docRef = doc(db, 'pages', id, 'rows', rowPageID);
+      docRef = doc(db, 'pages', page.id, 'rows', rowPageID);
       updateObj = {}
       updateObj[fieldID] = newVal;
     }
@@ -312,16 +312,17 @@ const Page = ( props ) => {
     await updateDoc(docRef, updateObj);
   }
 
-  const handleClickChange = async (event, rowPageID, fieldID) => {
+  const handleClickChange = async (event, rowPageID, fieldID, page, rows, setRows) => {
     // for click events, where onChange triggers simultaneous state change and firestore database change
 
     // get value
     const newVal = convertEntry(event.target.checked, 'checkbox');
+
     // update firestore
-    await updateDBRow(rowPageID, fieldID, newVal);
+    await updateDBRow(rowPageID, fieldID, page, rows, newVal);
 
     // update state
-    handleDBRowChange(event, rowPageID, fieldID);
+    handleDBRowChange(event, rowPageID, fieldID, page, rows, setRows);
   }
 
   ///////////////////
@@ -334,7 +335,7 @@ const Page = ( props ) => {
 
       // get the row
       const unsub = onSnapshot(doc(db, 'pages', page.parentDb, 'rows', id), (doc) => {
-        setRow({id: doc.id, ...doc.data()});
+        setRow([{id: doc.id, ...doc.data()}]);
       });
       return unsub;
     }
@@ -345,7 +346,7 @@ const Page = ( props ) => {
     if (uid !== '' && page.parentDb && page.parentDb !== '') {
       // get the parent page
       const unsub = onSnapshot(doc(db, 'pages', page.parentDb), (doc) => {
-        setParentDbPage({...doc.data()});
+        setParentDbPage({id: doc.id, ...doc.data()});
       });
       return unsub;
     }
@@ -353,22 +354,20 @@ const Page = ( props ) => {
 
   let headers;
 
-  if (page.parentDb && Object.keys(parentDbPage).length > 0 && Object.keys(row).length > 0) {
+  if (page.parentDb && Object.keys(parentDbPage).length > 0 && Object.keys(row[0]).length > 0) {
     // make single version of Database props
     const singleDbPage = {};
     singleDbPage[id] = page;
-    
-    const singleRow = [];
 
     headers = (
       <Database
         page={parentDbPage}
-        rows={[row]}
+        rows={row}
         dbPages={singleDbPage}
-        handleDBRowChange={() => null}
-        updateDBRow={() => null}
-        handleClickChange={() => null}
         dbDisplay='header'
+        handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, parentDbPage, row, setRow) }
+        updateDBRow={ (rowPageID, fieldID, overrideVal = null) => updateDBRow(rowPageID, fieldID, parentDbPage, row, overrideVal) }
+        handleClickChange={ (event, rowPageID, fieldID) => handleClickChange(event, rowPageID, fieldID, parentDbPage, row, setRow) }
       />
     );
   }
@@ -465,9 +464,9 @@ const Page = ( props ) => {
               page={page}
               rows={rows}
               dbPages={dbPages}
-              handleDBRowChange={handleDBRowChange}
-              updateDBRow={updateDBRow}
-              handleClickChange={handleClickChange}
+              handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, page, rows, setRows) }
+              updateDBRow={ (rowPageID, fieldID, overrideVal=null) => updateDBRow(rowPageID, fieldID, page, rows, overrideVal) }
+              handleClickChange={ (event, rowPageID, fieldID) => handleClickChange(event, rowPageID, fieldID, page, rows, setRows) }
             />
           }
 

@@ -72,7 +72,7 @@ const Database = (props) => {
   // Property icon/name
   const getColumnNameSpan = (propID) => {
     return (
-      <span className='columnName'>
+      <span key={propID} className='columnName'>
         <span>{ ICONS[getType(propID)] }</span>
         <span>{ getPropName(propID) }</span>
       </span>
