@@ -82,7 +82,7 @@ const Database = (props) => {
   // title
   const getIconTitleDiv = (rowID) => {
     return (
-      <div className='iconTitle'>
+      <div className='iconTitle' key={rowID}>
         { dbPages[rowID].icon }
           <Content
             handleContentChange={(event) => handleDBRowChange(event, rowID, 'title')}
