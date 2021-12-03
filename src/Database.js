@@ -107,7 +107,7 @@ const Database = (props) => {
       handleClick = () => null;
     }
     return (
-      <div key={`${row.id}${propID}`} onClick={ handleClick }>
+      <div className='field' key={`${row.id}${propID}`} onClick={ handleClick }>
 
         {/* CHECKBOX */}
         { type === 'checkbox' &&
