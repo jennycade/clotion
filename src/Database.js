@@ -125,7 +125,6 @@ const Database = (props) => {
             { displayInfo.displayName }
             </SelectOption>
           </SelectCell>
-          
         }
 
         { !SPECIALTYPES.includes(type) && // all other types
@@ -133,9 +132,9 @@ const Database = (props) => {
           handleContentChange={ (event) => handleDBRowChange(event, row.id, propID)}
           updateContent={ () => updateDBRow(row.id, propID)}
           content={ row[propID] }
-          element='span'
+          element={type}
         >
-          <span>
+          <span className='field'>
             { row[propID] }
           </span>
         </Content>

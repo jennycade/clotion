@@ -315,8 +315,16 @@ const Page = ( props ) => {
   const handleClickChange = async (event, rowPageID, fieldID, page, rows, setRows) => {
     // for click events, where onChange triggers simultaneous state change and firestore database change
 
+    // get field type
+    const type = page.properties[fieldID].type;
+
+    let newVal;
     // get value
-    const newVal = convertEntry(event.target.checked, 'checkbox');
+    if (type === 'checkbox') {
+      newVal = convertEntry(event.target.checked, 'checkbox');
+    } else {
+      newVal = convertEntry(event.target.value, type);
+    }
 
     // update firestore
     await updateDBRow(rowPageID, fieldID, page, rows, newVal);
@@ -401,19 +409,21 @@ const Page = ( props ) => {
         <div className="pageIcon linklike" onClick={ () => setShowIconPicker(true) }>{ page.icon }</div>
           
         {/* TITLE */}
-        <Content
-          element='h1'
-          handleContentChange={ handleTitleChange }
-          updateContent={ updateTitle }
-          content={ page.title }
-        >
-          { page.title === 'Untitled' &&
-            <h1 className="pageTitle titlePlaceholder">Untitled</h1>
-          }
-          { page.title !== 'Untitled' &&
-            <h1 className="pageTitle">{ page.title }</h1>
-          }
-        </Content>
+        <h1 className='pageTitle'>
+          <Content
+            element='title'
+            handleContentChange={ handleTitleChange }
+            updateContent={ updateTitle }
+            content={ page.title }
+          >
+            { (page.title === 'Untitled' || page.title === '') &&
+              <span className="titlePlaceholder">Untitled</span>
+            }
+            { page.title !== 'Untitled' &&
+              <span>{ page.title }</span>
+            }
+          </Content>
+        </h1>
 
         { headers }
         
