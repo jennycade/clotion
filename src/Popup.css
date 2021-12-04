@@ -1,0 +1,10 @@
+.popup {
+  position: absolute;
+  z-index: 100;
+  border: 1px solid red;
+
+  background-color: white;
+  box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0;
+  border: 1px solid rgb(231, 231, 231);
+  border-radius: 4px;
+}

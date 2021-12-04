@@ -1,3 +1,5 @@
+import './Popup.css';
+
 import { useEffect } from 'react';
 
 const Popup = (props) => {

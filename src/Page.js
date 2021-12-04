@@ -231,16 +231,18 @@ const Page = ( props ) => {
     }
   }, [uid, id, page]);
 
-  const handleDBRowChange = ( event, rowPageID, fieldID, page, rows, setRows ) => {
+  const handleDBRowChange = ( payload, rowPageID, fieldID, page, rows, setRows ) => {
     // get field type
     const type = page.properties[fieldID].type;
     
     // data validation/conversion
     let newVal;
     if (type === 'checkbox') {
-      newVal = convertEntry(event.target.checked, 'checkbox');
+      newVal = convertEntry(payload.target.checked, 'checkbox');
+    } else if (type === 'select') {
+      newVal = payload;
     } else {
-      newVal = convertEntry(event.target.value, type);
+      newVal = convertEntry(payload.target.value, type);
     }
 
     if (type === 'title') {
@@ -312,7 +314,7 @@ const Page = ( props ) => {
     await updateDoc(docRef, updateObj);
   }
 
-  const handleClickChange = async (event, rowPageID, fieldID, page, rows, setRows) => {
+  const handleClickChange = async (payload, rowPageID, fieldID, page, rows, setRows) => {
     // for click events, where onChange triggers simultaneous state change and firestore database change
 
     // get field type
@@ -321,16 +323,19 @@ const Page = ( props ) => {
     let newVal;
     // get value
     if (type === 'checkbox') {
-      newVal = convertEntry(event.target.checked, 'checkbox');
-    } else {
-      newVal = convertEntry(event.target.value, type);
+      newVal = convertEntry(payload.target.checked, 'checkbox');
+    } else if (type === 'select') {
+      newVal = payload;
+    }
+    else {
+      newVal = convertEntry(payload.target.value, type);
     }
 
     // update firestore
     await updateDBRow(rowPageID, fieldID, page, rows, newVal);
 
     // update state
-    handleDBRowChange(event, rowPageID, fieldID, page, rows, setRows);
+    handleDBRowChange(payload, rowPageID, fieldID, page, rows, setRows);
   }
 
   ///////////////////

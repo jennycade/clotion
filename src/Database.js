@@ -103,7 +103,12 @@ const Database = (props) => {
     let displayInfo;
     let handleClick;
     if (type === 'select') {
-      displayInfo = getSelectDisplay(propID, row[propID]);
+      // blank?
+      if (row[propID] === '') {
+        displayInfo = false;
+      } else {
+        displayInfo = getSelectDisplay(propID, row[propID]);
+      }
       handleClick = () => null;
     }
     return (
@@ -120,10 +125,15 @@ const Database = (props) => {
 
         {/* SELECT */}
         { type === 'select' &&
-          <SelectCell>
+          <SelectCell
+            type='select'
+            remove={ () => handleClickChange('', row.id, propID) }
+          >
+            { !!displayInfo &&
             <SelectOption color={displayInfo.color}>
-            { displayInfo.displayName }
+              { displayInfo.displayName }
             </SelectOption>
+            }
           </SelectCell>
         }
 
