@@ -2,6 +2,8 @@ import './Popup.css';
 
 import { useEffect } from 'react';
 
+import { getAncestorClassList } from './helpers';
+
 const Popup = (props) => {
   // props
   const { exit } = props;
@@ -10,7 +12,7 @@ const Popup = (props) => {
   useEffect(() => {
     const handleClick = (event) => {
       // console.table(); // return to this part!!!!!!!
-      if (!event.target.classList.contains('popup')) { // clicked outside the popup
+      if (!getAncestorClassList(event.target).includes('popup')) { // clicked outside the popup
         exit();
       }
     }

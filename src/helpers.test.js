@@ -1,5 +1,5 @@
 import { stringify } from '@firebase/util';
-import { countDuplicates, getTitles, rearrange, getDescendents, splicePageLinkInBlock } from './helpers';
+import { countDuplicates, getTitles, rearrange, getDescendents, splicePageLinkInBlock, getAncestorClassList } from './helpers';
 
 // countDuplicates
 test(`No duplicates in [1,2,3]`, () => {
@@ -473,3 +473,47 @@ test(`splicePageLinkInBlock() replaces pagelink node with empty text node if the
 
 //   expect(result).toBe(expectedResult);
 // });
+
+
+// for the DOM
+test(`getAncestorClassList returns parents class`, () => {
+  const parent = document.createElement('div');
+  parent.className = 'app';
+
+  const el = document.createElement('div');
+  parent.appendChild(el);
+
+  expect(getAncestorClassList(el)).toEqual(['app']);
+});
+
+test(`getAncestorClassList returns grandparents' class`, () => {
+  const grandparent = document.createElement('div');
+  grandparent.className = 'app';
+  
+  const parent = document.createElement('div');
+  grandparent.appendChild(parent);
+
+  const el = document.createElement('div');
+  parent.appendChild(el);
+
+  expect(getAncestorClassList(el)).toEqual(['app']);
+});
+
+test(`getAncestorClassList returns grandparents' and parents' classes`, () => {
+  const grandparent = document.createElement('div');
+  grandparent.className = 'app';
+  grandparent.classList.add('boop');
+  
+  const parent = document.createElement('div');
+  parent.classList.add('foop');
+  parent.classList.add('shmoop');
+  grandparent.appendChild(parent);
+
+  const el = document.createElement('div');
+  parent.appendChild(el);
+
+  expect(getAncestorClassList(el)).toContain('app');
+  expect(getAncestorClassList(el)).toContain('boop');
+  expect(getAncestorClassList(el)).toContain('foop');
+  expect(getAncestorClassList(el)).toContain('shmoop');
+});
