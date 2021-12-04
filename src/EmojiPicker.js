@@ -9,7 +9,6 @@ import { getTitles } from './helpers';
 
 import emojiDb from './emoji.json';
 
-
 const EmojiPicker = ( props ) => {
   // props
   const { handleIconClick, exit } = props;
@@ -19,11 +18,10 @@ const EmojiPicker = ( props ) => {
   const [groups, setGroups] = useState(getTitles(emojiDb, 'group'));
   const [filterText, setFilterText] = useState('');
 
-  // useEffect -> reset groups when emojis changes
+  
   useEffect(() => {
 
     const filterEmojis = ( filterText ) => {
-      // TODO: make case-insensitive
       if (filterText !== '') {
         let text = filterText.toLocaleLowerCase();
         const filteredEmojis = emojiDb.filter((emoji) => emoji.name.includes(text) ||
@@ -38,6 +36,7 @@ const EmojiPicker = ( props ) => {
     
   }, [filterText]);
 
+  // useEffect -> reset groups when emojis changes
   useEffect(() => {
     setGroups(getTitles(emojis, 'group'));
   }, [emojis]);

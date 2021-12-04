@@ -11,7 +11,6 @@ const Popup = (props) => {
   // event listener for clicking outside the picker --> close it
   useEffect(() => {
     const handleClick = (event) => {
-      // console.table(); // return to this part!!!!!!!
       if (!getAncestorClassList(event.target).includes('popup')) { // clicked outside the popup
         exit();
       }

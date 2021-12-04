@@ -60,6 +60,18 @@ const Database = (props) => {
     // {color, displayName, sortOrder}
     return displayInfo;
   }
+  const getSelectOptions = (propID) => {
+    // want [{id, displayName, color, sortOrder}, ...]
+    // OR DO I REALLY WANT
+    // {displayName: <SelectOption />, ...}
+    // OR
+    // [{displayName, jsx}, {displayName, jsx}, ...]
+    const selectOptionIDs = Object.keys(page.properties[propID].selectOptions);
+    const selectOptions = selectOptionIDs.map((x => {
+      return {id: x, ...getSelectDisplay(propID, x)};
+    }));
+    return selectOptions;
+  }
 
   
 
@@ -128,6 +140,7 @@ const Database = (props) => {
           <SelectCell
             type='select'
             remove={ () => handleClickChange('', row.id, propID) }
+            allOptions={ getSelectOptions(propID) }
           >
             { !!displayInfo &&
             <SelectOption color={displayInfo.color}>
