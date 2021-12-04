@@ -1,4 +1,4 @@
-import { useState, cloneElement } from 'react';
+import { useState, cloneElement, isValidElement } from 'react';
 import Popup from './Popup';
 
 const SelectCell = (props) => {
@@ -10,7 +10,7 @@ const SelectCell = (props) => {
 
   if (editing) {
     // add make SelectOptions removeable
-    const options = cloneElement(props.children, {remove});
+    const options = isValidElement(props.children) ? cloneElement(props.children, {remove}) : null;
 
     return (
       <Popup exit={ () => setEditing(false) }>
