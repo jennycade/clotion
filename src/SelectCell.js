@@ -1,3 +1,5 @@
+import './SelectCell.css';
+
 import { useState, useEffect, cloneElement, isValidElement } from 'react';
 import Popup from './Popup';
 import SelectOption from './SelectOption';
@@ -54,19 +56,30 @@ const SelectCell = (props) => {
 
     return (
       <Popup exit={ () => setEditing(false) }>
-        { options }
-        <input type='text' autoFocus={true} onChange={handleFilterChange} value={filter} />
-        { matchingOptions.map(option => {
-          return <div key={option.id}>
-            <SelectOption
-              color={option.color}
-            >
-              <span onClick={ () => handleClick(option.id) } >
+        <header className='currentSelectOptions'>
+          {/* Current value */}
+          { options } 
+
+          {/* Filter text box */}
+          <input
+            type='text'
+            autoFocus={true}
+            onChange={handleFilterChange}
+            value={filter}
+          />
+        </header>
+        
+        <ul className='selectOptions'>
+          { matchingOptions.map(option => {
+            return <li className='selectOptionDiv' key={option.id} onClick={ () => handleClick(option.id) } >
+              <SelectOption
+                color={option.color}
+              >
               { option.displayName }
-              </span>
-            </SelectOption>
-          </div>
-        })}
+              </SelectOption>
+            </li>
+          })}
+        </ul>
       </Popup>
       
     );
