@@ -85,7 +85,7 @@ td .content, td .content .block {
 }
 
 td div, .field, .field * {
-  width: 100%;
+  /* width: 100%; */
   min-width: 32px;
   min-height: 32px;
 }

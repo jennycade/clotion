@@ -1,5 +1,6 @@
 import { useState, useEffect, cloneElement, isValidElement } from 'react';
 import Popup from './Popup';
+import SelectOption from './SelectOption';
 
 const SelectCell = (props) => {
   // props
@@ -21,6 +22,8 @@ const SelectCell = (props) => {
     if (filter !== '') {
       const matching = allOptions.filter(x => x.displayName.includes(filter));
       setMatchingOptions(matching);
+    } else {
+      setMatchingOptions(allOptions);
     }
   }, [filter, allOptions]);
 
@@ -30,6 +33,16 @@ const SelectCell = (props) => {
       setFilter('');
     }
   }, [editing]);
+
+  // click to choose
+  const handleClick = (optionID) => {
+    // call prop
+    props.handleClick(optionID);
+    // close modal for select
+    if (type === 'select') {
+      setEditing(false);
+    }
+  }
 
   ////////////
   // RENDER //
@@ -42,9 +55,17 @@ const SelectCell = (props) => {
     return (
       <Popup exit={ () => setEditing(false) }>
         { options }
-        <input type='text' onChange={handleFilterChange} value={filter} />
+        <input type='text' autoFocus={true} onChange={handleFilterChange} value={filter} />
         { matchingOptions.map(option => {
-          return <div key={option.id}>{option.displayName}</div>
+          return <div key={option.id}>
+            <SelectOption
+              color={option.color}
+            >
+              <span onClick={ () => handleClick(option.id) } >
+              { option.displayName }
+              </span>
+            </SelectOption>
+          </div>
         })}
       </Popup>
       

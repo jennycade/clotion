@@ -6,10 +6,6 @@ const SelectOption = (props) => {
   // props
   const { color } = props;
 
-  if (props.remove) {
-
-  }
-
   const style = {
     backgroundColor: getColorCode(color, 'bgColor'),
   }

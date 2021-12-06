@@ -140,6 +140,7 @@ const Database = (props) => {
           <SelectCell
             type='select'
             remove={ () => handleClickChange('', row.id, propID) }
+            handleClick={ (optionID) =>  handleClickChange(optionID, row.id, propID) }
             allOptions={ getSelectOptions(propID) }
           >
             { !!displayInfo &&
