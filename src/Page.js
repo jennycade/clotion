@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, query, where, orderBy, } from 'firebase/firestore';
+import { doc, collection, onSnapshot, addDoc, updateDoc, setDoc, deleteDoc, query, where, orderBy, } from 'firebase/firestore';
 import { db } from './firebase/db';
 
 import { convertEntry } from './databaseFunctions';
@@ -15,6 +15,7 @@ import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
 import Database from './Database';
+import { generateUniqueString } from './helpers';
 
 const Page = ( props ) => {
   // props
@@ -338,6 +339,35 @@ const Page = ( props ) => {
     handleDBRowChange(payload, rowPageID, fieldID, page, rows, setRows);
   }
 
+  const addSelectOption = async (displayName, fieldID, page) => {
+    // generate ID
+    const currentIDs = Object.keys(
+      page.properties[fieldID].selectOptions
+    );
+    const newID = generateUniqueString(currentIDs);
+
+
+    // add doc to page/fieldID/props with default settings
+
+    const newOptions = {
+      ...page.properties[fieldID].selectOptions,
+      [newID]: {
+        color: 'gray',
+        displayName,
+        sortOrder: 0, // fix this TODO
+      
+      }
+    };
+    
+    await updateDoc(
+      doc(db, 'pages', page.id),
+      `properties.${fieldID}.selectOptions`,
+      newOptions,
+    );
+
+    return newID;
+  }
+
   ///////////////////
   // DATABASE PAGE //
   ///////////////////
@@ -381,6 +411,7 @@ const Page = ( props ) => {
         handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, parentDbPage, row, setRow) }
         updateDBRow={ (rowPageID, fieldID, overrideVal = null) => updateDBRow(rowPageID, fieldID, parentDbPage, row, overrideVal) }
         handleClickChange={ (event, rowPageID, fieldID) => handleClickChange(event, rowPageID, fieldID, parentDbPage, row, setRow) }
+        addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, parentDbPage)}
       />
     );
   }
@@ -482,6 +513,7 @@ const Page = ( props ) => {
               handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, page, rows, setRows) }
               updateDBRow={ (rowPageID, fieldID, overrideVal=null) => updateDBRow(rowPageID, fieldID, page, rows, overrideVal) }
               handleClickChange={ (event, rowPageID, fieldID) => handleClickChange(event, rowPageID, fieldID, page, rows, setRows) }
+              addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, page)}
             />
           }
 

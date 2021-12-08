@@ -10,7 +10,7 @@ import SelectCell from './SelectCell';
 
 const Database = (props) => {
   // props
-  const { page, rows, dbPages, handleDBRowChange, updateDBRow, handleClickChange, dbDisplay } = props;
+  const { page, rows, dbPages, handleDBRowChange, updateDBRow, handleClickChange, addSelectOption, dbDisplay } = props;
 
   let type, propIDs
 
@@ -142,6 +142,7 @@ const Database = (props) => {
             remove={ () => handleClickChange('', row.id, propID) }
             handleClick={ (optionID) =>  handleClickChange(optionID, row.id, propID) }
             allOptions={ getSelectOptions(propID) }
+            addSelectOption={ (displayName) => addSelectOption(propID, displayName) }
           >
             { !!displayInfo &&
             <SelectOption color={displayInfo.color}>

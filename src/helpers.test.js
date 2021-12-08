@@ -1,5 +1,5 @@
 import { stringify } from '@firebase/util';
-import { countDuplicates, getTitles, rearrange, getDescendents, splicePageLinkInBlock, getAncestorClassList } from './helpers';
+import { countDuplicates, getTitles, rearrange, getDescendents, splicePageLinkInBlock, getAncestorClassList, generateUniqueString } from './helpers';
 
 // countDuplicates
 test(`No duplicates in [1,2,3]`, () => {
@@ -516,4 +516,62 @@ test(`getAncestorClassList returns grandparents' and parents' classes`, () => {
   expect(getAncestorClassList(el)).toContain('boop');
   expect(getAncestorClassList(el)).toContain('foop');
   expect(getAncestorClassList(el)).toContain('shmoop');
+});
+
+
+
+////////////
+// unique strings //
+////////////////////
+test (`generateUniqueString() returns a string not already in the list`, () => {
+  const list = ['a', 'b', 'c', 'd'];
+  const newStr = generateUniqueString(list);
+
+  expect(list.includes(newStr)).toBe(false);
+  // also check that it exists at all
+  expect(typeof newStr).toBe('string');
+});
+
+test (`generateUniqueString() returns two different strings when called twice`, () => {
+  const list = ['a', 'b', 'c', 'd'];
+  const str1 = generateUniqueString(list);
+  const str2 = generateUniqueString([...list, str1]);
+
+  expect(str1).not.toBe(str2);
+});
+
+test(`generateUniqueString() returns unique strings each time when called 100 times`, () => {
+  const strings = [];
+  for (let i=0; i<100; i++) {
+    const newStr = generateUniqueString(strings);
+    expect(strings.includes(newStr)).toBe(false);
+    strings.push(newStr);
+  }
+});
+
+test(`generateUniqueString() makes a string 12 characters long unless otherwise specified`, () => {
+  const list = [];
+  const newStr = generateUniqueString(list);
+
+  expect(newStr.length).toBe(12);
+});
+
+test(`generateUniqueString() uses stringLength`, () => {
+  const list = [];
+  const newStr = generateUniqueString(list, 5);
+
+  expect(newStr.length).toBe(5);
+});
+
+test(`generateUniqueString() throws an error when it's stuck in an infinite loop`, () => {
+  const strings = [];
+
+  expect(() => {
+    for (let i=0; i<100; i++) {
+      const newStr = generateUniqueString(strings, 1);
+      expect(strings.includes(newStr)).toBe(false);
+      strings.push(newStr);
+    }
+  }).toThrow();
+  
 });

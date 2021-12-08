@@ -9,9 +9,15 @@
   padding: 0;
   list-style: none;
 }
+.selectOptions li {
+  padding: 6px 12px;
+}
 
-.selectOptionDiv {
-  padding: 6px;
+.selectOptions .instructions {
+  padding-top: 12px;
+  font-weight: bold;
+  font-size: 12px;
+  color: rgb(135, 134, 131);
 }
 
 .selectOptionDiv:hover {

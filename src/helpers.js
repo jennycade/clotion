@@ -202,6 +202,36 @@ const getAncestorClassList = (domElement, partialList = []) => {
   
 }
 
+const pickRandomCharacter = () => {
+  const CHARACTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  return CHARACTERS[Math.floor(Math.random()*CHARACTERS.length)];
+}
+
+const generateUniqueString = (existingStringsArr, stringLength = 12) => {
+  // prevent infinite loops!
+  const startTime = Date.now();
+  const timeoutms = 5000;
+
+  let str;
+  do {
+    // reset str
+    str = '';
+    
+    // check for infinite loop
+    if (startTime + timeoutms < Date.now()) {
+      throw new Error('Caught in an infinite loop in generateUniqueString(). Check stringLength parameter');
+    }
+    for (let i=0; i<stringLength; i++) {
+      // pick a random character
+      str += pickRandomCharacter();
+    }
+    
+  } while (existingStringsArr.includes(str)); // check for uniqueness
+
+  // return
+  return str;
+}
+
 
 export {
   countDuplicates,
@@ -212,6 +242,7 @@ export {
   splicePageLinkInBlock,
   getColorCode,
   getAncestorClassList,
+  generateUniqueString,
 };
 
 

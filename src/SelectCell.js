@@ -6,7 +6,7 @@ import SelectOption from './SelectOption';
 
 const SelectCell = (props) => {
   // props
-  const { type, remove, allOptions } = props; // type: 'select' or 'multiselect'
+  const { type, remove, allOptions, addSelectOption } = props; // type: 'select' or 'multiselect'
 
   // state
   const [editing, setEditing] = useState(false);
@@ -46,6 +46,23 @@ const SelectCell = (props) => {
     }
   }
 
+  // adding an option
+  const handleAddOption = async () => {
+    // add to db
+    const newOptionID = await addSelectOption(filter);
+
+    // select it
+    props.handleClick(newOptionID);
+
+    // clear filter
+    setFilter('');
+
+    // for select: close the SelectCell
+    if (type === 'select') {
+      setEditing(false);
+    }
+  }
+
   ////////////
   // RENDER //
   ////////////
@@ -70,6 +87,7 @@ const SelectCell = (props) => {
         </header>
         
         <ul className='selectOptions'>
+          <li className='instructions'>Select an option or create one.</li>
           { matchingOptions.map(option => {
             return <li className='selectOptionDiv' key={option.id} onClick={ () => handleClick(option.id) } >
               <SelectOption
@@ -79,6 +97,15 @@ const SelectCell = (props) => {
               </SelectOption>
             </li>
           })}
+
+          { matchingOptions.length === 0 && 
+            <li className='selectOptionDiv'
+              onClick={ handleAddOption }
+            >
+              Create <SelectOption color='gray'>{filter}</SelectOption>
+            </li>
+          }
+
         </ul>
       </Popup>
       
