@@ -8,10 +8,11 @@ import Content from './Content';
 import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
 import { removeFromArray } from './helpers';
+import FieldName from './FieldTitle';
 
 const Database = (props) => {
   // props
-  const { page, rows, dbPages, handleDBRowChange, updateDBRow, handleClickChange, addSelectOption, dbDisplay } = props;
+  const { page, rows, dbPages, handleDBRowChange, updateDBRow, handleClickChange, addSelectOption, dbDisplay, handleDBPropNameChange, updateDBPropName, } = props;
 
   let type, propIDs
 
@@ -30,20 +31,6 @@ const Database = (props) => {
     type = page.views[activeViewID].type;
     propIDs = page.views[activeViewID].visibleProperties;
   }
-
-  // property type icons
-  const ICONS = {
-    title: '🆔', 
-    text: '🔤',
-    number: '#️⃣',
-    select: '▾',
-    multiselect: '≔',
-    date: '🗓',
-    checkbox: '☑︎',
-    url: '🔗',
-    email: '✉️',
-    phone: '📞',
-  };
 
   const SPECIALTYPES = [
     'title', 'checkbox', 'select', 'multiselect',
@@ -117,10 +104,12 @@ const Database = (props) => {
   // Property icon/name
   const getColumnNameSpan = (propID) => {
     return (
-      <span key={propID} className='columnName'>
-        <span>{ ICONS[getType(propID)] }</span>
-        <span>{ getPropName(propID) }</span>
-      </span>
+      <FieldName
+        type={ getType(propID) }
+        displayName={ getPropName(propID) }
+        handleDBPropNameChange={ (newName) => handleDBPropNameChange(newName, propID)}
+        updateDBPropName={(newName) => updateDBPropName(newName, propID)}
+      />
     );
   }
 

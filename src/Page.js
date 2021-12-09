@@ -365,6 +365,25 @@ const Page = ( props ) => {
     return newID;
   }
 
+  const handleDBPropNameChange = async (newName, fieldID, page) => {
+    // shallow copy page
+    const pageCopy = {...page};
+    // update the name
+    page.properties[fieldID].displayName = newName;
+    // set state
+    setPage(pageCopy);
+  }
+  const updateDBPropName = async (newName, fieldID, dbPage) => {
+    const docRef = doc(db, 'pages', dbPage.id);
+    // construct firebase field with dot notation
+    const fieldStr = `properties.${fieldID}.displayName`;
+    const updateObj = {
+      [fieldStr]: newName,
+    };
+    await updateDoc(docRef, updateObj);
+
+  }
+
   ///////////////////
   // DATABASE PAGE //
   ///////////////////
@@ -409,6 +428,9 @@ const Page = ( props ) => {
         updateDBRow={ (rowPageID, fieldID, overrideVal = null) => updateDBRow(rowPageID, fieldID, parentDbPage, row, overrideVal) }
         handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, parentDbPage, row, setRow) }
         addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, parentDbPage)}
+        // database property updates
+        handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
+        updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
       />
     );
   }
@@ -507,10 +529,15 @@ const Page = ( props ) => {
               page={page}
               rows={rows}
               dbPages={dbPages}
+              // row changes
               handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, page, rows, setRows) }
               updateDBRow={ (rowPageID, fieldID, overrideVal=null) => updateDBRow(rowPageID, fieldID, page, rows, overrideVal) }
               handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, page, rows, setRows) }
+              // selectOption
               addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, page)}
+              // property changes
+              handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
+              updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}
             />
           }
 
