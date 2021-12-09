@@ -243,7 +243,7 @@ function App() {
     // add row for each new page
     const blankRow = {
       title: '',
-      defaultTags: '',
+      defaultTags: [],
       uid: uid,
     }
     for(const rowID of rowIDs) {
