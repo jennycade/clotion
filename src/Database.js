@@ -7,6 +7,7 @@ import './Database.css';
 import Content from './Content';
 import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
+import { removeFromArray } from './helpers';
 
 const Database = (props) => {
   // props
@@ -56,7 +57,10 @@ const Database = (props) => {
     return page.properties[propID].displayName;
   }
   const getSelectDisplay = (propID, selectOptionID) => {
-    const displayInfo = page.properties[propID].selectOptions[selectOptionID];
+    const displayInfo = {
+      id: selectOptionID,
+      ...page.properties[propID].selectOptions[selectOptionID]
+    };
     // {color, displayName, sortOrder}
     return displayInfo;
   }
@@ -71,6 +75,35 @@ const Database = (props) => {
       return {id: x, ...getSelectDisplay(propID, x)};
     }));
     return selectOptions;
+  }
+
+  const removeSelectOption = (optionID, rowID, propID) => {
+    // remove from array
+    const oldArr = rows.find(row => row.id === rowID)[propID];
+    const newArr = removeFromArray(optionID, oldArr);
+
+    // send through to page
+    handleClickChange(newArr, rowID, propID);
+  }
+
+  const chooseSelectOption = (optionID, rowID, propID) => {
+    // select: replace
+    const type = getType(propID);
+    let newArr;
+    
+    if (type === 'select') {
+      newArr = [optionID];
+    } else if (type === 'multiselect') {
+      // add to array
+      const oldArr = rows.find(row => row.id === rowID)[propID];
+      newArr = [...oldArr];
+      if (!oldArr.includes(optionID)) {
+        newArr.push(optionID);
+      }
+    }
+
+    // send through to page
+    handleClickChange(newArr, rowID, propID);
   }
 
   
@@ -114,13 +147,12 @@ const Database = (props) => {
     const type = getType(propID);
     let displayInfo;
     let handleClick;
-    if (type === 'select') {
-      // blank?
-      if (row[propID] === '') {
-        displayInfo = false;
-      } else {
-        displayInfo = getSelectDisplay(propID, row[propID]);
-      }
+    if (type === 'select' || type === 'multiselect') {
+      // row[propID] is array of selectOption IDs. Look up selectOption
+      displayInfo = row[propID].map(selectOption => getSelectDisplay(propID, selectOption));
+      // displayInfo = [{id, displayName, color, sortOrder}, {...}, ...]
+      
+      // no onClick for the whole cell
       handleClick = () => null;
     }
     return (
@@ -136,18 +168,25 @@ const Database = (props) => {
         }
 
         {/* SELECT */}
-        { type === 'select' &&
+        { (type === 'select' || type === 'multiselect') &&
           <SelectCell
-            type='select'
-            remove={ () => handleClickChange('', row.id, propID) }
-            handleClick={ (optionID) =>  handleClickChange(optionID, row.id, propID) }
+            type={ type }
+            remove={ (optionID) => removeSelectOption(optionID, row.id, propID) }
+            handleClick={ (payload) =>  chooseSelectOption(payload, row.id, propID) }
             allOptions={ getSelectOptions(propID) }
             addSelectOption={ (displayName) => addSelectOption(propID, displayName) }
           >
-            { !!displayInfo &&
-            <SelectOption color={displayInfo.color}>
-              { displayInfo.displayName }
-            </SelectOption>
+            { 
+              displayInfo.map(selectOption => (
+                  <SelectOption
+                    key={selectOption.id}
+                    id={selectOption.id}
+                    color={selectOption.color}
+                  >
+                    { selectOption.displayName }
+                  </SelectOption>
+                )
+              )
             }
           </SelectCell>
         }

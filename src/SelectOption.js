@@ -4,7 +4,7 @@ import { getColorCode } from './helpers';
 
 const SelectOption = (props) => {
   // props
-  const { color } = props;
+  const { id, color } = props;
 
   const style = {
     backgroundColor: getColorCode(color, 'bgColor'),
@@ -14,7 +14,7 @@ const SelectOption = (props) => {
     <span className='selectOption' style={style}>
       { props.children }
       { !!props.remove &&
-      <span onClick={ props.remove } className='closeX'>
+      <span onClick={ () => props.remove(id) } className='closeX'>
         ×
       </span>
       }

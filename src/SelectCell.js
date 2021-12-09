@@ -1,6 +1,6 @@
 import './SelectCell.css';
 
-import { useState, useEffect, cloneElement, isValidElement } from 'react';
+import { useState, useEffect, Children, cloneElement, isValidElement } from 'react';
 import Popup from './Popup';
 import SelectOption from './SelectOption';
 
@@ -69,7 +69,7 @@ const SelectCell = (props) => {
 
   if (editing) {
     // add make SelectOptions removeable
-    const options = isValidElement(props.children) ? cloneElement(props.children, {remove}) : null;
+    const options = Children.map(props.children, child => isValidElement(child) ? cloneElement(child, {remove}) : null); // iterate over children!
 
     return (
       <Popup exit={ () => setEditing(false) }>

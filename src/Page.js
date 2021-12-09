@@ -240,7 +240,7 @@ const Page = ( props ) => {
     let newVal;
     if (type === 'checkbox') {
       newVal = convertEntry(payload.target.checked, 'checkbox');
-    } else if (type === 'select') {
+    } else if (type === 'select' || type === 'multiselect') {
       newVal = payload;
     } else {
       newVal = convertEntry(payload.target.value, type);
@@ -325,7 +325,7 @@ const Page = ( props ) => {
     // get value
     if (type === 'checkbox') {
       newVal = convertEntry(payload.target.checked, 'checkbox');
-    } else if (type === 'select') {
+    } else if (type === 'select' || type === 'multiselect') {
       newVal = payload;
     }
     else {
@@ -346,16 +346,13 @@ const Page = ( props ) => {
     );
     const newID = generateUniqueString(currentIDs);
 
-
     // add doc to page/fieldID/props with default settings
-
     const newOptions = {
       ...page.properties[fieldID].selectOptions,
       [newID]: {
         color: 'gray',
         displayName,
         sortOrder: 0, // fix this TODO
-      
       }
     };
     
@@ -410,7 +407,7 @@ const Page = ( props ) => {
         dbDisplay='header'
         handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, parentDbPage, row, setRow) }
         updateDBRow={ (rowPageID, fieldID, overrideVal = null) => updateDBRow(rowPageID, fieldID, parentDbPage, row, overrideVal) }
-        handleClickChange={ (event, rowPageID, fieldID) => handleClickChange(event, rowPageID, fieldID, parentDbPage, row, setRow) }
+        handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, parentDbPage, row, setRow) }
         addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, parentDbPage)}
       />
     );
@@ -512,7 +509,7 @@ const Page = ( props ) => {
               dbPages={dbPages}
               handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, page, rows, setRows) }
               updateDBRow={ (rowPageID, fieldID, overrideVal=null) => updateDBRow(rowPageID, fieldID, page, rows, overrideVal) }
-              handleClickChange={ (event, rowPageID, fieldID) => handleClickChange(event, rowPageID, fieldID, page, rows, setRows) }
+              handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, page, rows, setRows) }
               addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, page)}
             />
           }

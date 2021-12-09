@@ -216,7 +216,7 @@ const generateUniqueString = (existingStringsArr, stringLength = 12) => {
   do {
     // reset str
     str = '';
-    
+
     // check for infinite loop
     if (startTime + timeoutms < Date.now()) {
       throw new Error('Caught in an infinite loop in generateUniqueString(). Check stringLength parameter');
@@ -232,6 +232,13 @@ const generateUniqueString = (existingStringsArr, stringLength = 12) => {
   return str;
 }
 
+const removeFromArray = (value, arr) => {
+  const loc = arr.findIndex(x => x === value);
+  const newArr = [...arr.slice(0, loc), ...arr.slice(loc + 1)];
+
+  return newArr;
+}
+
 
 export {
   countDuplicates,
@@ -243,6 +250,7 @@ export {
   getColorCode,
   getAncestorClassList,
   generateUniqueString,
+  removeFromArray,
 };
 
 
