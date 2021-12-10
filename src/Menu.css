@@ -1,0 +1,36 @@
+.menu {
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu li {
+  padding: 6px 12px 6px 6px;
+}
+.menu li.grid {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  justify-items: start;
+  align-items: baseline;
+}
+.menu .icon {
+  justify-self: center;
+}
+
+.menu li:not(.noHover):hover {
+  background-color: rgba(55, 53, 47, 0.08);
+  cursor: pointer;
+}
+.menu li.noHover:hover {
+  background-color: white !important;
+  cursor: auto;
+}
+
+.menu h2 {
+  margin: 0;
+  font-size: 11px;
+  color: rgba(55, 53, 47, 0.6);
+  font-weight: 500;
+}
+

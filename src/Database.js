@@ -12,7 +12,12 @@ import FieldName from './FieldTitle';
 
 const Database = (props) => {
   // props
-  const { page, rows, dbPages, handleDBRowChange, updateDBRow, handleClickChange, addSelectOption, dbDisplay, handleDBPropNameChange, updateDBPropName, } = props;
+  const {
+    page, rows, dbPages, dbDisplay,
+    handleDBRowChange, updateDBRow, handleClickChange,
+    addSelectOption,
+    handleDBPropNameChange, updateDBPropName, updateDBPropType,
+  } = props;
 
   let type, propIDs
 
@@ -109,6 +114,7 @@ const Database = (props) => {
         displayName={ getPropName(propID) }
         handleDBPropNameChange={ (newName) => handleDBPropNameChange(newName, propID)}
         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
+        updateDBPropType={(newType) => updateDBPropType(newType, propID)}
       />
     );
   }

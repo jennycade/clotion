@@ -1,39 +1,52 @@
-import Popup from './Popup';
+import './Menu.css';
 
 const Menu = (props) => {
   // props
-  const { menuItems, exit } = props;
+  const { menuItems, choose } = props;
 
   // arr menuItems = [
   // 	{
   //    id,
   // 		displayText,
-  // 		onChoose,
+  // 		onChoose, // or use choose(id)?
   // 		category // optional
   // 	},
   // 	...
   // ]
 
   // categories?
-  let categories;
+  // let categories;
 
-  if (menuItems.length > 0 && Object.keys(menuItems[0]).includes('category')) {
-    // get all categories
-    categories = menuItems.map(item => item.category);
-    // remove duplicates
-    categories = [...new Set(categories)];
-  }
+  // if (menuItems.length > 0 && Object.keys(menuItems[0]).includes('category')) {
+  //   // get all categories
+  //   categories = menuItems.map(item => item.category);
+  //   // remove duplicates
+  //   categories = [...new Set(categories)];
+  // }
 
   return (
-    <Popup exit={exit}>
+    <ul className='menu'>
       {
         menuItems.map(item => (
-          <ul onClick={item.choose}>
-            {item.displayText}
-          </ul>
+          <li
+            key={item.id}
+            className={ !!item.displayIcon ? 'grid' : ''}
+            onClick={ !!item.onChoose ? item.onChoose : () => choose(item.id)}
+          >
+            {!! item.displayIcon && 
+              <span className='icon'>
+                {item.displayIcon}
+              </span>
+            }
+            {
+              <span>
+                {item.displayText}
+              </span>
+            }
+          </li>
         ))
       }
-    </Popup>
+    </ul>
   )
 }
 

@@ -15,7 +15,7 @@ import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
 import Database from './Database';
-import { generateUniqueString } from './helpers';
+import { generateUniqueString, getTitles } from './helpers';
 
 const Page = ( props ) => {
   // props
@@ -381,7 +381,15 @@ const Page = ( props ) => {
       [fieldStr]: newName,
     };
     await updateDoc(docRef, updateObj);
+  }
+  const updateDBPropType = async (newType, fieldID, dbPage) => {
+    const oldType = dbPage.properties[fieldID].type;
 
+    console.log(`Converting column from ${oldType} to ${newType}`);
+
+    // convert dbPage.properties
+    
+    // convert rows.[row].fieldID
   }
 
   ///////////////////
@@ -431,6 +439,7 @@ const Page = ( props ) => {
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
+        updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbPage)}
       />
     );
   }
@@ -538,6 +547,7 @@ const Page = ( props ) => {
               // property changes
               handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
               updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}
+              updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, page)}
             />
           }
 
