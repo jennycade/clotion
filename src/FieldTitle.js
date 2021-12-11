@@ -57,6 +57,26 @@ const FieldName = (props) => {
     setEditing(false);
   }
 
+  // other column actions
+  const handleColumnAction = (action) => {
+    /*
+    ACTIONS
+    - selectOptions
+    - filter
+    - sortAsc
+    - sortDesc
+    - addLeft
+    - addRight
+    - hide
+    - duplicate
+    - delete
+    */
+   console.log(`Column action called: ${action}`);
+
+   // close
+   setEditing(false);
+  }
+
   // menus
   const propertyTypeMenu = [
     {
@@ -105,6 +125,47 @@ const FieldName = (props) => {
       displayIcon: ICONS['phone'],
     },
   ];
+  const columnActionMenu = [
+    {
+      id: 'selectOptions',
+      displayText: 'Configure options',
+    },
+    {
+      id: 'filter',
+      displayText: 'Add filter',
+    },
+    {
+      id: 'sortAsc',
+      displayText: 'Sort ascending',
+    },
+    {
+      id: 'sortDesc',
+      displayText: 'Sort descending',
+    },
+    {
+      id: 'addLeft',
+      displayText: 'Insert left',
+    },
+    {
+      id: 'addRight',
+      displayText: 'Insert right',
+    },
+    {
+      id: 'hide',
+      displayText: 'Hide',
+    },
+    {
+      id: 'duplicate',
+      displayText: 'Duplicate',
+    },
+    {
+      id: 'delete',
+      displayText: 'Delete',
+    },
+  ];
+
+
+  // RENDER
 
   if (editing) {
     return (
@@ -146,8 +207,13 @@ const FieldName = (props) => {
               choose={ handleChoosePropType }
             />
           </Popup>
-
         }
+
+        {/* COLUMN ACTIONS */}
+        <Menu
+          menuItems={ columnActionMenu }
+          choose={ (action) => handleColumnAction(action) }
+        />
 
       </Popup>
     );
