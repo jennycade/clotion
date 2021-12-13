@@ -1,4 +1,4 @@
-import { convertEntry } from './databaseFunctions';
+import { convertEntry, validateSelectOptions, getInvalidSelectOptions } from './databaseFunctions';
 
 test(`Doesn't change text, url, email, or phone`, () => {
   const strEntry = 'abc';
@@ -151,4 +151,93 @@ test(`For multiselect, allow array of any size`, () => {
   const result = convertEntry(input, 'multiselect');
 
   expect(result).toEqual(['bloop', 'sloop']);
+});
+
+
+////////////////////////////
+// VALIDATE SELECTOPTIONS //
+////////////////////////////
+
+test(`validateSelectOptions returns true when the only option is valid`, () => {
+  const entry = ['bloop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = validateSelectOptions(entry, allOptions);
+
+  expect(result).toBe(true);
+});
+
+test(`validateSelectOptions returns false when the only option is not valid`, () => {
+  const entry = ['gloop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = validateSelectOptions(entry, allOptions);
+
+  expect(result).toBe(false);
+});
+
+test(`validateSelectOptions returns true when the all options are valid`, () => {
+  const entry = ['bloop', 'poop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = validateSelectOptions(entry, allOptions);
+
+  expect(result).toBe(true);
+});
+
+test(`validateSelectOptions returns false when the one of several options are invalid`, () => {
+  const entry = ['bloop', 'gloop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = validateSelectOptions(entry, allOptions);
+
+  expect(result).toBe(false);
+});
+
+///////////////////////////////
+// GET INVALID SELECTOPTIONS //
+///////////////////////////////
+
+test(`validateSelectOptions returns an empty array when the only option is valid`, () => {
+  const entry = ['bloop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = getInvalidSelectOptions(entry, allOptions);
+
+  expect(result).toEqual([]);
+});
+
+test(`validateSelectOptions returns array with invalid selectOption when the only option is not valid`, () => {
+  const entry = ['gloop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = getInvalidSelectOptions(entry, allOptions);
+
+  expect(result).toEqual(['gloop']);
+});
+
+test(`validateSelectOptions returns an empty array when the all options are valid`, () => {
+  const entry = ['bloop', 'poop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = getInvalidSelectOptions(entry, allOptions);
+
+  expect(result).toEqual([]);
+});
+
+test(`validateSelectOptions returns array with invalid selectOption when one of several options are invalid`, () => {
+  const entry = ['bloop', 'gloop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = getInvalidSelectOptions(entry, allOptions);
+
+  expect(result).toEqual(['gloop']);
+});
+
+test(`validateSelectOptions returns array with invalid selectOptions when several options are invalid`, () => {
+  const entry = ['snoop', 'gloop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = getInvalidSelectOptions(entry, allOptions);
+
+  expect(result).toEqual(['snoop', 'gloop']);
+});
+
+test(`validateSelectOptions array doesn't include duplicates`, () => {
+  const entry = ['snoop', 'gloop', 'snoop', 'snoop', 'snoop'];
+  const allOptions = ['bloop', 'poop', 'shmoop'];
+  const result = getInvalidSelectOptions(entry, allOptions);
+
+  expect(result).toEqual(['snoop', 'gloop']);
 });

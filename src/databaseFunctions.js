@@ -73,6 +73,31 @@ const convertEntry = (entry, propType, finalSave = false, selectOptions = null) 
   }
 }
 
+const validateSelectOptions = (selectOptions, allSelectOptions) => {
+  let result = true;
+  selectOptions.forEach(selectOption => {
+    if (! allSelectOptions.includes(selectOption)) {
+      result = false;
+    }
+  })
+  return result;
+}
+
+const getInvalidSelectOptions = (selectOptions, allSelectOptions) => {
+  const result = [];
+  selectOptions.forEach(selectOption => {
+    if (! allSelectOptions.includes(selectOption)) {
+      // check for duplication
+      if (! result.includes(selectOption)) {
+        result.push(selectOption);
+      }
+    }
+  })
+  return result;
+}
+
 export {
   convertEntry,
+  validateSelectOptions,
+  getInvalidSelectOptions,
 };
