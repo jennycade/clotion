@@ -1,4 +1,4 @@
-const convertEntry = (entry, propType, finalSave = false) => {
+const convertEntry = (entry, propType, finalSave = false, selectOptions = null) => {
   switch(propType) {
     case 'text':
     case 'url':
@@ -47,9 +47,26 @@ const convertEntry = (entry, propType, finalSave = false) => {
 
         // put it together
         return `${year}-${month}-${day}`;
-
       }
-
+    case 'select':
+    case 'multiselect':
+      if (Array.isArray(entry)) {
+        if (propType === 'select') {
+          // only one array element
+          if (entry.length > 1) {
+            return entry.slice(0, 1);
+          }
+        }
+        return entry;
+      } else if (typeof entry === 'string') {
+        if (entry === '') {
+          return [];
+        } else {
+          return [entry];
+        }
+      } else {
+        throw new Error(`Don't know how to convert ${typeof entry} to ${propType}`);
+      }
 
     default:
       throw new Error(`Invalid property type: ${propType}`);

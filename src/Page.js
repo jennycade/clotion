@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { doc, collection, onSnapshot, addDoc, updateDoc, setDoc, deleteDoc, query, where, orderBy, } from 'firebase/firestore';
+import { doc, collection, onSnapshot, addDoc, updateDoc, setDoc, deleteDoc, query, where, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from './firebase/db';
 
 import { convertEntry } from './databaseFunctions';
@@ -388,9 +388,16 @@ const Page = ( props ) => {
     console.log(`Converting column from ${oldType} to ${newType}`);
 
     // convert dbPage.properties
+    // check for number of new selectOptions! Don't make multiples!
     
     // convert rows.[row].fieldID
+
+    // update firestore
+    const batch = writeBatch(db);
+    // batch.update(normal update)
+    // await batch.commit();
   }
+
 
   ///////////////////
   // DATABASE PAGE //

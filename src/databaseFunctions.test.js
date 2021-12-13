@@ -106,3 +106,49 @@ test(`Converts other date formats to xxxx-xx-xx`, () => {
   expect(convertEntry('12-2-21', 'date')).toBe(correct);
   expect(convertEntry('12-02-2021', 'date')).toBe(correct);
 });
+
+
+////////////
+// SELECT //
+////////////
+test(`Passes an empty array through`, () => {
+  const input = [];
+  const result = convertEntry(input, 'select');
+
+  expect(result).toEqual(input);
+});
+
+test(`Converts blank string to empty array`, () => {
+  const input = '';
+  const result = convertEntry(input, 'select');
+
+  expect(result).toEqual([]);
+});
+
+test(`Convert a non-blank string to array with that string`, () => {
+  const input = 'bloop';
+  const result = convertEntry(input, 'select');
+
+  expect(result).toEqual(['bloop']);
+});
+
+test(`Passes array with one member through`, () => {
+  const input = ['bloop'];
+  const result = convertEntry(input, 'select');
+
+  expect(result).toEqual(['bloop']);
+});
+
+test(`For select, reduces array down to first element`, () => {
+  const input = ['bloop', 'sloop'];
+  const result = convertEntry(input, 'select');
+
+  expect(result).toEqual(['bloop']);
+});
+
+test(`For multiselect, allow array of any size`, () => {
+  const input = ['bloop', 'sloop'];
+  const result = convertEntry(input, 'multiselect');
+
+  expect(result).toEqual(['bloop', 'sloop']);
+});

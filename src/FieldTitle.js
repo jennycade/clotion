@@ -164,6 +164,8 @@ const FieldName = (props) => {
     },
   ];
 
+  // adapt columnActionMenu for special types: title, non-selectOption types
+
 
   // RENDER
 
