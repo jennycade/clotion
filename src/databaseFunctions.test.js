@@ -1,4 +1,6 @@
-import { convertEntry, validateSelectOptions, getInvalidSelectOptions } from './databaseFunctions';
+import { convertEntry, validateSelectOptions, getInvalidSelectOptions, convertValue } from './databaseFunctions';
+
+import { generateUniqueString } from './helpers';
 
 test(`Doesn't change text, url, email, or phone`, () => {
   const strEntry = 'abc';
@@ -194,7 +196,7 @@ test(`validateSelectOptions returns false when the one of several options are in
 // GET INVALID SELECTOPTIONS //
 ///////////////////////////////
 
-test(`validateSelectOptions returns an empty array when the only option is valid`, () => {
+test(`getInvalidSelectOptions returns an empty array when the only option is valid`, () => {
   const entry = ['bloop'];
   const allOptions = ['bloop', 'poop', 'shmoop'];
   const result = getInvalidSelectOptions(entry, allOptions);
@@ -202,7 +204,7 @@ test(`validateSelectOptions returns an empty array when the only option is valid
   expect(result).toEqual([]);
 });
 
-test(`validateSelectOptions returns array with invalid selectOption when the only option is not valid`, () => {
+test(`getInvalidSelectOptions returns array with invalid selectOption when the only option is not valid`, () => {
   const entry = ['gloop'];
   const allOptions = ['bloop', 'poop', 'shmoop'];
   const result = getInvalidSelectOptions(entry, allOptions);
@@ -210,7 +212,7 @@ test(`validateSelectOptions returns array with invalid selectOption when the onl
   expect(result).toEqual(['gloop']);
 });
 
-test(`validateSelectOptions returns an empty array when the all options are valid`, () => {
+test(`getInvalidSelectOptions returns an empty array when the all options are valid`, () => {
   const entry = ['bloop', 'poop'];
   const allOptions = ['bloop', 'poop', 'shmoop'];
   const result = getInvalidSelectOptions(entry, allOptions);
@@ -218,7 +220,7 @@ test(`validateSelectOptions returns an empty array when the all options are vali
   expect(result).toEqual([]);
 });
 
-test(`validateSelectOptions returns array with invalid selectOption when one of several options are invalid`, () => {
+test(`getInvalidSelectOptions returns array with invalid selectOption when one of several options are invalid`, () => {
   const entry = ['bloop', 'gloop'];
   const allOptions = ['bloop', 'poop', 'shmoop'];
   const result = getInvalidSelectOptions(entry, allOptions);
@@ -226,7 +228,7 @@ test(`validateSelectOptions returns array with invalid selectOption when one of 
   expect(result).toEqual(['gloop']);
 });
 
-test(`validateSelectOptions returns array with invalid selectOptions when several options are invalid`, () => {
+test(`getInvalidSelectOptions returns array with invalid selectOptions when several options are invalid`, () => {
   const entry = ['snoop', 'gloop'];
   const allOptions = ['bloop', 'poop', 'shmoop'];
   const result = getInvalidSelectOptions(entry, allOptions);
@@ -234,10 +236,107 @@ test(`validateSelectOptions returns array with invalid selectOptions when severa
   expect(result).toEqual(['snoop', 'gloop']);
 });
 
-test(`validateSelectOptions array doesn't include duplicates`, () => {
+test(`getInvalidSelectOptions array doesn't include duplicates`, () => {
   const entry = ['snoop', 'gloop', 'snoop', 'snoop', 'snoop'];
   const allOptions = ['bloop', 'poop', 'shmoop'];
   const result = getInvalidSelectOptions(entry, allOptions);
 
   expect(result).toEqual(['snoop', 'gloop']);
+});
+
+
+///////////////////
+// CONVERT VALUE //
+///////////////////
+
+test(`Converting between text, url, email, and phone returns the original value`, () => {
+  const types = ['text', 'url', 'email', 'phone'];
+
+  // test all against each other
+  for (let i=0; i<types.length; i++) {
+    for (let j=0; j<types.length; j++) {
+      // get a random string
+      const testStr = generateUniqueString([]);
+      const oldType = types[i];
+      const newType = types[j];
+
+      const originalVal = convertEntry(testStr, oldType);
+      expect(convertValue(testStr, oldType, newType)).toBe(originalVal);
+    }
+  }
+});
+
+const dummySelectOptions = {
+  id1:
+    {
+      sortOrder: 0,
+      displayName: 'pizza',
+      color: 'gray',
+    },
+  id2:
+  {
+    sortOrder: 0,
+    displayName: 'burrito',
+    color: 'gray',
+  },
+  id3:
+  {
+    sortOrder: 0,
+    displayName: 'burger',
+    color: 'gray',
+  },
+};
+test(`Converting from multiselect to text returns a comma-separated list of values`, () => {
+
+  const oldValue = ['id1', 'id2'];
+
+  expect(convertValue(oldValue, 'multiselect', 'text', dummySelectOptions)).toBe('pizza, burrito');
+});
+
+test(`Converting from select to text returns a the displayName of the selectOption`, () => {
+  const oldValue = ['id3'];
+
+  expect(convertValue(oldValue, 'select', 'text', dummySelectOptions)).toBe('burger');
+});
+
+test(`Converting from a comma-separated list in text to multiselect returns an array with the values of the comma-separated items`, () => {
+  const oldValue = 'pizza, burrito';
+  const condensedValue = 'pizza,burrito';
+  
+  expect(convertValue(oldValue, 'text', 'multiselect')).toEqual(['pizza', 'burrito']);
+  expect(convertValue(condensedValue, 'text', 'multiselect')).toEqual(['pizza', 'burrito']);
+});
+
+// above for select
+test(`Converting from a comma-separated list in text to select returns an array with the first value of the comma-separated items`, () => {
+  const oldValue = 'pizza, burrito';
+  const condensedValue = 'pizza,burrito';
+  
+  expect(convertValue(oldValue, 'text', 'select')).toEqual(['pizza']);
+  expect(convertValue(condensedValue, 'text', 'select')).toEqual(['pizza']);
+});
+
+// above but test for eliminating duplicates
+test(`Converting from a comma-separated list in text to multiselect eliminates duplicates`, () => {
+  const oldValue = 'pizza, burrito, pizza, pizza, pizza';
+  const condensedValue = 'pizza,burrito,pizza,pizza,pizza';
+  
+  expect(convertValue(oldValue, 'text', 'multiselect')).toEqual(['pizza', 'burrito']);
+  expect(convertValue(condensedValue, 'text', 'multiselect')).toEqual(['pizza', 'burrito']);
+});
+
+// non-comma
+test(`Converting from text to multiselect or select without commas returns a single element in an array`, () => {
+  const string = 'Bloop bloop bloop bloop be doop';
+  expect(convertValue(string, 'text', 'multiselect')).toEqual([string]);
+  expect(convertValue(string, 'text', 'select')).toEqual([string]);
+});
+
+// blank!
+test(`Converting any blank string to select or multiselect returns an empty array`, () => {
+  const types = ['text', 'url', 'email', 'phone', 'date', 'number',];
+  types.forEach(type => {
+    expect(convertValue('', type, 'multiselect')).toEqual([]);
+    expect(convertValue('', type, 'select')).toEqual([]);
+  });
 });

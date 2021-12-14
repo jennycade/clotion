@@ -385,15 +385,29 @@ const Page = ( props ) => {
   const updateDBPropType = async (newType, fieldID, dbPage) => {
     const oldType = dbPage.properties[fieldID].type;
 
-    console.log(`Converting column from ${oldType} to ${newType}`);
+    // update firestore
+    const batch = writeBatch(db);
 
-    // convert dbPage.properties
+    // convert dbPage.property
+    const pageRef = doc(db, 'pages', dbPage.id);
+    const propTypeStr = `properties.${fieldID}.type`;
+    const propTypeUpdateObj = {
+      [propTypeStr]: newType,
+    };
+    batch.update(pageRef, propTypeUpdateObj);
+
+    // get old row values
+
+    if (newType === 'select' || newType === 'multiselect') {
     // check for number of new selectOptions! Don't make multiples!
+      if (!oldType.includes(['select', 'multiselect'])) {
+        // converting from non-selectOption field
+        
+      }
+    }
     
     // convert rows.[row].fieldID
 
-    // update firestore
-    const batch = writeBatch(db);
     // batch.update(normal update)
     // await batch.commit();
   }

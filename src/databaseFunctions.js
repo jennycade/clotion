@@ -96,8 +96,99 @@ const getInvalidSelectOptions = (selectOptions, allSelectOptions) => {
   return result;
 }
 
+const isBlank = (value, type) => {
+  const blanks = {
+    text: '',
+    url: '',
+    email: '',
+    phone: '',
+    number: '',
+    date: '',
+    checkbox: false,
+  };
+
+  // non-array types
+  if (Object.keys(blanks).includes(type)) {
+    return value === blanks[type];
+  }
+
+  // array types
+  if (['select', 'multiselect'].includes(type) && Array.isArray(value)) {
+    return value.length === 0;
+  }
+
+  // anything else is invalid
+  throw new Error(`isBlank() doesn't know how to handle value ${value} and type ${type}`);
+}
+
+const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
+  const simpleTypes = ['text', 'url', 'email', 'phone'];
+  const arrayTypes = ['select', 'multiselect'];
+  /* TYPES
+    text: str
+    url: str
+    email: str
+    phone: str
+
+    number: str with numeric value
+    date: str with format YYYY-MM-DD
+
+    checkbox: bool
+
+    select: arr with one element that corresponds to key in selectOptions obj
+    multiselect: arr with elements that correspond to keys in selectOptions obj
+  */
+
+  // NOTE: ignore selectOptions unless oldValue is select or multiselect. Let
+  // the function that calls this one sort out ids vs. displayNames and
+  // existing vs. new selectOptions.
+
+  // simple -> simple
+  if (oldType === newType ||
+    (simpleTypes.includes(oldType) && simpleTypes.includes(newType))
+  ) {
+    return oldValue;
+  }
+
+  // array -> simple
+  if (arrayTypes.includes(oldType) && simpleTypes.includes(newType)) {
+    // convert each array member to displayName
+    const names = oldValue.map(selectOptionID => selectOptions[selectOptionID].displayName);
+
+    // collapse into comma-separated list
+    return names.join(', ');
+  }
+
+  // non-arrayto array
+  if ((!arrayTypes.includes(oldType)) && arrayTypes.includes(newType)) {
+    // blanks
+    if (isBlank(oldValue, oldType)) {
+      return [];
+    }
+
+    // simple -> array
+    if (simpleTypes.includes(oldType)) {
+      // does value contain comma-separated list?
+      const commaSep = oldValue.split(/\s*,\s*/gm);
+
+      // elimintate duplicates
+      const uniqueVals = [...new Set(commaSep)];
+
+      if (newType === 'select') {
+        // only return the first element
+        return [uniqueVals[0]];
+      }
+
+      return uniqueVals;
+    }
+  }
+  
+
+}
+
 export {
   convertEntry,
   validateSelectOptions,
   getInvalidSelectOptions,
+  convertValue,
 };
