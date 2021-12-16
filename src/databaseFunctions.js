@@ -57,7 +57,7 @@ const convertEntry = (entry, propType, finalSave = false, selectOptions = null) 
             return entry.slice(0, 1);
           }
         }
-        return entry;
+        return [...entry];
       } else if (typeof entry === 'string') {
         if (entry === '') {
           return [];
@@ -102,13 +102,16 @@ const isBlank = (value, type) => {
     url: '',
     email: '',
     phone: '',
-    number: '',
+    number: NaN,
     date: '',
     checkbox: false,
   };
 
   // non-array types
   if (Object.keys(blanks).includes(type)) {
+    if (isNaN(blanks[type])) {
+      return isNaN(value);
+    }
     return value === blanks[type];
   }
 
@@ -130,8 +133,9 @@ const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
     email: str
     phone: str
 
-    number: str with numeric value
     date: str with format YYYY-MM-DD
+
+    number: number
 
     checkbox: bool
 
@@ -143,23 +147,71 @@ const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
   // the function that calls this one sort out ids vs. displayNames and
   // existing vs. new selectOptions.
 
-  // simple -> simple
+  // from selectOption 
+  if (arrayTypes.includes(oldType)) {
+    if (selectOptions.length === 0) {
+      throw new Error(`convertValue() missing argument selectOptions`);
+    }
+
+    // array -> simple
+    if (simpleTypes.includes(newType)) {
+      // convert each array member to displayName
+      const names = oldValue.map(selectOptionID => selectOptions[selectOptionID].displayName);
+
+      // collapse into comma-separated list
+      return names.join(', ');
+    }
+
+    // array -> array
+    if (arrayTypes.includes(newType)) {
+      if (oldType === 'multiselect' && newType === 'select') {
+        // only return first value
+        return convertEntry(oldValue, 'select', true, selectOptions);
+      }
+      return [...oldValue];
+    }
+
+    // non-array -> array
+    if (!arrayTypes.includes(newType)) {
+      // convert each array member to displayName
+      const names = oldValue.map(selectOptionID => selectOptions[selectOptionID].displayName);
+
+      // convert and concatenate: handling based on type
+
+      // number
+      if (newType === 'number') {
+        // concatenate all displayNames
+        const concatenated = names.join('');
+        // convert to number
+        return convertEntry(concatenated, 'number', true);
+      }
+
+      // checkbox
+      if (newType === 'checkbox') {
+        // concatenate all displayNames
+        const concatenated = names.join('');
+        // rerun as text
+        return convertValue(concatenated, 'text', 'checkbox');
+      }
+
+      // date
+      if (newType === 'date') {
+        // concatenate with... spaces?
+        const concatenated = names.join(' ');
+        // rerun as text
+        return convertValue(concatenated, 'text', 'date');
+      }
+    }
+  }
+
+  // simple -> simple and same -> same
   if (oldType === newType ||
     (simpleTypes.includes(oldType) && simpleTypes.includes(newType))
   ) {
     return oldValue;
   }
 
-  // array -> simple
-  if (arrayTypes.includes(oldType) && simpleTypes.includes(newType)) {
-    // convert each array member to displayName
-    const names = oldValue.map(selectOptionID => selectOptions[selectOptionID].displayName);
-
-    // collapse into comma-separated list
-    return names.join(', ');
-  }
-
-  // non-arrayto array
+  // non-array to array
   if ((!arrayTypes.includes(oldType)) && arrayTypes.includes(newType)) {
     // blanks
     if (isBlank(oldValue, oldType)) {
@@ -181,9 +233,103 @@ const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
 
       return uniqueVals;
     }
-  }
-  
 
+    // date, checkbox, number -> array with element corresponding to text value
+    if (['date', 'checkbox', 'number'].includes(oldType)) {
+      // blank? return empty array
+      if (isBlank(oldValue, oldType)) {
+        return [];
+      }
+      // convert to text
+      return [convertValue(oldValue, oldType, 'text')];
+    }
+  }
+
+  // to simple types
+  if (simpleTypes.includes(newType)) {
+    return convertToString(oldValue, oldType);
+  }
+
+  // to number
+  if (newType === 'number') {
+    // checkbox and date -> always blank (NaN)
+    if (['checkbox', 'date'].includes(oldType)) {
+      return NaN;
+    }
+    return convertEntry(oldValue, 'number', true);
+  }
+
+  // to checkbox
+  if (newType === 'checkbox') {
+    // date and number -> always false
+    if (['date', 'number'].includes(oldType)) {
+      return false;
+    }
+
+    // simple
+    if (simpleTypes.includes(oldType)) {
+      // only 'yes' (case insensitive, ignoring whitespace) corresponds to
+      // checked.
+      const lowerCaseTrimmed = oldValue.trim().toLowerCase();
+      return lowerCaseTrimmed === 'yes';
+    }
+  }
+
+  // to date
+  if (newType === 'date') {
+    // number and checkbox -> always empty
+    if (['number', 'checkbox'].includes(oldType)) {
+      return '';
+    }
+
+    // simple
+    if (simpleTypes.includes(oldType)) {
+      // convert
+      return convertEntry(oldValue, 'date');
+    }
+  }
+
+  throw new Error (`convertValue() doesn't know how to convert ${oldType} to ${newType}`);
+
+}
+
+const convertToString = (value, oldType) => {
+  switch (oldType) {
+    case 'date':
+      // validate
+      let date = Date.parse(value);
+      if (isNaN(date)) {
+        return '';
+      } else {
+        // convert
+        // date number to date object
+        date = new Date(value);
+
+        // num values
+        const year = date.getUTCFullYear();
+        let month = date.getUTCMonth();
+        const day = date.getUTCDate();
+
+        // convert to word month
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'];
+        month = MONTHS[month];
+
+        // put it together
+        return `${month} ${day}, ${year}`;
+      }
+    case 'checkbox':
+      return value ? 'Yes' : '';
+    case 'number':
+      if (isNaN(value)) {
+        return '';
+      }
+      return value.toString();
+     
+
+     default:
+       throw new Error(`convertToString() does not know how to handle type ${oldType}`);
+  }
 }
 
 export {
