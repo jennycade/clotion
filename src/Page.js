@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { doc, collection, onSnapshot, addDoc, updateDoc, setDoc, deleteDoc, query, where, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from './firebase/db';
 
-import { convertEntry } from './databaseFunctions';
+import { convertEntry, convertValue } from './databaseFunctions';
 
 import './Page.css';
 
@@ -382,8 +382,15 @@ const Page = ( props ) => {
     };
     await updateDoc(docRef, updateObj);
   }
-  const updateDBPropType = async (newType, fieldID, dbPage) => {
+  const updateDBPropType = async (newType, fieldID, dbPage, dbRows) => {
     const oldType = dbPage.properties[fieldID].type;
+    const ARRAYTYPES = ['select', 'multiselect'];
+
+    // head them off at the pass
+    if ((!ARRAYTYPES.includes(oldType)) && ARRAYTYPES.includes(newType)) {
+      console.log(`Silly goose. Converting ${oldType} to ${newType} isn't supported yet. Go finish writing updateDBPropType()!`);
+      return null;
+    }
 
     // update firestore
     const batch = writeBatch(db);
@@ -396,20 +403,43 @@ const Page = ( props ) => {
     };
     batch.update(pageRef, propTypeUpdateObj);
 
-    // get old row values
+    // convert row values
 
-    if (newType === 'select' || newType === 'multiselect') {
-    // check for number of new selectOptions! Don't make multiples!
-      if (!oldType.includes(['select', 'multiselect'])) {
+    // look up selectOptions for converting from array
+    let selectOptions;
+    if (ARRAYTYPES.includes(oldType)) {
+      // call convertValue with selectOptions
+      selectOptions = dbPage.properties[fieldID].selectOptions;
+    }
+
+    // non-array -> array
+    if ((!ARRAYTYPES.includes(oldType)) && ARRAYTYPES.includes(newType)) {
+      if (ARRAYTYPES.includes(oldType)) {
+        // array to array: 
+      }
+      // check for number of new selectOptions! Don't make multiples!
+      if (!oldType.includes(ARRAYTYPES)) {
         // converting from non-selectOption field
         
       }
+    } else { // NOT non-array -> array
+      dbRows.forEach(row => {
+        // convert to new value for new type
+        const newVal = convertValue(row[fieldID], oldType, newType, selectOptions);
+        // add update do batch
+        const rowRef = doc(db, 'pages', dbPage.id, 'rows', row.id);
+        const updateObj = {
+          [fieldID]: newVal,
+        };
+        batch.update(rowRef, updateObj);
+
+      });
     }
     
     // convert rows.[row].fieldID
 
     // batch.update(normal update)
-    // await batch.commit();
+    await batch.commit();
   }
 
 
@@ -460,7 +490,7 @@ const Page = ( props ) => {
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
-        updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbPage)}
+        // updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbRows)}
       />
     );
   }
@@ -568,7 +598,7 @@ const Page = ( props ) => {
               // property changes
               handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
               updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}
-              updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, page)}
+              updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, page, rows)}
             />
           }
 

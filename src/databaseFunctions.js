@@ -206,8 +206,7 @@ const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
 
   // simple -> simple and same -> same
   if (oldType === newType ||
-    (simpleTypes.includes(oldType) && simpleTypes.includes(newType))
-  ) {
+    (simpleTypes.includes(oldType) && simpleTypes.includes(newType))) {
     return oldValue;
   }
 
@@ -289,6 +288,7 @@ const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
     }
   }
 
+  // that covers everything—don't fail silently!
   throw new Error (`convertValue() doesn't know how to convert ${oldType} to ${newType}`);
 
 }
