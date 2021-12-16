@@ -386,12 +386,6 @@ const Page = ( props ) => {
     const oldType = dbPage.properties[fieldID].type;
     const ARRAYTYPES = ['select', 'multiselect'];
 
-    // head them off at the pass
-    if ((!ARRAYTYPES.includes(oldType)) && ARRAYTYPES.includes(newType)) {
-      console.log(`Silly goose. Converting ${oldType} to ${newType} isn't supported yet. Go finish writing updateDBPropType()!`);
-      return null;
-    }
-
     // update firestore
     const batch = writeBatch(db);
 
@@ -412,33 +406,87 @@ const Page = ( props ) => {
       selectOptions = dbPage.properties[fieldID].selectOptions;
     }
 
+    // for non-array -> array, but need in this scope
+    const allDisplayNames = {};
     // non-array -> array
     if ((!ARRAYTYPES.includes(oldType)) && ARRAYTYPES.includes(newType)) {
-      if (ARRAYTYPES.includes(oldType)) {
-        // array to array: 
-      }
       // check for number of new selectOptions! Don't make multiples!
       if (!oldType.includes(ARRAYTYPES)) {
         // converting from non-selectOption field
         
-      }
-    } else { // NOT non-array -> array
-      dbRows.forEach(row => {
-        // convert to new value for new type
-        const newVal = convertValue(row[fieldID], oldType, newType, selectOptions);
-        // add update do batch
-        const rowRef = doc(db, 'pages', dbPage.id, 'rows', row.id);
-        const updateObj = {
-          [fieldID]: newVal,
-        };
-        batch.update(rowRef, updateObj);
+        // 1. look up selectOptions - always exists and may have values if 
+        // field was once select or multiselect
+        selectOptions = dbPage.properties[fieldID].selectOptions;
 
-      });
+        // 2. get new row field values
+        const allNewValues = [];
+        dbRows.forEach(row => {
+          const newVal = convertValue(row[fieldID], oldType, newType);
+          allNewValues.push(newVal);
+        });
+        // flatten & remove duplicates
+        const newValues = [...new Set(allNewValues.flat())];
+
+        // 3. list displayNames from selectOptions
+        
+        /*
+        obj allDisplayNames = {
+          displayName1: id1,
+          displayName2: id2,
+          ...
+        }
+        */
+        for (const [selectOptionID, selectOptionObj] of Object.entries(selectOptions)) {
+          allDisplayNames[selectOptionObj.displayName] = selectOptionID;
+        }
+
+        // 4. compare existing selectOptions' displayNames to new values
+        newValues.forEach(val => {
+          if (!(val in allDisplayNames)) {
+            // no match: create new selectOption & add reference object
+            const id = generateUniqueString(Object.keys(selectOptions));
+            selectOptions[id] = {
+              color: 'gray',
+              sortOrder: 0,
+              displayName: val,
+            }
+            // add to allDisplayNames
+            allDisplayNames[val] = id;
+          }
+        });
+
+        // 6. update selectOptions in firebase (replace entire map)
+        const pageRef = doc(db, 'pages', dbPage.id);
+        const propTypeStr = `properties.${fieldID}.selectOptions`;
+        batch.update(pageRef, propTypeStr, selectOptions);
+
+        // 5. convert arrays of displayNames to selectOptionIDs &
+        // update firebase
+        // 
+        // this happens in the next block
+
+      }
     }
     
-    // convert rows.[row].fieldID
+    dbRows.forEach(row => {
+      // convert to new value for new type
+      let newVal = convertValue(row[fieldID], oldType, newType, selectOptions);
+      // replace displayNames with ids for non-array -> array
+      if ((!ARRAYTYPES.includes(oldType)) && ARRAYTYPES.includes(newType)) {
+        const temp = newVal.map(displayName => allDisplayNames[displayName]);
+        newVal = temp;
+      }
+      
+      // add update do batch
+      const rowRef = doc(db, 'pages', dbPage.id, 'rows', row.id);
+      const updateObj = {
+        [fieldID]: newVal,
+      };
+      batch.update(rowRef, updateObj);
 
-    // batch.update(normal update)
+    });
+    
+    // commit the batch
     await batch.commit();
   }
 
