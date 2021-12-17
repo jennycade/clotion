@@ -9,6 +9,7 @@ import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
 import { removeFromArray } from './helpers';
 import FieldName from './FieldTitle';
+import { renderDate } from './databaseFunctions';
 
 const Database = (props) => {
   // props
@@ -198,7 +199,25 @@ const Database = (props) => {
           element={type}
         >
           <span className='field'>
-            { row[propID] }
+            { type === 'url' &&
+              <a href={row[propID]}> {row[propID]} </a>
+            }
+            { type === 'email' &&
+              <a href={`mailto:${row[propID]}`}> {row[propID]} </a>
+            }
+            { type === 'phone' &&
+              <a href={`tel:${row[propID]}`}> {row[propID]} </a>
+            }
+            { type === 'number' &&
+              (isNaN(row[propID]) ? '' : row[propID])
+            }
+            { type === 'date' &&
+              renderDate(row[propID])
+            }
+
+            { type === 'text' &&
+              row[propID]
+            }
           </span>
         </Content>
         }

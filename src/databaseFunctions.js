@@ -332,9 +332,15 @@ const convertToString = (value, oldType) => {
   }
 }
 
+const renderDate = (val) => {
+  // convert to string
+  return convertToString(val, 'date');
+}
+
 export {
   convertEntry,
   validateSelectOptions,
   getInvalidSelectOptions,
   convertValue,
+  renderDate,
 };

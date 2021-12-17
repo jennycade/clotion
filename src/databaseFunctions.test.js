@@ -1,4 +1,4 @@
-import { convertEntry, validateSelectOptions, getInvalidSelectOptions, convertValue } from './databaseFunctions';
+import { convertEntry, validateSelectOptions, getInvalidSelectOptions, convertValue, renderDate } from './databaseFunctions';
 
 import { generateUniqueString } from './helpers';
 
@@ -847,3 +847,25 @@ test(`Converting multiselect with multiple elements to select returns equivalent
   const result = convertValue(val, 'multiselect', 'select', DUMMYSELECTOPTIONS);
   expect(result).toEqual(['id1']);
 });
+
+
+///////////////
+// rendering //
+///////////////
+
+test(`Date renders YYYY-MM-DD as Month d, YYYY when given no format argument`, () => {
+  const val = '2021-12-16';
+  const correct = 'December 16, 2021';
+  expect(renderDate(val)).toBe(correct);
+});
+
+test(`Date renders blank as blank`, () => {
+  expect(renderDate('')).toBe('');
+});
+
+// formats:
+// Full date
+// Month/Day/Year
+// Day/Month/Year
+// Year/Month/Day
+// Relative
