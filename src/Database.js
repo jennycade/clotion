@@ -142,7 +142,11 @@ const Database = (props) => {
     const type = getType(propID);
     let displayInfo;
     let handleClick;
-    if (type === 'select' || type === 'multiselect') {
+    if ((type === 'select' || type === 'multiselect')) {
+      if (!Array.isArray(row[propID])) {
+        // firebase doesn't have array value yet. Replace with empty array while waiting for it to come through
+        row[propID] = [];
+      }
       // row[propID] is array of selectOption IDs. Look up selectOption
       displayInfo = row[propID].map(selectOption => getSelectDisplay(propID, selectOption));
       // displayInfo = [{id, displayName, color, sortOrder}, {...}, ...]
