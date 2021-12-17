@@ -32,6 +32,7 @@ const Page = ( props ) => {
   const [row, setRow] = useState([{}]);
   const [dbPages, setDbPages] = useState([]);
   const [parentDbPage, setParentDbPage] = useState({});
+  const [parentDbRows, setParentDbRows] = useState([]);
 
   // get page object
   useEffect( () => {
@@ -518,6 +519,24 @@ const Page = ( props ) => {
     }
   }, [uid, id, page]);
 
+  // get parent db rows
+  useEffect(() => {
+    if (uid !== '' && page.parentDb && page.parentDb !== '') {
+      const rowsRef = collection(db, 'pages', page.parentDb, 'rows');
+      const rowsQuery = query(rowsRef, where('uid', '==', uid));
+
+      const unsub = onSnapshot(rowsQuery, (rowsSnapshot) => {
+        const newRows = [];
+        rowsSnapshot.forEach((doc) => {
+          const newBlock = {id: doc.id, ...doc.data()}
+          newRows.push(newBlock);
+        });
+        setParentDbRows(newRows);
+      });
+      return unsub;
+    }
+  }, [page.parentDb, uid]);
+
   let headers;
 
   if (page.parentDb && Object.keys(parentDbPage).length > 0 && Object.keys(row[0]).length > 0) {
@@ -538,7 +557,7 @@ const Page = ( props ) => {
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
-        // updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbRows)}
+        updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbPage, parentDbRows)}
       />
     );
   }
