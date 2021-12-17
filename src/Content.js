@@ -40,7 +40,7 @@ const Content = ( props ) => {
           onChange={ handleContentChange }
           onBlur={ leaveEditingMode }
           autoFocus={ true }
-          value={ content }
+          value={ element === 'number' && isNaN(content) ? '' : content }
         />
       }
 
