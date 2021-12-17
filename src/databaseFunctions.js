@@ -32,21 +32,26 @@ const convertEntry = (entry, propType, finalSave = false, selectOptions = null) 
       if (isNaN(date)) {
         return '';
       } else {
-        // convert
-        // date number to date object
-        date = new Date(entry);
+        // convert final save
+        if (finalSave) {
+          // date number to date object
+          date = new Date(entry);
 
-        // num values
-        const year = date.getUTCFullYear();
-        let month = date.getUTCMonth() + 1;
-        let day = date.getUTCDate();
+          // num values
+          const year = date.getUTCFullYear();
+          let month = date.getUTCMonth() + 1;
+          let day = date.getUTCDate();
 
-        // pad
-        month = month.toString().padStart(2, '0');
-        day = day.toString().padStart(2, '0');
+          // pad
+          month = month.toString().padStart(2, '0');
+          day = day.toString().padStart(2, '0');
 
-        // put it together
-        return `${year}-${month}-${day}`;
+          // put it together
+          return `${year}-${month}-${day}`;
+        } else {
+          return entry;
+        }
+        
       }
     case 'select':
     case 'multiselect':
@@ -199,7 +204,7 @@ const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
         // concatenate with... spaces?
         const concatenated = names.join(' ');
         // rerun as text
-        return convertValue(concatenated, 'text', 'date');
+        return convertValue(concatenated, 'text', 'date', true);
       }
     }
   }
@@ -284,7 +289,7 @@ const convertValue = (oldValue, oldType, newType, selectOptions = []) => {
     // simple
     if (simpleTypes.includes(oldType)) {
       // convert
-      return convertEntry(oldValue, 'date');
+      return convertEntry(oldValue, 'date', true);
     }
   }
 

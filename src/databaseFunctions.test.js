@@ -92,21 +92,21 @@ test(`Converts false to false for checkbox`, () => {
 
 // format: 'xxxx-xx-xx'
 test(`Converts invalid date into blank string`, () => {
-  expect(convertEntry('2020-12-32', 'date')).toBe('');
+  expect(convertEntry('2020-12-32', 'date', true)).toBe('');
 });
 
 test(`Leaves a valid xxxx-xx-xx date alone`, () => {
-  expect(convertEntry('2021-12-02', 'date')).toBe('2021-12-02');
+  expect(convertEntry('2021-12-02', 'date', true)).toBe('2021-12-02');
 });
 
 test(`Converts other date formats to xxxx-xx-xx`, () => {
   const correct = '2021-12-02';
   
-  expect(convertEntry('2021/12/02', 'date')).toBe(correct);
-  expect(convertEntry('12/02/21', 'date')).toBe(correct);
-  expect(convertEntry('12/02/2021', 'date')).toBe(correct);
-  expect(convertEntry('12-2-21', 'date')).toBe(correct);
-  expect(convertEntry('12-02-2021', 'date')).toBe(correct);
+  expect(convertEntry('2021/12/02', 'date', true)).toBe(correct);
+  expect(convertEntry('12/02/21', 'date', true)).toBe(correct);
+  expect(convertEntry('12/02/2021', 'date', true)).toBe(correct);
+  expect(convertEntry('12-2-21', 'date', true)).toBe(correct);
+  expect(convertEntry('12-02-2021', 'date', true)).toBe(correct);
 });
 
 

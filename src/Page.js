@@ -278,7 +278,7 @@ const Page = ( props ) => {
   // editing DBs
   const updateDBRow = async (rowPageID, fieldID, page, rows, overrideVal = null) => {
     // revalidate certain fields
-    const revalidateFields = ['number'];
+    const revalidateFields = ['number', 'date'];
     
     // get field type
     const type = page.properties[fieldID].type;
