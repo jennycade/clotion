@@ -1,4 +1,5 @@
 import './ColorToolbar.css';
+import './ColorThumbnail.css';
 
 const COLORNAMES = [
   'default',
@@ -35,7 +36,13 @@ const ColorToolbar = (props) => {
             className="color"
             onMouseDown={ (event) => handleClick(event, 'color', colorName) }
           >
-            { <ColorThumbnail color={ getColorCode(colorName, 'color') } backgroundColor='inherit' /> }
+            {
+              <ColorThumbnail
+                color={ getColorCode(colorName, 'color') }
+                backgroundColor='inherit'
+                content='A'
+              />
+            }
             { `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)}` }
           </div>
         );
@@ -49,7 +56,13 @@ const ColorToolbar = (props) => {
             className="color"
             onMouseDown={ (event) => handleClick(event, 'bgColor', colorName) }
           >
-            { <ColorThumbnail color='inherit' backgroundColor={ getColorCode(colorName, 'bgColor') } /> }
+            {
+              <ColorThumbnail
+                color='inherit'
+                backgroundColor={ getColorCode(colorName, 'bgColor') }
+                content='A'
+              />
+            }
             { `${colorName.slice(0, 1).toUpperCase()}${colorName.slice(1)} background` }
           </div>
         );
@@ -60,20 +73,21 @@ const ColorToolbar = (props) => {
 
 const ColorThumbnail = (props) => {
   // props
-  const { color, backgroundColor } = props;
+  const { color, backgroundColor, content = null } = props;
 
   // style
   const style = {
-    
     color: color,
     backgroundColor: backgroundColor,
   }
 
   return (
     <div className='colorThumbnail' style={style}>
-      A
+      { content }
     </div>
   );
 }
 
 export default ColorToolbar;
+
+export { ColorThumbnail };

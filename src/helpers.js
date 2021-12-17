@@ -159,6 +159,7 @@ const getColorCode = (colorName, type) => {
     red: 'rgba(208, 60, 60, 1)',
   }
   const BGCOLORS = {
+    'light gray': 'rgb(241, 240, 240)',
     gray: 'rgba(234, 234, 235, 0.93)',
     brown: 'rgba(213, 130, 38, 0.13)',
     orange: 'rgba(252, 103, 27, 0.13)',

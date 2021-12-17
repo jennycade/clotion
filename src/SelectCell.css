@@ -20,6 +20,21 @@
   color: rgb(135, 134, 131);
 }
 
+.selectOptionDiv {
+  display: flex;
+  justify-content: space-between;
+}
+
 .selectOptionDiv:hover {
   background-color: rgb(239, 239, 239);
+}
+
+.moreButton {
+  display: none;
+  /* background-color: transparent; */
+  /* border: none; */
+}
+
+.selectOptionDiv:hover .moreButton {
+  display: inline;
 }

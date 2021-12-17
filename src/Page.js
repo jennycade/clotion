@@ -366,6 +366,14 @@ const Page = ( props ) => {
     return newID;
   }
 
+  const updateSelectOption = async () => {
+    console.log(`Updating selectOption`);
+  }
+
+  const deleteSelectOption = async () => {
+    console.log(`Deleting selectOption`);
+  }
+
   const handleDBPropNameChange = async (newName, fieldID, page) => {
     // shallow copy page
     const pageCopy = {...page};
@@ -550,14 +558,20 @@ const Page = ( props ) => {
         rows={row}
         dbPages={singleDbPage}
         dbDisplay='header'
+        // hanlders
+        // rows
         handleDBRowChange={ (event, rowPageID, fieldID) => handleDBRowChange(event, rowPageID, fieldID, parentDbPage, row, setRow) }
         updateDBRow={ (rowPageID, fieldID, overrideVal = null) => updateDBRow(rowPageID, fieldID, parentDbPage, row, overrideVal) }
         handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, parentDbPage, row, setRow) }
+        // selectOptions
         addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, parentDbPage)}
+        updateSelectOption={ () => updateSelectOption() }
+        deleteSelectOption={ () => deleteSelectOption() }
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
         updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbPage, parentDbRows)}
+        
       />
     );
   }
@@ -662,6 +676,8 @@ const Page = ( props ) => {
               handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, page, rows, setRows) }
               // selectOption
               addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, page)}
+              updateSelectOption={ () => updateSelectOption() }
+              deleteSelectOption={ () => deleteSelectOption() }
               // property changes
               handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
               updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}

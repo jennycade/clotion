@@ -1,12 +1,17 @@
 import './SelectCell.css';
 
 import { useState, useEffect, Children, cloneElement, isValidElement } from 'react';
+
 import Popup from './Popup';
 import SelectOption from './SelectOption';
+import SelectOptionRow from './SelectOptionRow';
 
 const SelectCell = (props) => {
   // props
-  const { type, remove, allOptions, addSelectOption } = props; // type: 'select' or 'multiselect'
+  const {
+    type, remove, allOptions,
+    addSelectOption, updateSelectOption, deleteSelectOption,
+  } = props; // type: 'select' or 'multiselect'
 
   // state
   const [editing, setEditing] = useState(false);
@@ -89,16 +94,18 @@ const SelectCell = (props) => {
         <ul className='selectOptions'>
           <li className='instructions'>Select an option or create one.</li>
           { matchingOptions.map(option => {
-            return <li className='selectOptionDiv' key={option.id} onClick={ () => handleClick(option.id) } >
-              <SelectOption
+            return (
+              <SelectOptionRow key={option.id}
+                handleChoose={() => handleClick(option.id)}
                 color={option.color}
-              >
-              { option.displayName }
-              </SelectOption>
-            </li>
+                displayName={option.displayName}
+                updateSelectOption={ () => updateSelectOption() }
+                deleteSelectOption={ () => deleteSelectOption() }
+              />
+            )
           })}
 
-          { matchingOptions.length === 0 && 
+          { matchingOptions.length === 0 && filter !== '' && 
             <li className='selectOptionDiv'
               onClick={ handleAddOption }
             >

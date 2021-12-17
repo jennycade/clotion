@@ -1,0 +1,14 @@
+.colorThumbnail {
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+  border-radius: 3px;
+  font-weight: 500;
+  box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+}
