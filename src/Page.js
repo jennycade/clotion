@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { doc, collection, onSnapshot, addDoc, updateDoc, setDoc, deleteDoc, query, where, orderBy, writeBatch } from 'firebase/firestore';
+import { doc, collection, onSnapshot, addDoc, updateDoc, query, where, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from './firebase/db';
 
 import { convertEntry, convertValue } from './databaseFunctions';
@@ -15,7 +15,7 @@ import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
 import Database from './Database';
-import { generateUniqueString, getTitles } from './helpers';
+import { generateUniqueString, } from './helpers';
 
 const Page = ( props ) => {
   // props
@@ -52,7 +52,7 @@ const Page = ( props ) => {
     if (page.parent) {
       setLineage(getLineage(page));
     }
-  }, [page]);
+  }, [page, getLineage]);
 
   //////////////////////////
   // BLANK PAGE TEMPLATES //
