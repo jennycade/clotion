@@ -177,7 +177,7 @@ const Database = (props) => {
             allOptions={ getSelectOptions(propID) }
             addSelectOption={ (displayName) => addSelectOption(propID, displayName) }
             updateSelectOption={ (newVal, updateType, selectOptionID) => updateSelectOption(newVal, updateType, selectOptionID, propID) }
-            deleteSelectOption={ (selectOptionID) => deleteSelectOption(selectOptionID) }
+            deleteSelectOption={ (selectOptionID) => deleteSelectOption(selectOptionID, propID) }
           >
             { 
               displayInfo.map(selectOption => (

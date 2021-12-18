@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 
-import { doc, collection, onSnapshot, addDoc, updateDoc, query, where, orderBy, writeBatch } from 'firebase/firestore';
+import {
+    doc, collection,
+    onSnapshot,
+    addDoc, updateDoc,
+    query, where, orderBy,
+    writeBatch,
+    deleteField, arrayRemove
+} from 'firebase/firestore';
 import { db } from './firebase/db';
 
 import { convertEntry, convertValue } from './databaseFunctions';
@@ -373,19 +380,6 @@ const Page = ( props ) => {
       throw new Error(`updateSelectOption() doesn't know how to handle updateType ${updateType}`);
     }
 
-    // construct new option
-    const updatedOption = {
-      ...page.properties[fieldID].selectOptions[selectOptionID]
-    };
-    updatedOption[updateType] = newVal; // should probably validate this
-
-    // stick into all the selectOptions
-    const updatedSelectOptions = {
-      ...page.properties[fieldID].selectOptions
-    };
-    // replace
-    updatedSelectOptions[selectOptionID] = updatedOption;
-
     // update database
     await updateDoc(
       doc(db, 'pages', page.id),
@@ -394,8 +388,32 @@ const Page = ( props ) => {
     );
   }
 
-  const deleteSelectOption = async (selectOptionID, fieldID, page) => {
-    console.log(`Deleting selectOption ${selectOptionID} from field ${fieldID}`);
+  const deleteSelectOption = async (selectOptionID, fieldID, rows, page) => {
+    // batch for simultaneous db changes
+    const batch = writeBatch(db);
+
+    // remove from database selectOptions
+    batch.update(
+      doc(db, 'pages', page.id),
+      `properties.${fieldID}.selectOptions.${selectOptionID}`,
+      deleteField()
+    );
+
+    // remove from each row that has the selectOption
+    rows.forEach(row => {
+      if (Array.isArray(row[fieldID]) && row[fieldID].includes(selectOptionID)) {
+        // remove it
+        batch.update(
+          doc(db, 'pages', page.id, 'rows', row.id),
+          {
+            [fieldID]: arrayRemove(selectOptionID),
+          }
+        )
+      }
+    });
+
+    // commit batch
+    await batch.commit();
   }
 
   const handleDBPropNameChange = async (newName, fieldID, page) => {
@@ -406,6 +424,7 @@ const Page = ( props ) => {
     // set state
     setPage(pageCopy);
   }
+
   const updateDBPropName = async (newName, fieldID, dbPage) => {
     const docRef = doc(db, 'pages', dbPage.id);
     // construct firebase field with dot notation
@@ -590,7 +609,7 @@ const Page = ( props ) => {
         // selectOptions
         addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, parentDbPage)}
         updateSelectOption={ (newVal, type, selectOptionID, fieldID) => updateSelectOption(newVal, type, selectOptionID, fieldID, page) }
-        deleteSelectOption={ (selectOptionID, fieldID) => deleteSelectOption(selectOptionID, fieldID, parentDbPage) }
+        deleteSelectOption={ (selectOptionID, fieldID) => deleteSelectOption(selectOptionID, fieldID, parentDbRows, parentDbPage) }
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
@@ -701,7 +720,7 @@ const Page = ( props ) => {
               // selectOption
               addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, page)}
               updateSelectOption={ (newVal, type, selectOptionID, fieldID) => updateSelectOption(newVal, type, selectOptionID, fieldID, page) }
-              deleteSelectOption={ (selectOptionID, fieldID) => deleteSelectOption(selectOptionID, fieldID, page) }
+              deleteSelectOption={ (selectOptionID, fieldID) => deleteSelectOption(selectOptionID, fieldID, rows, page) }
               // property changes
               handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
               updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}
