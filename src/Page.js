@@ -366,12 +366,12 @@ const Page = ( props ) => {
     return newID;
   }
 
-  const updateSelectOption = async () => {
-    console.log(`Updating selectOption`);
+  const updateSelectOption = async (newVal, type, selectOptionID, fieldID, page) => {
+    console.log(`Updating ${type} of selectOption ${selectOptionID} for field ${fieldID} to ${newVal}`);
   }
 
-  const deleteSelectOption = async () => {
-    console.log(`Deleting selectOption`);
+  const deleteSelectOption = async (selectOptionID, fieldID, page) => {
+    console.log(`Deleting selectOption ${selectOptionID} from field ${fieldID}`);
   }
 
   const handleDBPropNameChange = async (newName, fieldID, page) => {
@@ -565,8 +565,8 @@ const Page = ( props ) => {
         handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, parentDbPage, row, setRow) }
         // selectOptions
         addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, parentDbPage)}
-        updateSelectOption={ () => updateSelectOption() }
-        deleteSelectOption={ () => deleteSelectOption() }
+        updateSelectOption={ (newVal, type, selectOptionID, fieldID) => updateSelectOption(newVal, type, selectOptionID, fieldID, page) }
+        deleteSelectOption={ (selectOptionID, fieldID) => deleteSelectOption(selectOptionID, fieldID, parentDbPage) }
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
@@ -676,8 +676,8 @@ const Page = ( props ) => {
               handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, page, rows, setRows) }
               // selectOption
               addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, page)}
-              updateSelectOption={ () => updateSelectOption() }
-              deleteSelectOption={ () => deleteSelectOption() }
+              updateSelectOption={ (newVal, type, selectOptionID, fieldID) => updateSelectOption(newVal, type, selectOptionID, fieldID, page) }
+              deleteSelectOption={ (selectOptionID, fieldID) => deleteSelectOption(selectOptionID, fieldID, page) }
               // property changes
               handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
               updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}

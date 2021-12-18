@@ -32,6 +32,9 @@ const SelectOptionRow = (props) => {
   const chooseColor = (color) => {
     updateSelectOption(color, 'color');
   }
+  const handleDelete = () => {
+    deleteSelectOption();
+  }
 
   // color menu
   const colorMenu = [
@@ -76,7 +79,7 @@ const SelectOptionRow = (props) => {
           <ul className='menu'>
             {/* DELETE */}
             <li className='grid'
-              onClick={deleteSelectOption}
+              onClick={handleDelete}
             >
               <span className='icon'>
                 🗑

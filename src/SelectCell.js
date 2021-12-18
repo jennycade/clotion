@@ -99,8 +99,8 @@ const SelectCell = (props) => {
                 handleChoose={() => handleClick(option.id)}
                 color={option.color}
                 displayName={option.displayName}
-                updateSelectOption={ () => updateSelectOption() }
-                deleteSelectOption={ () => deleteSelectOption() }
+                updateSelectOption={ (newVal, updateType) => updateSelectOption(newVal, updateType, option.id) }
+                deleteSelectOption={ () => deleteSelectOption(option.id) }
               />
             )
           })}

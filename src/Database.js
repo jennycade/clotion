@@ -175,8 +175,8 @@ const Database = (props) => {
             handleClick={ (payload) =>  chooseSelectOption(payload, row.id, propID) }
             allOptions={ getSelectOptions(propID) }
             addSelectOption={ (displayName) => addSelectOption(propID, displayName) }
-            updateSelectOption={ () => updateSelectOption() }
-            deleteSelectOption={ () => deleteSelectOption() }
+            updateSelectOption={ (newVal, updateType, selectOptionID) => updateSelectOption(newVal, updateType, selectOptionID, propID) }
+            deleteSelectOption={ (selectOptionID) => deleteSelectOption(selectOptionID) }
           >
             { 
               displayInfo.map(selectOption => (
