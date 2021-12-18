@@ -13,7 +13,9 @@ import { getColorCode } from './helpers';
 
 const SelectOptionRow = (props) => {
   // props
-  const { handleChoose, color, displayName,
+  const {
+    handleChoose,
+    id, color, displayName,
     updateSelectOption, deleteSelectOption,
   } = props;
 
@@ -52,7 +54,7 @@ const SelectOptionRow = (props) => {
 
   return (
     <li className='selectOptionDiv'>
-      <span onClick={ () => handleChoose }>
+      <span onClick={ handleChoose }>
         <SelectOption
           color={color}
         >
@@ -64,7 +66,10 @@ const SelectOptionRow = (props) => {
         onClick={ () => setEditOption(true) }
       >…</button>
       { editOption && 
-        <Popup exit={ () => setEditOption(false)}>
+        <Popup
+          popupClassName={id}
+          exit={ () => setEditOption(false)}
+        >
 
           {/* DISPLAY NAME */}
           <div>

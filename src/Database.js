@@ -170,6 +170,7 @@ const Database = (props) => {
         {/* SELECT */}
         { (type === 'select' || type === 'multiselect') &&
           <SelectCell
+            cellID={ `${row.id}-${propID}` }
             type={ type }
             remove={ (optionID) => removeSelectOption(optionID, row.id, propID) }
             handleClick={ (payload) =>  chooseSelectOption(payload, row.id, propID) }

@@ -84,7 +84,7 @@ td .content, td .content .block {
   height: 100%;
 }
 
-/* td div, .field, .field * {
+td, .field, .selectCell{
   min-width: 32px;
   min-height: 32px;
-} */
+}

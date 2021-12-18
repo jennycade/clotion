@@ -9,6 +9,7 @@ import SelectOptionRow from './SelectOptionRow';
 const SelectCell = (props) => {
   // props
   const {
+    cellID,
     type, remove, allOptions,
     addSelectOption, updateSelectOption, deleteSelectOption,
   } = props; // type: 'select' or 'multiselect'
@@ -77,7 +78,10 @@ const SelectCell = (props) => {
     const options = Children.map(props.children, child => isValidElement(child) ? cloneElement(child, {remove}) : null); // iterate over children!
 
     return (
-      <Popup exit={ () => setEditing(false) }>
+      <Popup
+        exit={ () => setEditing(false) }
+        popupClassName={cellID}
+      >
         <header className='currentSelectOptions'>
           {/* Current value */}
           { options } 
@@ -95,7 +99,7 @@ const SelectCell = (props) => {
           <li className='instructions'>Select an option or create one.</li>
           { matchingOptions.map(option => {
             return (
-              <SelectOptionRow key={option.id}
+              <SelectOptionRow key={option.id} id={option.id}
                 handleChoose={() => handleClick(option.id)}
                 color={option.color}
                 displayName={option.displayName}
@@ -119,7 +123,7 @@ const SelectCell = (props) => {
     );
   } else {
     return (
-      <div onClick={ () => setEditing(true) }>
+      <div className='selectCell' onClick={ () => setEditing(true) }>
         { props.children }
       </div>
     );

@@ -2,19 +2,28 @@ import './Popup.css';
 
 import { useEffect } from 'react';
 
-import { getAncestorClassList, generateUniqueString } from './helpers';
+import { getAncestorClassList } from './helpers';
 
 const Popup = (props) => {
   // props
   const { exit } = props;
 
-  // className just for *this* popup
-  const uniqueClassName = generateUniqueString([]);
+  // unique className
+  let uniqueClassName = 'popup';
+  let fullClassName = 'popup';
+  if (!!props.popupClassName) {
+    uniqueClassName = props.popupClassName;
+    fullClassName = `popup ${props.popupClassName}`;
+  }
+
+  // full className
+
 
   // event listener for clicking outside the picker --> close it
   useEffect(() => {
     const handleClick = (event) => {
-      if (!getAncestorClassList(event.target).includes(uniqueClassName)) { // clicked outside the popup
+      const allAncestors = getAncestorClassList(event.target);
+      if (!allAncestors.includes(uniqueClassName)) { // clicked outside the popup
         exit();
       }
     }
@@ -32,10 +41,10 @@ const Popup = (props) => {
       window.removeEventListener('click', handleClick);
       window.removeEventListener('keydown', handleKeydown);
     }
-  });
+  }, [exit, uniqueClassName]);
 
   return (
-    <div className={`popup ${uniqueClassName}`}>
+    <div className={ fullClassName }>
       { props.children }
     </div>
   );
