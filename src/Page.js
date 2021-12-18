@@ -542,6 +542,11 @@ const Page = ( props ) => {
     await batch.commit();
   }
 
+  const addProperty = async (dbPage, dbRows) => {
+    console.log(`Adding property to database ${dbPage.id}`);
+
+    // batch for simultaneous updates
+  }
 
   ///////////////////
   // DATABASE PAGE //
@@ -614,7 +619,8 @@ const Page = ( props ) => {
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
         updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbPage, parentDbRows)}
-        
+        // add property
+        addProperty={() => addProperty(parentDbPage, parentDbRows)}
       />
     );
   }
@@ -725,6 +731,8 @@ const Page = ( props ) => {
               handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
               updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}
               updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, page, rows)}
+              // add property
+              addProperty={() => addProperty(page, rows)}
             />
           }
 

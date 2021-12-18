@@ -18,6 +18,7 @@ const Database = (props) => {
     handleDBRowChange, updateDBRow, handleClickChange,
     addSelectOption, updateSelectOption, deleteSelectOption, 
     handleDBPropNameChange, updateDBPropName, updateDBPropType,
+    addProperty,
   } = props;
 
   let type, propIDs
@@ -242,6 +243,15 @@ const Database = (props) => {
           </th>
         );
       });
+      // add property
+      topRow.push(
+        <th
+          key='addProperty'
+          className='addProperty'
+          onClick={addProperty}>
+        +
+        </th>
+      )
 
       // rows
       const tableRows = rows.map(row => {
@@ -270,6 +280,9 @@ const Database = (props) => {
               }
             }
             )}
+
+            {/* Blank cell */}
+            <td></td>
           </tr>
         );
       });
@@ -298,6 +311,13 @@ const Database = (props) => {
               })
             ]);
           }) }
+
+          {/* ADD PROPERTY */}
+          <span className='columnName' onClick={ addProperty }>
+            <span>+</span>
+            <span>Add Property</span>
+          </span>
+
         </div>,
         <hr />
       ]);

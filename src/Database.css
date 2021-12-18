@@ -42,8 +42,6 @@ td.title {
 
 .openLinkContainer {
   display: none;
-
-
 }
 
 tr:hover .openLinkContainer {
@@ -87,4 +85,15 @@ td .content, td .content .block {
 td, .field, .selectCell{
   min-width: 32px;
   min-height: 32px;
+}
+
+table .addProperty {
+  cursor: pointer;
+  color: rgb(185, 185, 183);
+  text-align: center;
+  font-weight: normal;
+}
+
+table .addProperty:hover {
+  background-color: rgb(233, 233, 231);
 }
