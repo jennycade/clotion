@@ -366,8 +366,32 @@ const Page = ( props ) => {
     return newID;
   }
 
-  const updateSelectOption = async (newVal, type, selectOptionID, fieldID, page) => {
-    console.log(`Updating ${type} of selectOption ${selectOptionID} for field ${fieldID} to ${newVal}`);
+  const updateSelectOption = async (newVal, updateType, selectOptionID, fieldID, page) => {
+
+    const VALID_UPDATES = ['displayName', 'color', 'sortOrder'];
+    if (!VALID_UPDATES.includes(updateType)) {
+      throw new Error(`updateSelectOption() doesn't know how to handle updateType ${updateType}`);
+    }
+
+    // construct new option
+    const updatedOption = {
+      ...page.properties[fieldID].selectOptions[selectOptionID]
+    };
+    updatedOption[updateType] = newVal; // should probably validate this
+
+    // stick into all the selectOptions
+    const updatedSelectOptions = {
+      ...page.properties[fieldID].selectOptions
+    };
+    // replace
+    updatedSelectOptions[selectOptionID] = updatedOption;
+
+    // update database
+    await updateDoc(
+      doc(db, 'pages', page.id),
+      `properties.${fieldID}.selectOptions.${selectOptionID}.${updateType}`,
+      newVal
+    );
   }
 
   const deleteSelectOption = async (selectOptionID, fieldID, page) => {
