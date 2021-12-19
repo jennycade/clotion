@@ -6,7 +6,7 @@ import {
     addDoc, updateDoc,
     query, where, orderBy,
     writeBatch,
-    deleteField, arrayRemove
+    deleteField, arrayRemove, arrayUnion,
 } from 'firebase/firestore';
 import { db } from './firebase/db';
 
@@ -543,9 +543,52 @@ const Page = ( props ) => {
   }
 
   const addProperty = async (dbPage, dbRows) => {
-    console.log(`Adding property to database ${dbPage.id}`);
-
     // batch for simultaneous updates
+    const batch = writeBatch(db);
+
+    // 1. add blank text property to page.properties
+
+    // get existing IDs to make unique ID
+    const existingIDs = Object.keys(dbPage.properties);
+    const newID = generateUniqueString(existingIDs);
+    // new property object
+    const newFieldObj = {
+      displayName: 'Column', // TODO to be fancy: 'Column 1' if 'Column' exists, 'Column 2' if both exist, etc.
+      type: 'text',
+      sortOrder: 0 // TODO make this a thing
+    };
+    // add to database
+    batch.update(
+      doc(db, 'pages', dbPage.id),
+      `properties.${newID}`,
+      newFieldObj
+    );
+
+    // 2. add field to each rows
+    dbRows.forEach(row => {
+      batch.update(
+        doc(db, 'pages', dbPage.id, 'rows', row.id),
+        newID,
+        '',
+      ) 
+    });
+
+    // 3. add to all views!
+    for (const [viewID, viewObj] of Object.entries(dbPage.views)) {
+      // skip activeView
+      if (!(viewID === 'activeView')) {
+        // add to database
+        batch.update(
+          doc(db, 'pages', dbPage.id),
+          `views.${viewID}.visibleProperties`,
+          arrayUnion(newID)
+        );
+      }
+    }
+
+
+    // commit batch
+    await batch.commit();
   }
 
   ///////////////////
