@@ -23,7 +23,8 @@ const FieldName = (props) => {
   const {
     type, displayName,
     // handleDBPropNameChange,
-    updateDBPropName, updateDBPropType, 
+    updateDBPropName, updateDBPropType,
+    handleColumnAction,
   } = props;
 
   // state
@@ -58,7 +59,7 @@ const FieldName = (props) => {
   }
 
   // other column actions
-  const handleColumnAction = (action) => {
+  const handleColumnActionClick = (action) => {
     /*
     ACTIONS
     - selectOptions
@@ -71,7 +72,7 @@ const FieldName = (props) => {
     - duplicate
     - delete
     */
-   console.log(`Column action called: ${action}`);
+    handleColumnAction(action);
 
    // close
    setEditing(false);
@@ -214,7 +215,7 @@ const FieldName = (props) => {
         {/* COLUMN ACTIONS */}
         <Menu
           menuItems={ columnActionMenu }
-          choose={ (action) => handleColumnAction(action) }
+          choose={ handleColumnActionClick }
         />
 
       </Popup>

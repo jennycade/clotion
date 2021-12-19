@@ -19,6 +19,7 @@ const Database = (props) => {
     addSelectOption, updateSelectOption, deleteSelectOption, 
     handleDBPropNameChange, updateDBPropName, updateDBPropType,
     addProperty,
+    handleColumnAction,
   } = props;
 
   let type, propIDs
@@ -117,6 +118,7 @@ const Database = (props) => {
         handleDBPropNameChange={ (newName) => handleDBPropNameChange(newName, propID)}
         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
         updateDBPropType={(newType) => updateDBPropType(newType, propID)}
+        handleColumnAction={(action) => handleColumnAction(action, propID)}
       />
     );
   }

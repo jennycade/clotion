@@ -434,6 +434,7 @@ const Page = ( props ) => {
     };
     await updateDoc(docRef, updateObj);
   }
+
   const updateDBPropType = async (newType, fieldID, dbPage, dbRows) => {
     const oldType = dbPage.properties[fieldID].type;
     const ARRAYTYPES = ['select', 'multiselect'];
@@ -586,9 +587,56 @@ const Page = ( props ) => {
       }
     }
 
+    // commit batch
+    await batch.commit();
+  }
+
+  const deleteProperty = async (fieldID, dbPage, dbRows) => {
+    // batch for simultaneous updates
+    const batch = writeBatch(db);
+
+    // 1. Remove property from page.properties
+    batch.update(
+      doc(db, 'pages', dbPage.id),
+      `properties.${fieldID}`,
+      deleteField()
+    );
+
+    // 2. remove field from each row
+    dbRows.forEach(row => {
+      batch.update(
+        doc(db, 'pages', dbPage.id, 'rows', row.id),
+        fieldID,
+        deleteField(),
+      ) 
+    });
+
+    // 3. remove from all views!
+    for (const [viewID, viewObj] of Object.entries(dbPage.views)) {
+      // skip activeView
+      if (!(viewID === 'activeView')) {
+        // add to database
+        batch.update(
+          doc(db, 'pages', dbPage.id),
+          `views.${viewID}.visibleProperties`,
+          arrayRemove(fieldID)
+        );
+      }
+    }
 
     // commit batch
     await batch.commit();
+  }
+
+  const handleColumnAction = async (action, fieldID, dbPage, dbRows) => {
+    switch (action) {
+      case 'delete':
+        await deleteProperty(fieldID, dbPage, dbRows);
+        break;
+      
+      default:
+        throw new Error(`handleColumnAction() doens't know how to handle action ${action}`);
+    }
   }
 
   ///////////////////
@@ -664,6 +712,8 @@ const Page = ( props ) => {
         updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbPage, parentDbRows)}
         // add property
         addProperty={() => addProperty(parentDbPage, parentDbRows)}
+        // column actions
+        handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, parentDbPage, parentDbRows)}
       />
     );
   }
@@ -776,6 +826,8 @@ const Page = ( props ) => {
               updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, page, rows)}
               // add property
               addProperty={() => addProperty(page, rows)}
+              // column actions
+              handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, page, rows)}
             />
           }
 
