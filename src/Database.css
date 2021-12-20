@@ -87,13 +87,46 @@ td, .field, .selectCell{
   min-height: 32px;
 }
 
-table .addProperty {
+table .addProperty, table .addRow {
   cursor: pointer;
   color: rgb(185, 185, 183);
-  text-align: center;
   font-weight: normal;
 }
+table .addProperty {
+  text-align: center;
+}
 
-table .addProperty:hover {
+table .addProperty:hover, table .addRow:hover {
   background-color: rgb(233, 233, 231);
+}
+
+
+/* ACTION BAR */
+.dbActionBar {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.dbActionBar button {
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: rgba(55, 53, 47, 0.6);
+  cursor: pointer;
+}
+
+button.newButton {
+  background-color: #2eaadc;
+  color: white;
+  font-weight: bold;
+  border: 1px solid rgb(76, 147, 188);
+  border-radius: 3px;
+  padding: 8px;
+}
+
+button.viewButton {
+  color: black;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

@@ -628,6 +628,10 @@ const Page = ( props ) => {
     await batch.commit();
   }
 
+  const addDBRow = async (dbPage, rows) => {
+    console.log(`Adding row to database`);
+  }
+
   const handleColumnAction = async (action, fieldID, dbPage, dbRows) => {
     switch (action) {
       case 'delete':
@@ -714,6 +718,8 @@ const Page = ( props ) => {
         addProperty={() => addProperty(parentDbPage, parentDbRows)}
         // column actions
         handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, parentDbPage, parentDbRows)}
+        // rows
+        addRow={() => addDBRow(parentDbPage, parentDbRows)}
       />
     );
   }
@@ -828,6 +834,7 @@ const Page = ( props ) => {
               addProperty={() => addProperty(page, rows)}
               // column actions
               handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, page, rows)}
+              addDBRow={() => addDBRow(page, rows)}
             />
           }
 

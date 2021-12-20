@@ -20,6 +20,7 @@ const Database = (props) => {
     handleDBPropNameChange, updateDBPropName, updateDBPropType,
     addProperty,
     handleColumnAction,
+    addDBRow,
   } = props;
 
   let type, propIDs
@@ -236,7 +237,51 @@ const Database = (props) => {
   ////////////////////////////
 
   switch (type) {
+
+    // TABLE
     case 'table':
+      // action bar
+
+      // views, properties, group, filter, sort, search, …, New button
+      const actionBar = (
+        <div className='dbActionBar'>
+          {/* VIEWS */}
+          <button className='viewButton'>
+            Default view
+          </button>
+
+          <button>
+            Properties
+          </button>
+          <button>
+            Group
+          </button>
+          <button>
+            Filter
+          </button>
+          <button>
+            Sort
+          </button>
+          <button>
+            Search
+          </button>
+
+          <button className='newButton' onClick={addDBRow}>
+            New
+          </button>
+        </div>
+      );
+
+      // count columns
+      const numColumns = propIDs.length + 1; // +1 for Add property column
+      const tableFooter = (
+        <tr>
+          <td className='addRow' colSpan={numColumns} onClick={addDBRow}>
+            + New
+          </td>
+        </tr>
+      );
+
       // table heading
       const topRow = propIDs.map(propID => {
         return (
@@ -290,17 +335,23 @@ const Database = (props) => {
       });
 
       return (
-        <table>
-          <thead>
-            <tr>
-              {topRow}
-            </tr>
-          </thead>
-          <tbody>
-            { tableRows }
-          </tbody>
-        </table>
+        <div>
+          {actionBar}
+          <table>
+            <thead>
+              <tr>
+                {topRow}
+              </tr>
+            </thead>
+            <tbody>
+              { tableRows }
+              { tableFooter }
+            </tbody>
+          </table>
+        </div>
       );
+
+    // SINGLE DB PAGE
     case 'header':
       return ([
         <div className='pageDbInfo'>
