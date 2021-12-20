@@ -628,7 +628,7 @@ const Page = ( props ) => {
     await batch.commit();
   }
 
-  const addDBRow = async (dbPage, rows) => {
+  const addDBRow = async (dbPage) => {
     // add page first so we have a page ID!
     const newRowID = await addPage(dbPage.id, true);
 
@@ -850,7 +850,7 @@ const Page = ( props ) => {
               addProperty={() => addProperty(page, rows)}
               // column actions
               handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, page, rows)}
-              addDBRow={() => addDBRow(page, rows)}
+              addDBRow={() => addDBRow(page)}
             />
           }
 
