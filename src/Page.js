@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 import {
     doc, collection,
     onSnapshot,
-    addDoc, updateDoc,
+    addDoc, updateDoc, setDoc,
     query, where, orderBy,
     writeBatch,
     deleteField, arrayRemove, arrayUnion,
 } from 'firebase/firestore';
 import { db } from './firebase/db';
 
-import { convertEntry, convertValue } from './databaseFunctions';
+import { convertEntry, convertValue, getDefaultEntry } from './databaseFunctions';
 
 import './Page.css';
 
@@ -629,7 +629,25 @@ const Page = ( props ) => {
   }
 
   const addDBRow = async (dbPage, rows) => {
-    console.log(`Adding row to database`);
+    // add page first so we have a page ID!
+    const newRowID = await addPage(dbPage.id, true);
+
+    // construct row object
+    const newRow = {
+      uid: uid,
+    };
+    // add default value for each property
+    for (const [propID, propObj] of Object.entries(dbPage.properties)) {
+      if (propID !== 'title') {
+        newRow[propID] = getDefaultEntry(propObj.type);
+      }
+    }
+    // add to rows collection
+    await setDoc(
+      doc(collection(db, 'pages', dbPage.id, 'rows'), newRowID),
+      newRow
+    );
+
   }
 
   const handleColumnAction = async (action, fieldID, dbPage, dbRows) => {
@@ -718,8 +736,6 @@ const Page = ( props ) => {
         addProperty={() => addProperty(parentDbPage, parentDbRows)}
         // column actions
         handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, parentDbPage, parentDbRows)}
-        // rows
-        addRow={() => addDBRow(parentDbPage, parentDbRows)}
       />
     );
   }

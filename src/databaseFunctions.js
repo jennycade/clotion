@@ -342,8 +342,13 @@ const renderDate = (val) => {
   return convertToString(val, 'date');
 }
 
+const getDefaultEntry = (type) => {
+  return convertEntry('', type, true);
+}
+
 export {
   convertEntry,
+  getDefaultEntry,
   validateSelectOptions,
   getInvalidSelectOptions,
   convertValue,
