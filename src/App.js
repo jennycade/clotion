@@ -201,35 +201,69 @@ function App() {
     // change page.isDb to true
     updateDoc(pageRef, {isDb: true});
 
-    // add properties map
-    updateDoc(pageRef, {
-      isDb: true,
-
-      // default properties
-      properties: {
-        'title': {
-          displayName: 'Name',
-          type: 'title',
-        },
-        'defaultTags': {
+    // construct views and properties
+    const views = {
+      'defaultView': {
+        type: type,
+        visibleProperties: ['title', 'defaultProp'],
+      }
+    };
+    const properties = {
+      'title': {
+        displayName: 'Name',
+        type: 'title',
+      },
+      'defaultProp': {
+        // fill in based on view type
+      },
+    };
+    // default property by type
+    switch (type) {
+      case 'table':
+        properties['defaultProp'] = {
           displayName: 'Tags',
           type: 'multiselect',
           selectOptions: {
             // empty
           }
-        },
-      },
+        };
+        break;
+      case 'board':
+        properties['defaultProp'] = {
+          displayName: 'Status',
+          type: 'select',
+          selectOptions: {
+            notStarted: {
+              displayName: 'Not started',
+              color: 'red',
+              sortOrder: 0,
+            },
+            inProgress: {
+              displayName: 'In progress',
+              color: 'yellow',
+              sortOrder: 1,
+            },
+            completed: {
+              displayName: 'Completed',
+              color: 'green',
+              sortOrder: 2,
+            },
+          }
+        };
+        views['defaultView']['groupBy'] = 'defaultProp';
+        break;
+      default: 
+        throw new Error(`addDatabase() doesn't know how to handle type ${type}`);
+    }
 
+    // add properties map
+    updateDoc(pageRef, {
+      isDb: true,
+      // default properties
+      properties: properties,
       // default view
-      views: {
-        activeView: 'defaultTable',
-        'defaultTable': {
-          type: 'table',
-          visibleProperties: ['title', 'defaultTags'],
-          // filter: null,
-          // sort: null,
-        }
-      }
+      activeView: 'defaultView',
+      views: views,
     });
 
     // add rows subcollection

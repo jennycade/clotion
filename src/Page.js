@@ -807,9 +807,11 @@ const Page = ( props ) => {
         
               <h2>DATABASE</h2>
               <button className='linklike'
-                onClick={ () => addDatabase(id) }
+                onClick={ () => addDatabase(id, 'table') }
               >Table</button>
-              <button className='linklike'>Board</button>
+              <button className='linklike'
+                onClick={ () => addDatabase(id, 'board')}
+              >Board</button>
               <button className='linklike'>List</button>
               <button className='linklike'>Gallery</button>
             </div>

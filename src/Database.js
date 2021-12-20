@@ -237,7 +237,6 @@ const Database = (props) => {
   ////////////////////////////
 
   switch (type) {
-
     // TABLE
     case 'table':
       // action bar
@@ -350,6 +349,12 @@ const Database = (props) => {
           </table>
         </div>
       );
+
+    // BOARD
+    case 'board': 
+      
+      break;
+
 
     // SINGLE DB PAGE
     case 'header':
