@@ -9,7 +9,7 @@ import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
 import { removeFromArray } from './helpers';
 import FieldName from './FieldTitle';
-import { renderDate } from './databaseFunctions';
+import { renderDate, isBlank} from './databaseFunctions';
 
 const Database = (props) => {
   // props
@@ -23,7 +23,8 @@ const Database = (props) => {
     addDBRow,
   } = props;
 
-  let type, propIDs
+  // some variables to smooth things out
+  let type, propIDs, groupBy, groupByIDs, groupBySelectOptions, activeViewID, activeView;
 
   if (dbDisplay) {
     // override view
@@ -36,7 +37,9 @@ const Database = (props) => {
     propIDs = propIDs.filter(propID => !hiddenProps.includes(propID));
   } else {
 
-    const activeViewID = page.views.activeView;
+    activeViewID = page.activeView;
+    activeView = page.views[activeViewID];
+
     type = page.views[activeViewID].type;
     propIDs = page.views[activeViewID].visibleProperties;
   }
@@ -102,13 +105,49 @@ const Database = (props) => {
     handleClickChange(newArr, rowID, propID);
   }
 
-  
+  // board: groupBy
+  if (type === 'board' && activeView) {
+    groupBy = activeView.groupBy;
+    groupBySelectOptions = getSelectOptions(groupBy);
+    groupByIDs = groupBySelectOptions.map(selectOption => selectOption.id);
+  }
 
   ///////////////
   // RENDERING //
   ///////////////
 
   // the bits of rendering - reusable for different view types
+
+  // action bar
+  // views, properties, group, filter, sort, search, …, New button
+  const actionBar = (
+    <div className='dbActionBar'>
+      {/* VIEWS */}
+      <button className='viewButton'>
+        Default view
+      </button>
+
+      <button>
+        Properties
+      </button>
+      <button>
+        Group
+      </button>
+      <button>
+        Filter
+      </button>
+      <button>
+        Sort
+      </button>
+      <button>
+        Search
+      </button>
+
+      <button className='newButton' onClick={addDBRow}>
+        New
+      </button>
+    </div>
+  );
   
   // Property icon/name
   const getColumnNameSpan = (propID) => {
@@ -232,45 +271,39 @@ const Database = (props) => {
     );
   }
 
+  const getCard = (row) => {
+    // div with Title on top, prop value per row. skip empty props. Click to open page.
+    return (
+      <div className='card' key={row.id}>
+        <Link to={ `/${row.id}` }>
+          { getIconTitleDiv(row.id) }
+          {
+            propIDs.map(propID => {
+              const type = getType(propID);
+              if (type !== 'title' && !isBlank(row[propID], getType(propID))) {
+                return (
+                  <div className='cardProp' key={propID}>
+                    {getCell(propID, row)}
+                  </div>
+                );
+              } else {
+                return null;
+              }
+            })
+          }
+        </Link>
+      </div>
+    )
+  }
+
   ////////////////////////////
   // SWITCH BY DISPLAY TYPE //
   ////////////////////////////
 
+  
   switch (type) {
     // TABLE
     case 'table':
-      // action bar
-
-      // views, properties, group, filter, sort, search, …, New button
-      const actionBar = (
-        <div className='dbActionBar'>
-          {/* VIEWS */}
-          <button className='viewButton'>
-            Default view
-          </button>
-
-          <button>
-            Properties
-          </button>
-          <button>
-            Group
-          </button>
-          <button>
-            Filter
-          </button>
-          <button>
-            Sort
-          </button>
-          <button>
-            Search
-          </button>
-
-          <button className='newButton' onClick={addDBRow}>
-            New
-          </button>
-        </div>
-      );
-
       // count columns
       const numColumns = propIDs.length + 1; // +1 for Add property column
       const tableFooter = (
@@ -351,9 +384,52 @@ const Database = (props) => {
       );
 
     // BOARD
-    case 'board': 
-      
-      break;
+    case 'board':
+      return (
+        <div>
+          { actionBar }
+          <div className='board'>
+            <div className='boardColumn'>
+              <header>
+                No {getPropName(groupBy)}
+              </header>
+
+              {
+                rows.filter(
+                  row => row[groupBy].length === 0
+                ).map(row => {
+                  return getCard(row);
+                })
+              }
+
+            </div>
+
+            { groupBySelectOptions.map(selectOption => {
+              return (
+                <div className='boardColumn' key={selectOption.id}>
+                  <header>
+                    <SelectOption
+                      id={selectOption.id}
+                      color={selectOption.color}
+                    >
+                      {selectOption.displayName}
+                    </SelectOption>
+                  </header>
+
+                  {
+                    rows.filter(
+                      row => row[groupBy].includes(selectOption.id)
+                    ).map(row => {
+                      return getCard(row);
+                    })
+                  }
+
+                </div>
+              );
+            }) }
+          </div>
+        </div>
+      );
 
 
     // SINGLE DB PAGE
