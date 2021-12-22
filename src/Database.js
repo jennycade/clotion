@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // style
@@ -22,6 +23,9 @@ const Database = (props) => {
     handleColumnAction,
     addDBRow,
   } = props;
+
+  // state
+  const [draggedRowID, setDraggedRowID] = useState('');
 
   // some variables to smooth things out
   let type, propIDs, groupBy, groupByIDs, groupBySelectOptions, activeViewID, activeView;
@@ -103,6 +107,14 @@ const Database = (props) => {
 
     // send through to page
     handleClickChange(newArr, rowID, propID);
+  }
+
+  const handleBoardCardDrop = (event) => {
+    // dropped onto column --> id = new selecOption
+    const newSelectOptionID = event.currentTarget.id;
+    // which row to change?
+
+    handleClickChange([newSelectOptionID], draggedRowID, groupBy);
   }
 
   // board: groupBy
@@ -274,7 +286,11 @@ const Database = (props) => {
   const getCard = (row) => {
     // div with Title on top, prop value per row. skip empty props. Click to open page.
     return (
-      <div className='card' key={row.id}>
+      <div
+        className='card'
+        key={row.id}
+        onDragStart={ () => setDraggedRowID(row.id) }
+      >
         <Link to={ `/${row.id}` }>
           { getIconTitleDiv(row.id) }
           {
@@ -391,7 +407,11 @@ const Database = (props) => {
           <div className='board'>
 
             {/* NO VALUE */}
-            <div className='boardColumn'>
+            <div className='boardColumn'
+              id=''
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={ handleBoardCardDrop }
+            >
               <header>
                 <span>No {getPropName(groupBy)}</span>
                 <div className='addRow'
@@ -420,7 +440,13 @@ const Database = (props) => {
             {/* ONE COLUMN PER SELECTOPTION */}
             { groupBySelectOptions.map(selectOption => {
               return (
-                <div className='boardColumn' key={selectOption.id}>
+                <div
+                  className='boardColumn'
+                  key={selectOption.id}
+                  id={selectOption.id}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={ handleBoardCardDrop }
+                >
                   <header>
                     <SelectOption
                       id={selectOption.id}
