@@ -35,6 +35,19 @@ function App() {
   const [userDisplayName, setUserDisplayName] = useState('');
   const [uid, setUid] = useState('');
 
+  ///////////////////////
+  // FAVICON AND TITLE //
+  ///////////////////////
+
+  const updateFavicon = (newEmoji) => {
+    const faviconElement = document.getElementById("favicon");
+    faviconElement.href=`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${newEmoji}</text></svg>`;
+  }
+
+  const updatePageTitle = (newTitle) => {
+    const titleElement = document.getElementById('pageTitle');
+    titleElement.innerText = newTitle;
+  }
 
   //////////
   // AUTH //
@@ -533,6 +546,8 @@ function App() {
                   redirect={ setNewPage }
                   deletePage={ () => deletePageAndSubpages(page) }
                   addDatabase={ addDatabase }
+                  updateFavicon={updateFavicon}
+                  updatePageTitle={updatePageTitle}
                 />
               </Route>
             )

@@ -26,7 +26,10 @@ import { generateUniqueString, } from './helpers';
 
 const Page = ( props ) => {
   // props
-  const { uid, id, addPage, redirect, getLineage, deletePage, addDatabase } = props;
+  const {
+    uid, id, addPage, redirect, getLineage, deletePage, addDatabase,
+    updateFavicon, updatePageTitle,
+  } = props;
 
   // state
   const [page, setPage] = useState({title: null, id: null, icon: null, isDb: false});
@@ -60,6 +63,22 @@ const Page = ( props ) => {
       setLineage(getLineage(page));
     }
   }, [page, getLineage]);
+
+  // set favicon and title
+  useEffect(() => {
+    if (page.icon) {
+      updateFavicon(page.icon);
+    } else {
+      updateFavicon('🧬'); // default
+    }
+
+    if (page.title !== '') {
+      updatePageTitle(page.title);
+    } else {
+      updatePageTitle('Untitled');
+    }
+
+  }, [page, updateFavicon, updatePageTitle]);
 
   //////////////////////////
   // BLANK PAGE TEMPLATES //
