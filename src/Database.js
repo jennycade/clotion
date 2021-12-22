@@ -389,9 +389,16 @@ const Database = (props) => {
         <div>
           { actionBar }
           <div className='board'>
+
+            {/* NO VALUE */}
             <div className='boardColumn'>
               <header>
-                No {getPropName(groupBy)}
+                <span>No {getPropName(groupBy)}</span>
+                <div className='addRow'
+                      onClick={() => addDBRow({[groupBy]: []})}
+                    >
+                      +
+                    </div>
               </header>
 
               {
@@ -402,8 +409,15 @@ const Database = (props) => {
                 })
               }
 
+              <div className='addRow'
+                onClick={() => addDBRow({[groupBy]: []})}
+              >
+                + New
+              </div>
+
             </div>
 
+            {/* ONE COLUMN PER SELECTOPTION */}
             { groupBySelectOptions.map(selectOption => {
               return (
                 <div className='boardColumn' key={selectOption.id}>
@@ -414,6 +428,11 @@ const Database = (props) => {
                     >
                       {selectOption.displayName}
                     </SelectOption>
+                    <div className='addRow'
+                      onClick={() => addDBRow({[groupBy]: [selectOption.id]})}
+                    >
+                      +
+                    </div>
                   </header>
 
                   {
@@ -423,6 +442,12 @@ const Database = (props) => {
                       return getCard(row);
                     })
                   }
+
+                  <div className='addRow'
+                    onClick={() => addDBRow({[groupBy]: [selectOption.id]})}
+                  >
+                    + New
+                  </div>
 
                 </div>
               );

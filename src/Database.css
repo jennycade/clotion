@@ -87,7 +87,7 @@ td, table .field, table .selectCell{
   min-height: 32px;
 }
 
-table .addProperty, table .addRow {
+table .addProperty, table .addRow, .board .addRow {
   cursor: pointer;
   color: rgb(185, 185, 183);
   font-weight: normal;
@@ -96,7 +96,7 @@ table .addProperty {
   text-align: center;
 }
 
-table .addProperty:hover, table .addRow:hover {
+table .addProperty:hover, table .addRow:hover, .board .addRow:hover {
   background-color: rgb(233, 233, 231);
 }
 
@@ -149,8 +149,11 @@ button.viewButton {
 }
 
 .boardColumn>header {
+  display: flex;
   margin: 10px 5px;
   font-size: 14px;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 .card {
@@ -179,6 +182,16 @@ button.viewButton {
 
 .cardProp {
   margin-top: 10px;
+}
+
+.boardColumn>.addRow {
+  padding: 8px;
+  border-radius: 3px;
+  font-size: 14px;
+}
+.boardColumn header .addRow {
+  padding: 3px;
+  border-radius: 3px;
 }
 
 

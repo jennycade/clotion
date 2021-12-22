@@ -628,7 +628,7 @@ const Page = ( props ) => {
     await batch.commit();
   }
 
-  const addDBRow = async (dbPage) => {
+  const addDBRow = async (dbPage, fields = null) => {
     // add page first so we have a page ID!
     const newRowID = await addPage(dbPage.id, true);
 
@@ -642,6 +642,12 @@ const Page = ( props ) => {
         newRow[propID] = getDefaultEntry(propObj.type);
       }
     }
+
+    if (fields) {
+      // merge in
+      Object.assign(newRow, fields);
+    }
+
     // add to rows collection
     await setDoc(
       doc(collection(db, 'pages', dbPage.id, 'rows'), newRowID),
@@ -852,7 +858,7 @@ const Page = ( props ) => {
               addProperty={() => addProperty(page, rows)}
               // column actions
               handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, page, rows)}
-              addDBRow={() => addDBRow(page)}
+              addDBRow={(fields) => addDBRow(page, fields)}
             />
           }
 
