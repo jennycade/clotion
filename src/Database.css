@@ -82,7 +82,7 @@ td .content, td .content .block {
   height: 100%;
 }
 
-td, .field, .selectCell{
+td, table .field, table .selectCell{
   min-width: 32px;
   min-height: 32px;
 }
@@ -138,12 +138,19 @@ button.viewButton {
   width: 100%;
   overflow-x: scroll;
   gap: 20px;
+
+  border-top: 1px solid rgb(233, 233, 231);
 }
 
 .boardColumn {
   flex: 0 0 auto;
   width: 260px;
   padding: 1px;
+}
+
+.boardColumn>header {
+  margin: 10px 5px;
+  font-size: 14px;
 }
 
 .card {
@@ -153,14 +160,25 @@ button.viewButton {
   margin-bottom: 5px;
   background: white;
   overflow: hidden;
-  padding: 8px 10px;
+  padding: 10px;
 
   display: flex;
   flex-direction: column;
+
+  font-size: 12px;
 }
 .card a {
   color: inherit;
   text-decoration: none;
+}
+
+.card .iconTitle {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.cardProp {
+  margin-top: 10px;
 }
 
 
