@@ -242,6 +242,19 @@ function App() {
           }
         };
         break;
+
+      case 'gallery':
+        properties['defaultProp'] = {
+          displayName: 'Tags',
+          type: 'multiselect',
+          selectOptions: {
+            // empty
+          }
+        };
+        views['visibleProperties'] = ['title'];
+        views['cardSize'] = 'medium';
+        break;
+
       case 'board':
         properties['defaultProp'] = {
           displayName: 'Status',
@@ -265,7 +278,9 @@ function App() {
           }
         };
         views['defaultView']['groupBy'] = 'defaultProp';
+        views['cardSize'] = 'medium';
         break;
+        
       default: 
         throw new Error(`addDatabase() doesn't know how to handle type ${type}`);
     }

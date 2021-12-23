@@ -180,7 +180,7 @@ button.viewButton {
   font-size: 14px;
 }
 
-.cardProp {
+.board .cardProp {
   margin-top: 10px;
 }
 
@@ -254,4 +254,13 @@ button.viewButton {
 .list .addRow {
   padding: 4px;
   border-radius: 3px;
+}
+
+/* GALLERY */
+.gallery {
+  width: 100%;
+  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat( auto-fill, minmax(250px, 1fr) );
+
 }

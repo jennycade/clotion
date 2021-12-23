@@ -320,32 +320,6 @@ const Database = (props) => {
     )
   }
 
-  const getListRow = (row) => {
-    <div
-        className='row'
-        key={row.id}
-
-      >
-        <Link to={ `/${row.id}` }>
-          { getIconTitleDiv(row.id) }
-        </Link>
-          {
-            propIDs.map(propID => {
-              const type = getType(propID);
-              if (type !== 'title' && !isBlank(row[propID], getType(propID))) {
-                return (
-                  <div className='cardProp' key={propID}>
-                    {getCell(propID, row)}
-                  </div>
-                );
-              } else {
-                return null;
-              }
-            })
-          }
-      </div>
-  }
-
   ////////////////////////////
   // SWITCH BY DISPLAY TYPE //
   ////////////////////////////
@@ -519,13 +493,14 @@ const Database = (props) => {
         </div>
       );
     
-    // LIST
+    // LIST & GALLERY
     case 'list':
+    case 'gallery':
       return (
         <div>
           { actionBar }
 
-          <div className='list'>
+          <div className={type}>
             {/* ONE 'CARD' PER ROW */}
             {
               rows.map(row => {
@@ -544,7 +519,6 @@ const Database = (props) => {
 
         </div>
       );
-
 
     // SINGLE DB PAGE
     case 'header':
