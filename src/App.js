@@ -232,6 +232,7 @@ function App() {
     };
     // default property by type
     switch (type) {
+      case 'list':
       case 'table':
         properties['defaultProp'] = {
           displayName: 'Tags',

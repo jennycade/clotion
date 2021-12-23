@@ -837,8 +837,12 @@ const Page = ( props ) => {
               <button className='linklike'
                 onClick={ () => addDatabase(id, 'board')}
               >Board</button>
-              <button className='linklike'>List</button>
-              <button className='linklike'>Gallery</button>
+              <button className='linklike'
+                onClick={ () => addDatabase(id, 'list')}
+              >List</button>
+              <button className='linklike'
+                onClick={ () => addDatabase(id, 'gallery')}
+              >Gallery</button>
             </div>
           }
 

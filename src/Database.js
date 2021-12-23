@@ -292,12 +292,43 @@ const Database = (props) => {
     // div with Title on top, prop value per row. skip empty props. Click to open page.
     return (
       <div
-        className='card'
+        className={type === 'list'? 'row' : 'card'}
         key={row.id}
-        onDragStart={ () => setDraggedRowID(row.id) }
+        onDragStart={ type === 'board' ? () => setDraggedRowID(row.id) : null }
       >
         <Link to={ `/${row.id}` }>
           { getIconTitleDiv(row.id) }
+
+          <div className='rowProps'>
+            {
+              propIDs.map(propID => {
+                const type = getType(propID);
+                if (type !== 'title' && !isBlank(row[propID], getType(propID))) {
+                  return (
+                    <div className='cardProp' key={propID}>
+                      {getCell(propID, row)}
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
+              })
+            }
+          </div>
+        </Link>
+      </div>
+    )
+  }
+
+  const getListRow = (row) => {
+    <div
+        className='row'
+        key={row.id}
+
+      >
+        <Link to={ `/${row.id}` }>
+          { getIconTitleDiv(row.id) }
+        </Link>
           {
             propIDs.map(propID => {
               const type = getType(propID);
@@ -312,9 +343,7 @@ const Database = (props) => {
               }
             })
           }
-        </Link>
       </div>
-    )
   }
 
   ////////////////////////////
@@ -452,6 +481,7 @@ const Database = (props) => {
                   onDragOver={(event) => event.preventDefault()}
                   onDrop={ handleBoardCardDrop }
                 >
+                  {/* HEADER */}
                   <header>
                     <SelectOption
                       id={selectOption.id}
@@ -466,6 +496,7 @@ const Database = (props) => {
                     </div>
                   </header>
 
+                  {/* CARDS */}
                   {
                     rows.filter(
                       row => row[groupBy].includes(selectOption.id)
@@ -474,6 +505,7 @@ const Database = (props) => {
                     })
                   }
 
+                  {/* ADD BUTTON */}
                   <div className='addRow'
                     onClick={() => addDBRow({[groupBy]: [selectOption.id]})}
                   >
@@ -484,6 +516,32 @@ const Database = (props) => {
               );
             }) }
           </div>
+        </div>
+      );
+    
+    // LIST
+    case 'list':
+      return (
+        <div>
+          { actionBar }
+
+          <div className='list'>
+            {/* ONE 'CARD' PER ROW */}
+            {
+              rows.map(row => {
+                return getCard(row);
+              })
+            }
+
+            {/* ADD BUTTON */}
+            <div className='addRow'
+              onClick={() => addDBRow()}
+            >
+              + New
+            </div>
+
+          </div>
+
         </div>
       );
 
