@@ -114,7 +114,12 @@ const Database = (props) => {
     const newSelectOptionID = event.currentTarget.id;
     // which row to change?
 
-    handleClickChange([newSelectOptionID], draggedRowID, groupBy);
+    const newVal = [];
+    if (newSelectOptionID !== 'blank') { // blank value
+      newVal.push(newSelectOptionID);
+    }
+
+    handleClickChange(newVal, draggedRowID, groupBy);
   }
 
   // board: groupBy
@@ -408,7 +413,7 @@ const Database = (props) => {
 
             {/* NO VALUE */}
             <div className='boardColumn'
-              id=''
+              id='blank'
               onDragOver={(event) => event.preventDefault()}
               onDrop={ handleBoardCardDrop }
             >
