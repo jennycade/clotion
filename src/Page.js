@@ -686,9 +686,14 @@ const Page = ( props ) => {
   }
 
   const deleteView = async (dbPage, viewID) => {
-    console.log(`switchView() isn't written yet, silly goose!`);
+    console.log(`deleteView() isn't written yet, silly goose!`);
   }
 
+  const updatePropertyVisibility = async (action, propID, viewID, dbPage) => {
+    console.log(`addVisibleProperty() isn't written yet, silly goose!`);
+  }
+
+  // column actions (table and single page)
   const handleColumnAction = async (action, fieldID, dbPage, dbRows) => {
     switch (action) {
       case 'delete':
@@ -699,6 +704,7 @@ const Page = ( props ) => {
         throw new Error(`handleColumnAction() doens't know how to handle action ${action}`);
     }
   }
+
 
 
 
@@ -903,6 +909,7 @@ const Page = ( props ) => {
               addView={(viewType) => addView(page, rows, viewType)}
               switchView={(newViewID) => switchView(page, newViewID)}
               deleteView={(viewID) => deleteView(page, viewID)}
+              updatePropertyVisibility={(action, propID, viewID) => updatePropertyVisibility(action, propID, viewID, page)}
             />
           }
 
