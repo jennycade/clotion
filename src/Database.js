@@ -8,8 +8,10 @@ import './Database.css';
 import Content from './Content';
 import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
-import { removeFromArray } from './helpers';
 import FieldName from './FieldTitle';
+
+// my functions
+import { removeFromArray } from './helpers';
 import { renderDate, isBlank} from './databaseFunctions';
 
 const Database = (props) => {
@@ -28,7 +30,7 @@ const Database = (props) => {
   const [draggedRowID, setDraggedRowID] = useState('');
 
   // some variables to smooth things out
-  let type, propIDs, groupBy, groupByIDs, groupBySelectOptions, activeViewID, activeView;
+  let type, propIDs, groupBy, groupBySelectOptions, activeViewID, activeView;
 
   if (dbDisplay) {
     // override view
@@ -126,7 +128,6 @@ const Database = (props) => {
   if (type === 'board' && activeView) {
     groupBy = activeView.groupBy;
     groupBySelectOptions = getSelectOptions(groupBy);
-    groupByIDs = groupBySelectOptions.map(selectOption => selectOption.id);
   }
 
   ///////////////
@@ -299,6 +300,7 @@ const Database = (props) => {
         onDragStart={ type === 'board' ? () => setDraggedRowID(row.id) : null }
       >
         <Link to={ `/${row.id}` }>
+
           { getIconTitleDiv(row.id) }
 
           <div className='rowProps'>
