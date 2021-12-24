@@ -144,25 +144,27 @@ const Database = (props) => {
         Default view
       </button>
 
-      <button>
-        Properties
-      </button>
-      <button>
-        Group
-      </button>
-      <button>
-        Filter
-      </button>
-      <button>
-        Sort
-      </button>
-      <button>
-        Search
-      </button>
+      <div className='otherActions'>
+        <button>
+          Properties
+        </button>
+        <button>
+          Group
+        </button>
+        <button>
+          Filter
+        </button>
+        <button>
+          Sort
+        </button>
+        <button>
+          Search
+        </button>
 
-      <button className='newButton' onClick={addDBRow}>
-        New
-      </button>
+        <button className='newButton' onClick={addDBRow}>
+          New
+        </button>
+      </div>
     </div>
   );
   
@@ -302,13 +304,16 @@ const Database = (props) => {
           <div className='rowProps'>
             {
               propIDs.map(propID => {
-                const type = getType(propID);
-                if (type !== 'title' && !isBlank(row[propID], getType(propID))) {
+                const propType = getType(propID);
+                if (propType !== 'title' && !isBlank(row[propID], propType)) {
                   return (
                     <div className='cardProp' key={propID}>
                       {getCell(propID, row)}
                     </div>
                   );
+                } else if (propType !== 'title' && isBlank(row[propID], propType) && type === 'gallery') {
+                  // don't skip blanks 
+                  return <div className='cardProp' key={propID}></div>
                 } else {
                   return null;
                 }

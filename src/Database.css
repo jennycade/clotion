@@ -104,7 +104,18 @@ table .addProperty:hover, table .addRow:hover, .board .addRow:hover, .list .addR
 /* ACTION BAR */
 .dbActionBar {
   display: flex;
+  width: 100%;
+  justify-content: space-between;
   margin-bottom: 10px;
+}
+
+.dbActionBar .viewButton {
+  text-overflow: ellipsis;
+}
+
+.dbActionBar .otherActions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .dbActionBar button {
@@ -131,6 +142,12 @@ button.viewButton {
   text-overflow: ellipsis;
 }
 
+/* BORDER BELOW ACTION BAR */
+.board, .list, .gallery, table {
+  border-top: 1px solid rgb(233, 233, 231);
+  padding-top: 16px;
+}
+
 
 /* BOARD */
 .board {
@@ -138,8 +155,6 @@ button.viewButton {
   width: 100%;
   overflow-x: scroll;
   gap: 20px;
-
-  border-top: 1px solid rgb(233, 233, 231);
 }
 
 .boardColumn {
@@ -206,7 +221,6 @@ button.viewButton {
 .list {
   width: 100%;
   overflow-x: auto;
-  border-top: 1px solid rgb(233, 233, 231);
 }
 .list .row, .list .addRow {
   width: 100%;
@@ -259,8 +273,30 @@ button.viewButton {
 /* GALLERY */
 .gallery {
   width: 100%;
+  padding-right: 3px;
+  padding-left: 3px;
   overflow-x: auto;
   display: grid;
   grid-template-columns: repeat( auto-fill, minmax(250px, 1fr) );
+  grid-auto-rows: 1fr;
+  gap: 16px;
+}
 
+.gallery .card {
+  height: 250px;
+  cursor: pointer;
+}
+
+.gallery .addRow {
+  color: rgba(55, 53, 47, 0.3);
+  border: 1px solid rgb(237, 237, 236);
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.gallery .card:hover, .gallery .addRow:hover {
+  background-color: rgba(55, 53, 47, 0.03);
 }
