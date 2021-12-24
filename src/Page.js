@@ -675,6 +675,20 @@ const Page = ( props ) => {
 
   }
 
+  // views
+
+  const addView = async (dbPage, dbRows, viewType) => {
+    console.log(`addView() isn't written yet, silly goose!`);
+  }
+
+  const switchView = async (dbPage, newViewID) => {
+    console.log(`switchView() isn't written yet, silly goose!`);
+  }
+
+  const deleteView = async (dbPage, viewID) => {
+    console.log(`switchView() isn't written yet, silly goose!`);
+  }
+
   const handleColumnAction = async (action, fieldID, dbPage, dbRows) => {
     switch (action) {
       case 'delete':
@@ -685,6 +699,8 @@ const Page = ( props ) => {
         throw new Error(`handleColumnAction() doens't know how to handle action ${action}`);
     }
   }
+
+
 
   ///////////////////
   // DATABASE PAGE //
@@ -881,7 +897,12 @@ const Page = ( props ) => {
               addProperty={() => addProperty(page, rows)}
               // column actions
               handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, page, rows)}
+              // add row
               addDBRow={(fields) => addDBRow(page, fields)}
+              // views
+              addView={(viewType) => addView(page, rows, viewType)}
+              switchView={(newViewID) => switchView(page, newViewID)}
+              deleteView={(viewID) => deleteView(page, viewID)}
             />
           }
 

@@ -162,7 +162,7 @@ const Database = (props) => {
           Search
         </button>
 
-        <button className='newButton' onClick={addDBRow}>
+        <button className='newButton' onClick={() => addDBRow()}>
           New
         </button>
       </div>
