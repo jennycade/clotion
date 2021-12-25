@@ -9,6 +9,7 @@ import Content from './Content';
 import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
 import FieldName from './FieldTitle';
+import ViewManager from './ViewManager';
 
 // my functions
 import { removeFromArray } from './helpers';
@@ -24,6 +25,7 @@ const Database = (props) => {
     addProperty,
     handleColumnAction,
     addDBRow,
+    addView, switchView, deleteView, updatePropertyVisibility,
   } = props;
 
   // state
@@ -142,7 +144,7 @@ const Database = (props) => {
     <div className='dbActionBar'>
       {/* VIEWS */}
       <button className='viewButton'>
-        Default view
+        <ViewManager />
       </button>
 
       <div className='otherActions'>

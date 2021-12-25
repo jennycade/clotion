@@ -691,6 +691,7 @@ const Page = ( props ) => {
 
   const updatePropertyVisibility = async (action, propID, viewID, dbPage) => {
     console.log(`addVisibleProperty() isn't written yet, silly goose!`);
+    // action: 'add' or 'remove'
   }
 
   // column actions (table and single page)
