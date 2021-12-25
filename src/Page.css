@@ -34,12 +34,13 @@
   outline: none;
 }
 
-nav {
+.pageContainer>nav {
   color: rgb(55, 53, 47);
-  position: sticky;
-  width: 100%;
+  position: fixed;
+  width: calc(100vw - 15rem);
   
   background-color: white;
+  z-index: 2;
 
   display: flex;
   justify-content: space-between;
