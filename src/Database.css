@@ -118,7 +118,7 @@ table .addProperty:hover, table .addRow:hover, .board .addRow:hover, .list .addR
   justify-content: flex-end;
 }
 
-.dbActionBar button {
+.dbActionBar button, .dbActionBar .viewButton {
   border: none;
   background: none;
   font-size: 14px;

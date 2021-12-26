@@ -25,7 +25,7 @@ const Database = (props) => {
     addProperty,
     handleColumnAction,
     addDBRow,
-    addView, switchView, deleteView, updatePropertyVisibility,
+    addView, switchView, updateViewName, deleteView, updatePropertyVisibility,
   } = props;
 
   // state
@@ -143,9 +143,14 @@ const Database = (props) => {
   const actionBar = (
     <div className='dbActionBar'>
       {/* VIEWS */}
-      <button className='viewButton'>
-        <ViewManager />
-      </button>
+      <div className='viewButton'>
+        <ViewManager
+          views={page.views}
+          activeViewID={activeView}
+          addView={addView}
+          updateViewName={updateViewName}
+        />
+      </div>
 
       <div className='otherActions'>
         <button>

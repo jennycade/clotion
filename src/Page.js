@@ -681,6 +681,10 @@ const Page = ( props ) => {
     console.log(`addView() isn't written yet, silly goose!`);
   }
 
+  const updateViewName = async (newName, viewID, dbPage) => {
+    console.log(`updateViewName() isn't written yet, silly goose!`);
+  }
+
   const switchView = async (dbPage, newViewID) => {
     console.log(`switchView() isn't written yet, silly goose!`);
   }
@@ -909,6 +913,7 @@ const Page = ( props ) => {
               // views
               addView={(viewType) => addView(page, rows, viewType)}
               switchView={(newViewID) => switchView(page, newViewID)}
+              updateViewName={(newName, viewID) => updateViewName(newName, viewID, page)}
               deleteView={(viewID) => deleteView(page, viewID)}
               updatePropertyVisibility={(action, propID, viewID) => updatePropertyVisibility(action, propID, viewID, page)}
             />
