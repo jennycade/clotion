@@ -146,7 +146,7 @@ const Database = (props) => {
       <div className='viewButton'>
         <ViewManager
           views={page.views}
-          activeViewID={activeView}
+          activeViewID={page.activeView}
           addView={addView}
           updateViewName={updateViewName}
         />

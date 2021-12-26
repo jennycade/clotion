@@ -218,6 +218,7 @@ function App() {
     const views = {
       'defaultView': {
         type: type,
+        displayName: type,
         visibleProperties: ['title', 'defaultProp'],
       }
     };

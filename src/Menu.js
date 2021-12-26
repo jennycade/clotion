@@ -8,6 +8,7 @@ const Menu = (props) => {
   // 	{
   //    id,
   // 		displayText,
+  //    displayIcon, // optional
   // 		onChoose, // or use choose(id) if not defined
   // 		category // optional (currently not used)
   // 	},

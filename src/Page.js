@@ -22,7 +22,7 @@ import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
 import Database from './Database';
-import { generateUniqueString, } from './helpers';
+import { generateUniqueString, removeFromArray } from './helpers';
 
 const Page = ( props ) => {
   // props
@@ -678,7 +678,32 @@ const Page = ( props ) => {
   // views
 
   const addView = async (dbPage, dbRows, viewType) => {
-    console.log(`addView() isn't written yet, silly goose!`);
+    // todo later: add select property for boards
+
+    if (viewType === 'board') {
+      console.log(`addView() doesn't know how to handle adding a board yet, silly goose!`);
+    }
+    
+    // generate ID
+    const existingIDs = Object.keys(dbPage.views);
+    const newID = generateUniqueString(existingIDs);
+
+    // new view object
+    const newViewObj = {
+      displayName: viewType,
+      type: viewType,
+      visibleProperties: Object.keys(dbPage.properties),
+    };
+    const fieldStr = `views.${newID}`;
+
+    // update firestore
+    await updateDoc(
+      doc(db, 'pages', dbPage.id),
+      { [fieldStr]: newViewObj }
+    );
+
+    // switch!
+    await switchView(dbPage, newID);
   }
 
   const updateViewName = async (newName, viewID, dbPage) => {
