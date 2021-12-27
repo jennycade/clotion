@@ -21,8 +21,9 @@ const ViewManager = (props) => {
   // handling
   const handleAddClick = (viewType) => {
     addView(viewType);
-    // close popup
+    // close popups
     setShowAddMenu(false);
+    setShowSwitcher(false);
   }
 
   const handleSwitchView = (viewID) => {
@@ -57,8 +58,10 @@ const ViewManager = (props) => {
             }
             choose={handleSwitchView}
           >
-
+            
           </Menu>
+          {/* Add button */}
+          <button onClick={() => setShowAddMenu(true)}>+ Add a view</button>
         </Popup>
       }
 
