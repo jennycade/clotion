@@ -252,8 +252,8 @@ function App() {
             // empty
           }
         };
-        views['visibleProperties'] = ['title'];
-        views['cardSize'] = 'medium';
+        views['defaultView']['visibleProperties'] = ['title'];
+        views['defaultView']['cardSize'] = 'medium';
         break;
 
       case 'board':
@@ -279,7 +279,7 @@ function App() {
           }
         };
         views['defaultView']['groupBy'] = 'defaultProp';
-        views['cardSize'] = 'medium';
+        views['defaultView']['cardSize'] = 'medium';
         break;
         
       default: 
