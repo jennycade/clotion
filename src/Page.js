@@ -562,7 +562,13 @@ const Page = ( props ) => {
     await batch.commit();
   }
 
-  const addProperty = async (dbPage, dbRows) => {
+  const addProperty = async (dbPage, dbRows, type='text') => {
+    // check for type
+    const ALLOWABLETYPES = ['text', 'select'];
+    if (!ALLOWABLETYPES.includes(type)) {
+      throw new Error(`addProperty() doesn't know how to handle type ${type}`);
+    }
+
     // batch for simultaneous updates
     const batch = writeBatch(db);
 
@@ -571,12 +577,17 @@ const Page = ( props ) => {
     // get existing IDs to make unique ID
     const existingIDs = Object.keys(dbPage.properties);
     const newID = generateUniqueString(existingIDs);
+
     // new property object
     const newFieldObj = {
       displayName: 'Column', // TODO to be fancy: 'Column 1' if 'Column' exists, 'Column 2' if both exist, etc.
-      type: 'text',
+      type: type,
       sortOrder: 0 // TODO make this a thing
     };
+    if (['select', 'multiselect'].includes(type)) {
+      newFieldObj.selectOptions = [];
+    }
+
     // add to database
     batch.update(
       doc(db, 'pages', dbPage.id),
@@ -585,29 +596,31 @@ const Page = ( props ) => {
     );
 
     // 2. add field to each rows
+    // blank val
+    const blank = getDefaultEntry(type);
     dbRows.forEach(row => {
       batch.update(
         doc(db, 'pages', dbPage.id, 'rows', row.id),
         newID,
-        '',
+        blank,
       ) 
     });
 
     // 3. add to all views!
-    for (const [viewID, viewObj] of Object.entries(dbPage.views)) {
-      // skip activeView
-      if (!(viewID === 'activeView')) {
-        // add to database
-        batch.update(
-          doc(db, 'pages', dbPage.id),
-          `views.${viewID}.visibleProperties`,
-          arrayUnion(newID)
-        );
-      }
+    for (const viewID of Object.keys(dbPage.views)) {
+      // add to database
+      batch.update(
+        doc(db, 'pages', dbPage.id),
+        `views.${viewID}.visibleProperties`,
+        arrayUnion(newID)
+      );
     }
 
     // commit batch
     await batch.commit();
+
+    // return the new prop ID
+    return newID;
   }
 
   const deleteProperty = async (fieldID, dbPage, dbRows) => {
@@ -678,10 +691,19 @@ const Page = ( props ) => {
   // views
 
   const addView = async (dbPage, dbRows, viewType) => {
-    // todo later: add select property for boards
 
+    // board: choose a select property to use or make one
+    let selectPropID;
     if (viewType === 'board') {
-      console.log(`addView() doesn't know how to handle adding a board yet, silly goose!`);
+      // check for select properties
+      selectPropID = Object.keys(dbPage.properties).find(
+        propID => dbPage.properties[propID].type === 'select'
+      );
+
+      // no select property: make one
+      if (!selectPropID) {
+        selectPropID = await addProperty(dbPage, dbRows, 'select');
+      }
     }
     
     // generate ID
@@ -694,6 +716,10 @@ const Page = ( props ) => {
       type: viewType,
       visibleProperties: Object.keys(dbPage.properties),
     };
+    if (viewType === 'board') {
+      newViewObj.groupBy = selectPropID;
+    }
+
     const fieldStr = `views.${newID}`;
 
     // update firestore
@@ -715,7 +741,7 @@ const Page = ( props ) => {
     const updateObj = {
       activeView: newViewID
     };
-    
+
     await updateDoc(
       docRef,
       updateObj
