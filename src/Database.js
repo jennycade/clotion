@@ -149,6 +149,7 @@ const Database = (props) => {
           activeViewID={page.activeView}
           addView={addView}
           updateViewName={updateViewName}
+          switchView={switchView}
         />
       </div>
 

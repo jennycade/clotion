@@ -712,6 +712,7 @@ const Page = ( props ) => {
 
   const switchView = async (dbPage, newViewID) => {
     console.log(`switchView() isn't written yet, silly goose!`);
+    console.log(`newViewID: ${newViewID}`);
   }
 
   const deleteView = async (dbPage, viewID) => {

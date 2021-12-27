@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // my components
 import Popup from './Popup';
@@ -17,16 +17,6 @@ const ViewManager = (props) => {
 
   // vars
   const numViews = Object.keys(views).length;
-  // view switching menu
-  const viewMenuItems = [];
-  for (const [viewID, viewObj] of Object.entries(views)) {
-    viewMenuItems.push(
-      {
-        id: viewID,
-        displayName: viewObj.displayName,
-      }
-    )
-  }
 
   // handling
   const handleAddClick = (viewType) => {
@@ -60,7 +50,13 @@ const ViewManager = (props) => {
       {/* VIEW SWITCHER - only when 2+ views */}
       { showSwitcher &&
         <Popup exit={() => setShowSwitcher(false)}>
-          <Menu menuItems={viewMenuItems} choose={handleSwitchView}>
+          <Menu menuItems={
+              Object.keys(views).map(
+                id => { return { id: id, displayText: views[id].displayName } }
+              )
+            }
+            choose={handleSwitchView}
+          >
 
           </Menu>
         </Popup>
