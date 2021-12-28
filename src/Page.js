@@ -753,8 +753,26 @@ const Page = ( props ) => {
   }
 
   const updatePropertyVisibility = async (action, propID, viewID, dbPage) => {
-    console.log(`addVisibleProperty() isn't written yet, silly goose!`);
     // action: 'add' or 'remove'
+    let updateFn;
+    switch (action) {
+      case 'add':
+        updateFn = arrayUnion;
+        break;
+      case 'remove':
+        updateFn = arrayRemove;
+        break;
+      default:
+        throw new Error(`updatePropertyVisibility() doesn't know how to handle ${action}`);
+    }
+
+    // update firestore
+    const docRef = doc(db, 'pages', dbPage.id);
+    const fieldStr = `views.${viewID}.visibleProperties`;
+    await updateDoc(
+      docRef,
+      { [fieldStr]: updateFn(propID)}
+    );
   }
 
   // column actions (table and single page)

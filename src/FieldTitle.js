@@ -4,21 +4,10 @@ import { useState } from 'react';
 import Popup from './Popup';
 import Menu from './Menu';
 
-const FieldName = (props) => {
-  // property type icons
-  const ICONS = {
-    title: '🆔', 
-    text: '🔤',
-    number: '#️⃣',
-    select: '▾',
-    multiselect: '≔',
-    date: '🗓',
-    checkbox: '☑︎',
-    url: '🔗',
-    email: '✉️',
-    phone: '📞',
-  };
+// constants
+import { PROPERTYTYPEICONS } from './definitions';
 
+const FieldName = (props) => {
   // props
   const {
     type, displayName,
@@ -83,47 +72,47 @@ const FieldName = (props) => {
     {
       id: 'text',
       displayText: 'Text',
-      displayIcon: ICONS['text'],
+      displayIcon: PROPERTYTYPEICONS['text'],
     },
     {
       id: 'number',
       displayText: 'Number',
-      displayIcon: ICONS['number'],
+      displayIcon: PROPERTYTYPEICONS['number'],
     },
     {
       id: 'select',
       displayText: 'Select',
-      displayIcon: ICONS['select'],
+      displayIcon: PROPERTYTYPEICONS['select'],
     },
     {
       id: 'multiselect',
       displayText: 'Multi-select',
-      displayIcon: ICONS['multiselect'],
+      displayIcon: PROPERTYTYPEICONS['multiselect'],
     },
     {
       id: 'date',
       displayText: 'Date',
-      displayIcon: ICONS['date'],
+      displayIcon: PROPERTYTYPEICONS['date'],
     },
     {
       id: 'checkbox',
       displayText: 'Checkbox',
-      displayIcon: ICONS['checkbox'],
+      displayIcon: PROPERTYTYPEICONS['checkbox'],
     },
     {
       id: 'url',
       displayText: 'URL',
-      displayIcon: ICONS['url'],
+      displayIcon: PROPERTYTYPEICONS['url'],
     },
     {
       id: 'email',
       displayText: 'Email',
-      displayIcon: ICONS['email'],
+      displayIcon: PROPERTYTYPEICONS['email'],
     },
     {
       id: 'phone',
       displayText: 'Phone',
-      displayIcon: ICONS['phone'],
+      displayIcon: PROPERTYTYPEICONS['phone'],
     },
   ];
   const columnActionMenu = [
@@ -192,7 +181,7 @@ const FieldName = (props) => {
             onClick={() => setShowPropTypeMenu(true)}
           >
             <span className='icon'>
-              {ICONS[type]}
+              {PROPERTYTYPEICONS[type]}
             </span>
             <span>
               { propertyTypeMenu.find(x => x.id === type).displayText }
@@ -223,7 +212,7 @@ const FieldName = (props) => {
   } else {
     return (
       <span className='columnName' onClick={() => setEditing(true)}>
-        <span>{ ICONS[type] }</span>
+        <span>{ PROPERTYTYPEICONS[type] }</span>
         <span>{ displayName }</span>
       </span>
     );

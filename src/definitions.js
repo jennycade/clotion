@@ -17,6 +17,19 @@ const VIEWMENU = [
   },
 ];
 
+const PROPERTYTYPEICONS = {
+  title: '🆔', 
+  text: '🔤',
+  number: '#️⃣',
+  select: '▾',
+  multiselect: '≔',
+  date: '🗓',
+  checkbox: '☑︎',
+  url: '🔗',
+  email: '✉️',
+  phone: '📞',
+};
+
 
 
 
@@ -27,4 +40,5 @@ const VIEWMENU = [
 
 export {
   VIEWMENU,
+  PROPERTYTYPEICONS,
 };

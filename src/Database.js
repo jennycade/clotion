@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Switch } from 'react-router-dom';
 
 // style
 import './Database.css';
+import './Menu.css';
 
 // my components
 import Content from './Content';
@@ -10,10 +11,15 @@ import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
 import FieldName from './FieldTitle';
 import ViewManager from './ViewManager';
+import Popup from './Popup';
+import Toggle from './Toggle';
 
 // my functions
 import { removeFromArray } from './helpers';
 import { renderDate, isBlank} from './databaseFunctions';
+
+// constants
+import { PROPERTYTYPEICONS } from './definitions';
 
 const Database = (props) => {
   // props
@@ -30,6 +36,7 @@ const Database = (props) => {
 
   // state
   const [draggedRowID, setDraggedRowID] = useState('');
+  const [showPropertiesManager, setShowPropertiesManager] = useState(false);
 
   // some variables to smooth things out
   let type, propIDs, groupBy, groupBySelectOptions, activeViewID, activeView;
@@ -154,9 +161,40 @@ const Database = (props) => {
       </div>
 
       <div className='otherActions'>
-        <button>
+        <button onClick={() => setShowPropertiesManager(true)}>
           Properties
         </button>
+        { showPropertiesManager &&
+          <Popup exit={() => setShowPropertiesManager(false)}>
+            <ul className='menu'>
+              {
+                Object.keys(page.properties).map(propID => {
+                  return (
+                    <li className='grid' key={propID}>
+                      {/* ICON */}
+                      <span className='icon'>
+                        {PROPERTYTYPEICONS[getType(propID)]}
+                      </span>
+
+                      {/* NAME */}
+                      <span>{page.properties[propID].displayName}</span>
+
+                      {/* SWITCH */}
+                      <Toggle
+                        checked={propIDs.includes(propID)}
+                        onCallback={() => updatePropertyVisibility('add', propID, page.activeView)}
+                        offCallback={() => updatePropertyVisibility('remove', propID, page.activeView)}
+                      />
+                    </li>
+                  )
+                }
+                )
+              }
+            </ul>
+            
+          </Popup>
+        }
+
         <button>
           Group
         </button>
