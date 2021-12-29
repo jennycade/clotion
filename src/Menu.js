@@ -2,7 +2,7 @@ import './Menu.css';
 
 const Menu = (props) => {
   // props
-  const { menuItems, choose } = props;
+  const { menuItems, choose, className } = props;
 
   // arr menuItems = [
   // 	{
@@ -26,7 +26,7 @@ const Menu = (props) => {
   // }
 
   return (
-    <ul className='menu'>
+    <ul className={className ? className : 'menu'}>
       {
         menuItems.map(item => (
           <li

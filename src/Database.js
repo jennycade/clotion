@@ -171,17 +171,17 @@ const Database = (props) => {
       <div className='otherActions'>
 
         {/* PROPERTIES */}
-        <div classname='dropdownWrapper'>
+        <div className='dropdownWrapper'>
         <button onClick={() => setShowPropertiesManager(true)}>
           Properties
         </button>
         { showPropertiesManager &&
           <Popup exit={() => setShowPropertiesManager(false)}>
-            <ul className='menu'>
+            <ul className='menu wideMenu'>
               {
                 ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)].map(propID => {
                   return (
-                    <li className='grid' key={propID}>
+                    <li className='iconNameButtonGrid' key={propID}>
                       {/* ICON */}
                       <span className='icon'>
                         {PROPERTYTYPEICONS[getType(propID)]}
@@ -208,29 +208,29 @@ const Database = (props) => {
         }
         </div>
 
-        <div classname='dropdownWrapper'>
+        <div className='dropdownWrapper'>
           <button>
             Group
           </button>
         </div>
-        <div classname='dropdownWrapper'>
+        <div className='dropdownWrapper'>
           <button>
             Filter
           </button>
         </div>
-        <div classname='dropdownWrapper'>
+        <div className='dropdownWrapper'>
           <button>
             Sort
           </button>
         </div>
-        <div classname='dropdownWrapper'>
+        <div className='dropdownWrapper'>
           <button>
             Search
           </button>
         </div>
         
 
-        <div classname='dropdownWrapper'>
+        <div className='dropdownWrapper'>
           <button className='newButton' onClick={() => addDBRow()}>
             New
           </button>

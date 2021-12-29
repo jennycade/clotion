@@ -3,6 +3,10 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  color: black;
+}
+.wideMenu {
+  width: 400px;
 }
 
 .menu li {
@@ -10,10 +14,17 @@
 }
 .menu li.grid {
   display: grid;
-  grid-template-columns: 26px 1fr;
+  grid-template-columns: 30px 1fr;
   justify-items: start;
   align-items: baseline;
 }
+.menu li.iconNameButtonGrid {
+  display: grid;
+  grid-template-columns: 30px 1fr min-content;
+  justify-items: start;
+  align-items: baseline;
+}
+
 .menu .icon {
   justify-self: center;
 }

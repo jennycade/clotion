@@ -122,8 +122,13 @@ table .addProperty:hover, table .addRow:hover, .board .addRow:hover, .list .addR
   border: none;
   background: none;
   font-size: 14px;
+  padding: 6px;
+  border-radius: 3px;
   color: rgba(55, 53, 47, 0.6);
   cursor: pointer;
+}
+.dbActionBar button:hover {
+  background-color: rgba(55,53,47,0.08);
 }
 
 button.newButton {
@@ -133,6 +138,9 @@ button.newButton {
   border: 1px solid rgb(76, 147, 188);
   border-radius: 3px;
   padding: 8px;
+}
+button.newButton:hover {
+  background-color: rgb(6, 156, 205);
 }
 
 button.viewButton {

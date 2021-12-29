@@ -57,6 +57,7 @@ const ViewManager = (props) => {
               )
             }
             choose={handleSwitchView}
+            className='wideMenu menu'
           >
             
           </Menu>
@@ -68,7 +69,7 @@ const ViewManager = (props) => {
       {/* ADD A VIEW popup */}
       { showAddMenu &&
         <Popup exit={() => setShowAddMenu(false)}>
-          <Menu menuItems={VIEWMENU} choose={handleAddClick}>
+          <Menu menuItems={VIEWMENU} choose={handleAddClick} className='wideMenu menu'>
 
           </Menu>
         </Popup>
