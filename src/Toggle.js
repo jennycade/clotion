@@ -2,22 +2,29 @@ import './Toggle.css';
 
 const Toggle = (props) => {
   // props
-  const { checked, onCallback, offCallback } = props;
+  const { checked, onCallback, offCallback, disabled } = props;
 
   // handling
   const handleClick = () => {
-    if (checked) {
-      // toggle off
-      offCallback();
-    } else {
-      // toggle on
-      onCallback();
+    if (!disabled) {
+      if (checked) {
+        // toggle off
+        offCallback();
+      } else {
+        // toggle on
+        onCallback();
+      }
     }
   }
 
   return (
     <div className='switch' onClick={handleClick}>
-      <input type='checkbox' checked={checked} readonly={true} />
+      <input
+        className={disabled ? 'disabled' : ''}
+        type='checkbox'
+        checked={checked}
+        readonly={true}
+      />
       <span className='slider'></span>
     </div>
   );

@@ -50,3 +50,7 @@ input:focus + .slider {
 input:checked + .slider:before {
   transform: translateX(0.5rem);
 }
+
+input.disabled:checked + .slider {
+  opacity: 0.4;
+}

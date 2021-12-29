@@ -733,7 +733,12 @@ const Page = ( props ) => {
   }
 
   const updateViewName = async (newName, viewID, dbPage) => {
-    console.log(`updateViewName() isn't written yet, silly goose!`);
+    const docRef = doc(db, 'pages', dbPage.id);
+    const fieldStr = `views.${viewID}.displayName`;
+    await updateDoc(
+      docRef,
+      { [fieldStr]: newName }
+    );
   }
 
   const switchView = async (dbPage, newViewID) => {
@@ -749,7 +754,13 @@ const Page = ( props ) => {
   }
 
   const deleteView = async (dbPage, viewID) => {
-    console.log(`deleteView() isn't written yet, silly goose!`);
+    const docRef = doc(db, 'pages', dbPage.id);
+    const fieldStr = `views${viewID}`;
+    await updateDoc(
+      docRef,
+      fieldStr,
+      deleteField()
+    );
   }
 
   const updatePropertyVisibility = async (action, propID, viewID, dbPage) => {

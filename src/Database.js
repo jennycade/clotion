@@ -161,6 +161,8 @@ const Database = (props) => {
       </div>
 
       <div className='otherActions'>
+
+        {/* PROPERTIES */}
         <button onClick={() => setShowPropertiesManager(true)}>
           Properties
         </button>
@@ -184,6 +186,7 @@ const Database = (props) => {
                         checked={propIDs.includes(propID)}
                         onCallback={() => updatePropertyVisibility('add', propID, page.activeView)}
                         offCallback={() => updatePropertyVisibility('remove', propID, page.activeView)}
+                        disabled={propID === 'title'}
                       />
                     </li>
                   )
