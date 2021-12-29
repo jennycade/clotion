@@ -20,6 +20,7 @@ import { renderDate, isBlank, sortIDsByCreated } from './databaseFunctions';
 
 // constants
 import { PROPERTYTYPEICONS } from './definitions';
+import PropertyRow from './PropertyRow';
 
 const Database = (props) => {
   // props
@@ -181,27 +182,23 @@ const Database = (props) => {
               {
                 ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)].map(propID => {
                   return (
-                    <li className='iconNameButtonGrid' key={propID}>
-                      {/* ICON */}
-                      <span className='icon'>
-                        {PROPERTYTYPEICONS[getType(propID)]}
-                      </span>
-
-                      {/* NAME */}
-                      <span>{page.properties[propID].displayName}</span>
-
-                      {/* SWITCH */}
-                      <Toggle
-                        checked={propIDs.includes(propID)}
-                        onCallback={() => updatePropertyVisibility('add', propID, page.activeView)}
-                        offCallback={() => updatePropertyVisibility('remove', propID, page.activeView)}
-                        disabled={propID === 'title'}
-                      />
-                    </li>
+                    <PropertyRow
+                      key={propID}
+                      propID={propID}
+                      properties={page.properties}
+                      propIDs={propIDs}
+                      type={getType(propID)}
+                      updatePropertyVisibility={(action) => updatePropertyVisibility(action, propID, page.activeView)}
+                      displayName={ getPropName(propID) }
+                      updateDBPropName={(newName) => updateDBPropName(newName, propID)}
+                      updateDBPropType={(newType) => updateDBPropType(newType, propID)}
+                      handleColumnAction={(action) => handleColumnAction(action, propID)}
+                    />
                   )
                 }
                 )
               }
+              <li onClick={addProperty}>+ Add a property</li>
             </ul>
             
           </Popup>
@@ -245,7 +242,6 @@ const Database = (props) => {
       <FieldName
         type={ getType(propID) }
         displayName={ getPropName(propID) }
-        handleDBPropNameChange={ (newName) => handleDBPropNameChange(newName, propID)}
         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
         updateDBPropType={(newType) => updateDBPropType(newType, propID)}
         handleColumnAction={(action) => handleColumnAction(action, propID)}

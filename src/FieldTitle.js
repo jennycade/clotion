@@ -11,7 +11,6 @@ const FieldName = (props) => {
   // props
   const {
     type, displayName,
-    // handleDBPropNameChange,
     updateDBPropName, updateDBPropType,
     handleColumnAction,
   } = props;
@@ -26,9 +25,6 @@ const FieldName = (props) => {
     // update state
     const input = event.target.value;
     setNewName(input);
-
-    // send to Page (why exactly?)
-    // handleDBPropNameChange(input);
   }
 
   // update prop/column name
@@ -163,6 +159,7 @@ const FieldName = (props) => {
     return (
       <Popup
         exit={ () => setEditing(false) }
+        popupClassName={'fieldNamePopup'}
       >
         {/* COLUMN NAME */}
         <div>
@@ -192,6 +189,7 @@ const FieldName = (props) => {
         { showPropTypeMenu &&
           <Popup
             exit={ () => setShowPropTypeMenu(false) }
+            popupClassName={'propTypePopup'}
           >
             <Menu
               menuItems={ propertyTypeMenu }

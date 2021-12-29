@@ -24,6 +24,12 @@
   justify-items: start;
   align-items: baseline;
 }
+.menu li.rightButtonGrid {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  justify-items: start;
+  align-items: baseline;
+}
 
 .menu .icon {
   justify-self: center;

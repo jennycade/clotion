@@ -34,11 +34,11 @@ const Popup = (props) => {
       }
     }
 
-    window.addEventListener('click', handleClick);
+    window.addEventListener('mousedown', handleClick);
     window.addEventListener('keydown', handleKeydown);
     // clean up
     return () => {
-      window.removeEventListener('click', handleClick);
+      window.removeEventListener('mousedown', handleClick);
       window.removeEventListener('keydown', handleKeydown);
     }
   }, [exit, uniqueClassName]);

@@ -190,7 +190,7 @@ const getColorCode = (colorName, type) => {
 
 const getAncestorClassList = (domElement, partialList = []) => {
   
-  if (domElement.parentNode && domElement.id !== 'root') {
+  if (domElement.parentNode && (domElement.id !== 'root')) {
     // add parent class(es)
     const result = [...partialList];
     domElement.parentNode.classList.forEach(x => {
