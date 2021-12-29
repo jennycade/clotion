@@ -23,7 +23,7 @@ const Toggle = (props) => {
         className={disabled ? 'disabled' : ''}
         type='checkbox'
         checked={checked}
-        readonly={true}
+        readOnly={true}
       />
       <span className='slider'></span>
     </div>

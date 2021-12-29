@@ -1,5 +1,9 @@
 import { stringify } from '@firebase/util';
-import { countDuplicates, getTitles, rearrange, getDescendents, splicePageLinkInBlock, getAncestorClassList, generateUniqueString, removeFromArray } from './helpers';
+import {
+  countDuplicates,
+  getTitles, rearrange, getDescendents, splicePageLinkInBlock, getAncestorClassList, generateUniqueString, removeFromArray,
+  sortOutOfPlace
+} from './helpers';
 
 // countDuplicates
 test(`No duplicates in [1,2,3]`, () => {
@@ -599,4 +603,50 @@ test(`removeFromArray() doesn't change the original array`, () => {
   const newArr = removeFromArray(2, arr);
 
   expect(arr).toEqual([1, 2, 3]);
+});
+
+
+///////////
+// sort array not-in-place //
+/////////////////////////////
+
+test(`sortOutOfPlace() returns a new array`, () => {
+  const arr = [3,2,1];
+  const newArr = sortOutOfPlace(arr);
+  
+  expect(newArr).toEqual(expect.any(Array));
+  expect(newArr).not.toBe(arr);
+});
+
+test(`sortOutOfPlace() returns a sorted array and leaves the old one alone (when not provided with a sortFn)`, () => {
+  const arr = [3,2,1];
+  const newArr = sortOutOfPlace(arr);
+  
+  expect(newArr).toEqual([1,2,3]);
+  expect(arr).toEqual([3,2,1]);
+});
+
+test(`sortOutOfPlace() uses the sortFn provided`, () => {
+  const arr = [
+    { id: 'c', created: 1234 },
+    { id: 'b', created: 1011 },
+    { id: 'a', created: 3124 },
+  ];
+
+  // sort by created
+  const sortFn = (firstEl, secondEl) => {
+    return firstEl.created - secondEl.created;
+  };
+  const newArr = sortOutOfPlace(arr, sortFn);
+
+  expect(newArr).toEqual([
+    { id: 'b', created: 1011 },
+    { id: 'c', created: 1234 },
+    { id: 'a', created: 3124 },
+  ]);
+  expect(arr).toEqual([
+    { id: 'c', created: 1234 },
+    { id: 'b', created: 1011 },
+    { id: 'a', created: 3124 },
+  ]);
 });

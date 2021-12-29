@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // style
 import './Database.css';
@@ -15,7 +15,7 @@ import Popup from './Popup';
 import Toggle from './Toggle';
 
 // my functions
-import { removeFromArray } from './helpers';
+import { removeFromArray, sortOutOfPlace } from './helpers';
 import { renderDate, isBlank} from './databaseFunctions';
 
 // constants
@@ -63,6 +63,12 @@ const Database = (props) => {
     'title', 'checkbox', 'select', 'multiselect',
   ];
 
+  // helper functions
+  const propertySorter = (firstEl, secondEl) => {
+    // elements are propIDs. sort by properties[propID].created
+    return page.properties[firstEl].created.seconds - page.properties[secondEl].created.seconds;
+  }
+
   // get property info
   const getType = (propID) => {
     return page.properties[propID].type;
@@ -90,6 +96,8 @@ const Database = (props) => {
     }));
     return selectOptions;
   }
+
+  // handling
 
   const removeSelectOption = (optionID, rowID, propID) => {
     // remove from array
@@ -170,7 +178,7 @@ const Database = (props) => {
           <Popup exit={() => setShowPropertiesManager(false)}>
             <ul className='menu'>
               {
-                Object.keys(page.properties).map(propID => {
+                sortOutOfPlace(Object.keys(page.properties), propertySorter).map(propID => {
                   return (
                     <li className='grid' key={propID}>
                       {/* ICON */}

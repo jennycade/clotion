@@ -240,6 +240,16 @@ const removeFromArray = (value, arr) => {
   return newArr;
 }
 
+const sortOutOfPlace = (arr, sortFn) => {
+  const result = [...arr];
+
+  if (sortFn) {
+    return result.sort(sortFn);
+  }
+
+  return result.sort();
+}
+
 
 export {
   countDuplicates,
@@ -252,6 +262,7 @@ export {
   getAncestorClassList,
   generateUniqueString,
   removeFromArray,
+  sortOutOfPlace,
 };
 
 

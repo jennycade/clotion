@@ -12,7 +12,13 @@ import { rearrange, getDescendents, splicePageLinkInBlock } from './helpers';
 // import { DbContext } from './firebase';
 import { db, auth, googleProvider } from './firebase/db';
 
-import { onSnapshot, collection, addDoc, setDoc, updateDoc, deleteDoc, orderBy, query, where, writeBatch, doc, getDocs } from "firebase/firestore";
+import {
+  doc, collection,
+  onSnapshot, getDocs,
+  orderBy, query, where, 
+  addDoc, setDoc, updateDoc, deleteDoc, writeBatch, 
+  serverTimestamp,
+} from "firebase/firestore";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -220,12 +226,14 @@ function App() {
         type: type,
         displayName: type,
         visibleProperties: ['title', 'defaultProp'],
+        created: serverTimestamp(),
       }
     };
     const properties = {
       'title': {
         displayName: 'Name',
         type: 'title',
+        created: serverTimestamp(),
       },
       'defaultProp': {
         // fill in based on view type
@@ -238,6 +246,7 @@ function App() {
         properties['defaultProp'] = {
           displayName: 'Tags',
           type: 'multiselect',
+          created: serverTimestamp(),
           selectOptions: {
             // empty
           }
@@ -248,6 +257,7 @@ function App() {
         properties['defaultProp'] = {
           displayName: 'Tags',
           type: 'multiselect',
+          created: serverTimestamp(),
           selectOptions: {
             // empty
           }
@@ -260,6 +270,7 @@ function App() {
         properties['defaultProp'] = {
           displayName: 'Status',
           type: 'select',
+          created: serverTimestamp(),
           selectOptions: {
             notStarted: {
               displayName: 'Not started',

@@ -7,6 +7,7 @@ import {
     query, where, orderBy,
     writeBatch,
     deleteField, arrayRemove, arrayUnion,
+    serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase/db';
 
@@ -582,7 +583,8 @@ const Page = ( props ) => {
     const newFieldObj = {
       displayName: 'Column', // TODO to be fancy: 'Column 1' if 'Column' exists, 'Column 2' if both exist, etc.
       type: type,
-      sortOrder: 0 // TODO make this a thing
+      sortOrder: 0, // TODO make this a thing
+      created: serverTimestamp(),
     };
     if (['select', 'multiselect'].includes(type)) {
       newFieldObj.selectOptions = [];

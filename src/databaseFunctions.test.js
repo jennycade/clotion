@@ -1,6 +1,6 @@
-import { convertEntry, validateSelectOptions, getInvalidSelectOptions, convertValue, renderDate } from './databaseFunctions';
+import { convertEntry, validateSelectOptions, getInvalidSelectOptions, convertValue, renderDate, sortIDsByCreated } from './databaseFunctions';
 
-import { generateUniqueString } from './helpers';
+import { generateUniqueString, sortOutOfPlace } from './helpers';
 
 test(`Doesn't change text, url, email, or phone`, () => {
   const strEntry = 'abc';
@@ -869,3 +869,36 @@ test(`Date renders blank as blank`, () => {
 // Day/Month/Year
 // Year/Month/Day
 // Relative
+
+
+////////////////////////
+// sort IDs by created //
+////////////////////////
+
+const fakeMap = {
+  bloop: {created: {nanoseconds: 957000000, seconds: 1640803303}, displayName: 'Column 3'},
+  snoop: {created: {nanoseconds: 226000000, seconds: 1640803303}, displayName: 'Column 2'},
+  droop: {created: {nanoseconds: 409000000, seconds: 1640803267}, displayName: 'Column 1'}, 
+  gloop: {created: {nanoseconds: 535000000, seconds: 1640804005}, displayName: 'Column 4'},
+};
+const sortedFakeMap = {
+  droop: {created: {nanoseconds: 409000000, seconds: 1640803267}, displayName: 'Column 1'}, 
+  snoop: {created: {nanoseconds: 226000000, seconds: 1640803303}, displayName: 'Column 2'},
+  bloop: {created: {nanoseconds: 957000000, seconds: 1640803303}, displayName: 'Column 3'},
+  gloop: {created: {nanoseconds: 535000000, seconds: 1640804005}, displayName: 'Column 4'},
+};
+const ids = ['bloop', 'droop', 'gloop', 'snoop'];
+const sortedIDs = Object.keys(sortedFakeMap);
+
+test(`sortIDsByCreated() returns a new array and leaves the original alone`, () => {
+  const result = sortIDsByCreated(ids, fakeMap);
+
+  expect(result).toEqual(expect.any(Array));
+  expect(result).not.toBe(ids);
+});
+
+test(`sortIDsByCreated() returns a sorted array`, () => {
+  const result = sortIDsByCreated(ids, fakeMap);
+
+  expect(result).toEqual(sortedIDs);
+});

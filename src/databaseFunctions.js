@@ -1,3 +1,7 @@
+import { sortOutOfPlace } from './helpers';
+
+import { toDate } from 'firebase/firestore';
+
 const convertEntry = (entry, propType, finalSave = false, selectOptions = null) => {
   switch(propType) {
     case 'text':
@@ -346,6 +350,24 @@ const getDefaultEntry = (type) => {
   return convertEntry('', type, true);
 }
 
+const getMilliseconds = (timestamp) => {
+  // timestamp = {nanoseconds: xxxxxxxxx, seconds: xxxxxxxxxx}
+  // seconds and nanoseconds to milliseconds
+  const ms = timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000;
+  return ms;
+}
+
+const sortIDsByCreated = (idsArray, map) => {
+  const sortFn = (firstID, secondID) => {
+    const firstTimestamp = getMilliseconds(map[firstID].created);
+    const secondTimestamp = getMilliseconds(map[secondID].created);
+
+    return firstTimestamp - secondTimestamp;
+  }
+
+  return sortOutOfPlace(idsArray, sortFn);
+}
+
 export {
   convertEntry,
   getDefaultEntry,
@@ -354,4 +376,5 @@ export {
   convertValue,
   renderDate,
   isBlank,
+  sortIDsByCreated,
 };
