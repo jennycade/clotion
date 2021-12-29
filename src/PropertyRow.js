@@ -30,27 +30,6 @@ const PropertyRow = (props) => {
         handleColumnAction={handleColumnAction}
       />
 
-      {/* ICON */}
-      {/* <span className='icon'>
-        {PROPERTYTYPEICONS[type]}
-      </span> */}
-
-      {/* NAME */}
-      {/* <span onClick={() => setShowFieldName(true)}>{displayName}</span> */}
-
-      {/* POPUP */}
-      {/* { showFieldName &&
-      <Popup exit={() => setShowFieldName(false)} >
-        <FieldName
-          type={type}
-          displayName={displayName}
-          updateDBPropName={updateDBPropName}
-          updateDBPropType={updateDBPropType}
-          handleColumnAction={handleColumnAction}
-        />
-      </Popup>
-      } */}
-
       {/* SWITCH */}
       <Toggle
         checked={propIDs.includes(propID)}

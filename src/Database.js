@@ -19,8 +19,6 @@ import { removeFromArray,  } from './helpers';
 import { renderDate, isBlank, sortIDsByCreated } from './databaseFunctions';
 
 // constants
-import { PROPERTYTYPEICONS } from './definitions';
-import PropertyRow from './PropertyRow';
 
 const Database = (props) => {
   // props
@@ -28,7 +26,7 @@ const Database = (props) => {
     page, rows, dbPages, dbDisplay,
     handleDBRowChange, updateDBRow, handleClickChange,
     addSelectOption, updateSelectOption, deleteSelectOption, 
-    handleDBPropNameChange, updateDBPropName, updateDBPropType,
+    updateDBPropName, updateDBPropType,
     addProperty,
     handleColumnAction,
     addDBRow,
@@ -182,18 +180,36 @@ const Database = (props) => {
               {
                 ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)].map(propID => {
                   return (
-                    <PropertyRow
-                      key={propID}
-                      propID={propID}
-                      properties={page.properties}
-                      propIDs={propIDs}
-                      type={getType(propID)}
-                      updatePropertyVisibility={(action) => updatePropertyVisibility(action, propID, page.activeView)}
-                      displayName={ getPropName(propID) }
-                      updateDBPropName={(newName) => updateDBPropName(newName, propID)}
-                      updateDBPropType={(newType) => updateDBPropType(newType, propID)}
-                      handleColumnAction={(action) => handleColumnAction(action, propID)}
-                    />
+                    <li className='rightButtonGrid'>
+                      <FieldName
+                        type={getType(propID)}
+                        displayName={getPropName(propID)}
+                        updateDBPropName={(newName) => updateDBPropName(newName, propID)}
+                        updateDBPropType={(newType) => updateDBPropType(newType, propID)}
+                        handleColumnAction={(action) => handleColumnAction(action, propID)}
+                      />
+
+                      {/* SWITCH */}
+                      <Toggle
+                        checked={propIDs.includes(propID)}
+                        onCallback={() => updatePropertyVisibility('add', propID, page.activeView)}
+                        offCallback={() => updatePropertyVisibility('remove', propID, page.activeView)}
+                        disabled={propID === 'title'}
+                      />
+                    </li>
+
+                    // <PropertyRow
+                    //   key={propID}
+                    //   propID={propID}
+                    //   properties={page.properties}
+                    //   propIDs={propIDs}
+                    //   type={getType(propID)}
+                    //   updatePropertyVisibility={(action) => updatePropertyVisibility(action, propID, page.activeView)}
+                    //   displayName={ getPropName(propID) }
+                    //   updateDBPropName={(newName) => updateDBPropName(newName, propID)}
+                    //   updateDBPropType={(newType) => updateDBPropType(newType, propID)}
+                    //   handleColumnAction={(action) => handleColumnAction(action, propID)}
+                    // />
                   )
                 }
                 )
