@@ -171,6 +171,7 @@ const Database = (props) => {
       <div className='otherActions'>
 
         {/* PROPERTIES */}
+        <div classname='dropdownWrapper'>
         <button onClick={() => setShowPropertiesManager(true)}>
           Properties
         </button>
@@ -205,23 +206,35 @@ const Database = (props) => {
             
           </Popup>
         }
+        </div>
 
-        <button>
-          Group
-        </button>
-        <button>
-          Filter
-        </button>
-        <button>
-          Sort
-        </button>
-        <button>
-          Search
-        </button>
+        <div classname='dropdownWrapper'>
+          <button>
+            Group
+          </button>
+        </div>
+        <div classname='dropdownWrapper'>
+          <button>
+            Filter
+          </button>
+        </div>
+        <div classname='dropdownWrapper'>
+          <button>
+            Sort
+          </button>
+        </div>
+        <div classname='dropdownWrapper'>
+          <button>
+            Search
+          </button>
+        </div>
+        
 
-        <button className='newButton' onClick={() => addDBRow()}>
-          New
-        </button>
+        <div classname='dropdownWrapper'>
+          <button className='newButton' onClick={() => addDBRow()}>
+            New
+          </button>
+        </div>
       </div>
     </div>
   );
