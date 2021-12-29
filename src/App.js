@@ -218,7 +218,7 @@ function App() {
     const pageRef = doc(db, 'pages', pageID);
 
     // change page.isDb to true
-    updateDoc(pageRef, {isDb: true});
+    await updateDoc(pageRef, {isDb: true});
 
     // construct views and properties
     const views = {

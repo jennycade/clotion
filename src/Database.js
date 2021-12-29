@@ -15,8 +15,8 @@ import Popup from './Popup';
 import Toggle from './Toggle';
 
 // my functions
-import { removeFromArray, sortOutOfPlace } from './helpers';
-import { renderDate, isBlank} from './databaseFunctions';
+import { removeFromArray,  } from './helpers';
+import { renderDate, isBlank, sortIDsByCreated } from './databaseFunctions';
 
 // constants
 import { PROPERTYTYPEICONS } from './definitions';
@@ -178,7 +178,7 @@ const Database = (props) => {
           <Popup exit={() => setShowPropertiesManager(false)}>
             <ul className='menu'>
               {
-                sortOutOfPlace(Object.keys(page.properties), propertySorter).map(propID => {
+                ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)].map(propID => {
                   return (
                     <li className='grid' key={propID}>
                       {/* ICON */}
