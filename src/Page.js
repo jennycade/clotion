@@ -457,10 +457,19 @@ const Page = ( props ) => {
 
   const updateDBPropType = async (newType, fieldID, dbPage, dbRows) => {
     const oldType = dbPage.properties[fieldID].type;
+
+    // no change -> don't bother!
+    if (oldType === newType) {
+      return null;
+    }
+
     const ARRAYTYPES = ['select', 'multiselect'];
 
     // update firestore
     const batch = writeBatch(db);
+
+    // 0. Check for any views using it as a groupBy property
+    await replaceGroupByProperty(fieldID, dbPage, dbRows);
 
     // convert dbPage.property
     const pageRef = doc(db, 'pages', dbPage.id);
@@ -490,6 +499,9 @@ const Page = ( props ) => {
         // 1. look up selectOptions - always exists and may have values if 
         // field was once select or multiselect
         selectOptions = dbPage.properties[fieldID].selectOptions;
+        if (!selectOptions) {
+          selectOptions = {};
+        }
 
         // 2. get new row field values
         const allNewValues = [];
@@ -625,18 +637,44 @@ const Page = ( props ) => {
     return newID;
   }
 
+  const replaceGroupByProperty = async (fieldID, dbPage, dbRows) => {
+    const viewsToReplaceGroupBy = getViewsUsingPropForGrouping(fieldID, dbPage.views);
+    let newGroupByPropID;
+    if (viewsToReplaceGroupBy.length > 0) {
+      // option one: replace with another select property
+      // find first select property
+      const existingSelectPropID = removeFromArray( // don't try to replace with the one that's about to be deleted!
+        fieldID,
+        Object.keys(dbPage.properties) 
+      ).find(propID => {
+        return dbPage.properties[propID].type === 'select';
+      });
+
+      if (existingSelectPropID) {
+        newGroupByPropID = existingSelectPropID;
+      } else {
+        // add a select property
+        newGroupByPropID = await addProperty(dbPage, dbRows, 'select');
+      }
+      
+      // go through views that need to be updated
+      viewsToReplaceGroupBy.forEach(viewID => {
+        // switch groupBy value to new property id
+        updateDoc(
+          doc(db, 'pages', dbPage.id),
+          `views.${viewID}.groupBy`,
+          newGroupByPropID
+        );
+      });
+    }
+  }
+
   const deleteProperty = async (fieldID, dbPage, dbRows) => {
     // batch for simultaneous updates
     const batch = writeBatch(db);
 
     // 0. Check for any views using it as a groupBy property
-    const viewsToReplaceGroupBy = getViewsUsingPropForGrouping(fieldID, dbPage.views);
-    if (viewsToReplaceGroupBy.length > 0) {
-      // add a select property
-      
-      // for each view
-      // switch groupBy value to new property id
-    }
+    await replaceGroupByProperty(fieldID, dbPage, dbRows);
 
     // 1. Remove property from page.properties
     batch.update(
@@ -655,7 +693,7 @@ const Page = ( props ) => {
     });
 
     // 3. remove from all views!
-    for (const [viewID, viewObj] of Object.entries(dbPage.views)) {
+    for (const viewID of Object.keys(dbPage.views)) {
       // skip activeView
       if (!(viewID === 'activeView')) {
         // add to database
