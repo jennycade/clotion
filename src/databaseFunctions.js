@@ -368,6 +368,18 @@ const sortIDsByCreated = (idsArray, map) => {
   return sortOutOfPlace(idsArray, sortFn);
 }
 
+const getViewsUsingPropForGrouping = (propID, views) => {
+  const viewIDs = [];
+
+  Object.keys(views).forEach(viewID => {
+    if (views[viewID].groupBy === propID) {
+      viewIDs.push(viewID);
+    }
+  });
+
+  return viewIDs;
+}
+
 export {
   convertEntry,
   getDefaultEntry,
@@ -377,4 +389,5 @@ export {
   renderDate,
   isBlank,
   sortIDsByCreated,
+  getViewsUsingPropForGrouping
 };

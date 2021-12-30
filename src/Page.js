@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase/db';
 
-import { convertEntry, convertValue, getDefaultEntry } from './databaseFunctions';
+import { convertEntry, convertValue, getDefaultEntry, getViewsUsingPropForGrouping } from './databaseFunctions';
 
 import './Page.css';
 
@@ -628,6 +628,15 @@ const Page = ( props ) => {
   const deleteProperty = async (fieldID, dbPage, dbRows) => {
     // batch for simultaneous updates
     const batch = writeBatch(db);
+
+    // 0. Check for any views using it as a groupBy property
+    const viewsToReplaceGroupBy = getViewsUsingPropForGrouping(fieldID, dbPage.views);
+    if (viewsToReplaceGroupBy.length > 0) {
+      // add a select property
+      
+      // for each view
+      // switch groupBy value to new property id
+    }
 
     // 1. Remove property from page.properties
     batch.update(

@@ -1,4 +1,6 @@
-import { convertEntry, validateSelectOptions, getInvalidSelectOptions, convertValue, renderDate, sortIDsByCreated } from './databaseFunctions';
+import { convertEntry, validateSelectOptions, getInvalidSelectOptions, convertValue, renderDate, sortIDsByCreated,
+  getViewsUsingPropForGrouping,
+} from './databaseFunctions';
 
 import { generateUniqueString, sortOutOfPlace } from './helpers';
 
@@ -901,4 +903,47 @@ test(`sortIDsByCreated() returns a sorted array`, () => {
   const result = sortIDsByCreated(ids, fakeMap);
 
   expect(result).toEqual(sortedIDs);
+});
+
+/////////
+// getViewsUsingPropForGrouping
+///////
+const fakeViews = {
+  1: {groupBy: 'a',},
+  2: {groupBy: 'b'},
+  3: {groupBy: 'c'},
+  4: {groupBy: 'c'},
+  5: {},
+};
+
+test(`getViewsUsingPropForGrouping() returns an array and doesn't change the views object`, () => {
+  const viewIDs = getViewsUsingPropForGrouping('a', fakeViews);
+  const originalFakeViews = {
+    1: {groupBy: 'a'},
+    2: {groupBy: 'b'},
+    3: {groupBy: 'c'},
+    4: {groupBy: 'c'},
+    5: {},
+  };
+  
+  expect(viewIDs).toEqual(expect.any(Array));
+  expect(fakeViews).toEqual(originalFakeViews);
+});
+
+test(`getViewsUsingPropForGrouping() returns single viewID`, () => {
+  const viewIDs = getViewsUsingPropForGrouping('a', fakeViews);
+  
+  expect(viewIDs).toEqual(['1']);
+});
+
+test(`getViewsUsingPropForGrouping() returns two matching viewID`, () => {
+  const viewIDs = getViewsUsingPropForGrouping('c', fakeViews);
+  
+  expect(viewIDs).toEqual(['3', '4']);
+});
+
+test(`getViewsUsingPropForGrouping() returns blank array if no matches`, () => {
+  const viewIDs = getViewsUsingPropForGrouping('d', fakeViews);
+  
+  expect(viewIDs).toEqual([]);
 });
