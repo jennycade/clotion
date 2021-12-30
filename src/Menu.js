@@ -10,6 +10,7 @@ const Menu = (props) => {
   // 		displayText,
   //    displayIcon, // optional
   // 		onChoose, // or use choose(id) if not defined
+  //    moreButton, // JSX!
   // 		category // optional (currently not used)
   // 	},
   // 	...
@@ -28,24 +29,43 @@ const Menu = (props) => {
   return (
     <ul className={className ? className : 'menu'}>
       {
-        menuItems.map(item => (
-          <li
-            key={item.id}
-            className={ !!item.displayIcon ? 'grid' : ''}
-            onClick={ !!item.onChoose ? item.onChoose : () => choose(item.id)}
-          >
-            {!! item.displayIcon && 
-              <span className='icon'>
-                {item.displayIcon}
-              </span>
-            }
-            {
+        menuItems.map(item => {
+
+          // className based on what elements are there to rendered
+          let liClassName = '';
+          if (!!item.displayIcon && item.moreButton) {
+            liClassName = 'iconNameButtonGrid';
+          } else if (!!item.displayIcon) {
+            liClassName = 'grid';
+          } else if (!! item.moreButton) {
+            liClassName = 'rightButtonGrid';
+          }
+
+          const handleClick = !!item.onChoose ? item.onChoose : () => choose(item.id)
+          
+          return (
+            <li
+              key={item.id}
+              className={liClassName}
+              onClick={ handleClick }
+            >
+              {/* ICON */}
+              {!! item.displayIcon && 
+                <span className='icon'>
+                  {item.displayIcon}
+                </span>
+              }
+              {/* TEXT */}
               <span>
                 {item.displayText}
               </span>
-            }
-          </li>
-        ))
+              {/* MORE BUTTON */}
+              { !! item.moreButton &&
+                item.moreButton
+              }
+            </li>
+          )
+        })
       }
     </ul>
   )

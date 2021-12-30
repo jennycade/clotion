@@ -197,19 +197,6 @@ const Database = (props) => {
                         disabled={propID === 'title'}
                       />
                     </li>
-
-                    // <PropertyRow
-                    //   key={propID}
-                    //   propID={propID}
-                    //   properties={page.properties}
-                    //   propIDs={propIDs}
-                    //   type={getType(propID)}
-                    //   updatePropertyVisibility={(action) => updatePropertyVisibility(action, propID, page.activeView)}
-                    //   displayName={ getPropName(propID) }
-                    //   updateDBPropName={(newName) => updateDBPropName(newName, propID)}
-                    //   updateDBPropType={(newType) => updateDBPropType(newType, propID)}
-                    //   handleColumnAction={(action) => handleColumnAction(action, propID)}
-                    // />
                   )
                 }
                 )

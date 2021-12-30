@@ -3,13 +3,17 @@ import { useState, useEffect } from 'react';
 // my components
 import Popup from './Popup';
 import Menu from './Menu';
+import Content from './Content';
 
 // constants
 import { VIEWMENU } from './definitions';
 
 const ViewManager = (props) => {
   // props
-  const { views, activeViewID, addView, switchView, updateViewName, deleteView } = props;
+  const {
+    views, activeViewID,
+    addView, switchView, updateViewName, deleteView
+  } = props;
 
   // state
   const [showAddMenu, setShowAddMenu] = useState(false);
@@ -53,7 +57,13 @@ const ViewManager = (props) => {
         <Popup exit={() => setShowSwitcher(false)}>
           <Menu menuItems={
               Object.keys(views).map(
-                id => { return { id: id, displayText: views[id].displayName } }
+                id => {
+                  return {
+                    id: id,
+                    displayText: views[id].displayName,
+                    moreButton: <button>…</button>
+                  }
+                }
               )
             }
             choose={handleSwitchView}
