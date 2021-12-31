@@ -5,6 +5,7 @@ import Popup from './Popup';
 
 const MoreButton = (props) => {
   // props
+  const { displayText } = props;
 
   // state
   const [showDropdown, setShowDropdown] = useState(false);
@@ -13,7 +14,9 @@ const MoreButton = (props) => {
     <div className='dropdownWrapper'>
       <button className='ellipsisButton'
         onClick={() => setShowDropdown(true)}
-      >…</button>
+      >
+        { displayText ? displayText : '…'}
+      </button>
 
       {/* DROPDOWN */}
       { showDropdown &&

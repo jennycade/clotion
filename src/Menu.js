@@ -16,16 +16,6 @@ const Menu = (props) => {
   // 	...
   // ]
 
-  // categories?
-  // let categories;
-
-  // if (menuItems.length > 0 && Object.keys(menuItems[0]).includes('category')) {
-  //   // get all categories
-  //   categories = menuItems.map(item => item.category);
-  //   // remove duplicates
-  //   categories = [...new Set(categories)];
-  // }
-
   return (
     <ul className={className ? className : 'menu'}>
       {

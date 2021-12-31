@@ -13,10 +13,12 @@ import FieldName from './FieldTitle';
 import ViewManager from './ViewManager';
 import Popup from './Popup';
 import Toggle from './Toggle';
+import Menu from './Menu';
 
 // my functions
 import { removeFromArray,  } from './helpers';
 import { renderDate, isBlank, sortIDsByCreated } from './databaseFunctions';
+import MoreButton from './MoreButton';
 
 // constants
 
@@ -30,7 +32,8 @@ const Database = (props) => {
     addProperty,
     handleColumnAction,
     addDBRow,
-    addView, switchView, updateViewName, deleteView, updatePropertyVisibility,
+    addView, switchView, updateViewName, deleteView,
+    updatePropertyVisibility, updateViewGroupByProperty,
   } = props;
 
   // state
@@ -178,10 +181,33 @@ const Database = (props) => {
         { showPropertiesManager &&
           <Popup exit={() => setShowPropertiesManager(false)}>
             <ul className='menu wideMenu'>
+              {/* Group by for boards */}
+              { type === 'board' &&
+                <li className='rightButton'>
+                  <span>Group by</span>
+                  <MoreButton displayText={getPropName(groupBy)}>
+                    {/* all select properties */}
+                    <Menu
+                      menuItems={
+                        Object.keys(page.properties).filter(propID => {
+                          return getType(propID) === 'select'
+                        }).map(propID => {
+                          return {
+                            id: propID,
+                            displayText: page.properties[propID].displayName,
+                          }
+                        })
+                      }
+                      choose={(newGroupByPropID) => updateViewGroupByProperty(newGroupByPropID, activeViewID)}
+
+                    />
+                  </MoreButton>
+                </li>
+              }
               {
                 ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)].map(propID => {
                   return (
-                    <li className='rightButtonGrid'>
+                    <li key={propID} className='rightButtonGrid'>
                       <FieldName
                         type={getType(propID)}
                         displayName={getPropName(propID)}
@@ -209,7 +235,7 @@ const Database = (props) => {
         }
         </div>
 
-        <div className='dropdownWrapper'>
+        {/* <div className='dropdownWrapper'>
           <button>
             Group
           </button>
@@ -228,7 +254,7 @@ const Database = (props) => {
           <button>
             Search
           </button>
-        </div>
+        </div> */}
         
 
         <div className='dropdownWrapper'>

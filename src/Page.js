@@ -857,6 +857,22 @@ const Page = ( props ) => {
     );
   }
 
+  const updateViewGroupByProperty = async (newGroupByPropID, viewID, dbPage) => {
+    // check that it's a select property
+    if (dbPage.properties[newGroupByPropID].type !== 'select') {
+      throw new Error(`Only select properties can be used for grouping`);
+    }
+
+    // update it
+    const docRef = doc(db, 'pages', dbPage.id);
+    const fieldStr = `views.${viewID}.groupBy`;
+    await updateDoc(
+      docRef,
+      fieldStr,
+      newGroupByPropID
+    );
+  }
+
   // column actions (table and single page)
   const handleColumnAction = async (action, fieldID, dbPage, dbRows) => {
     switch (action) {
@@ -1075,6 +1091,7 @@ const Page = ( props ) => {
               updateViewName={(newName, viewID) => updateViewName(newName, viewID, page)}
               deleteView={(viewID) => deleteView(page, viewID)}
               updatePropertyVisibility={(action, propID, viewID) => updatePropertyVisibility(action, propID, viewID, page)}
+              updateViewGroupByProperty={(newGroupByPropID, viewID) => updateViewGroupByProperty(newGroupByPropID, viewID, page)}
             />
           }
 
