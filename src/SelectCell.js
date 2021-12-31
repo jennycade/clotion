@@ -25,6 +25,13 @@ const SelectCell = (props) => {
     setFilter(newVal);
   }
 
+  // filter -> new selectOption by hitting return
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === 'Return') {
+      handleAddOption();
+    }
+  }
+
   // filter
   useEffect(() => {
     if (filter !== '') {
@@ -92,6 +99,7 @@ const SelectCell = (props) => {
             autoFocus={true}
             onChange={handleFilterChange}
             value={filter}
+            onKeyDown={handleKeyDown}
           />
         </header>
         

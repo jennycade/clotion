@@ -2,13 +2,17 @@ import { useState } from 'react';
 
 const TextInput = (props) => {
   // props
-  const { initialVal, updateVal } = props;
+  const { initialVal, updateVal, liveUpdate } = props;
 
   // state
   const [currentVal, setCurrentVal ] = useState(initialVal);
 
   // handling
   const handleChange = (event) => {
+    // liveUpdate -> send through immediately
+    if (liveUpdate) {
+      updateVal(event.target.value);
+    }
     // update state
     setCurrentVal(event.target.value);
   }
