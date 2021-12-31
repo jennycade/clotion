@@ -10,6 +10,7 @@ import Popup from './Popup';
 import Menu from './Menu';
 import { ColorThumbnail } from './ColorToolbar';
 import { getColorCode } from './helpers';
+import TextInput from './TextInput';
 
 const SelectOptionRow = (props) => {
   // props
@@ -21,16 +22,8 @@ const SelectOptionRow = (props) => {
 
   // state
   const [editOption, setEditOption] = useState(false);
-  const [newName, setNewName] = useState(displayName);
 
   // handling
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  }
-  const handleBlur = () => {
-    // send through
-    updateSelectOption(newName, 'displayName');
-  }
   const chooseColor = (color) => {
     updateSelectOption(color, 'color');
   }
@@ -73,11 +66,9 @@ const SelectOptionRow = (props) => {
 
           {/* DISPLAY NAME */}
           <div>
-            <input type='text'
-              onChange={handleNameChange}
-              onBlur={handleBlur}
-              value={ newName }
-              autoFocus={true}
+            <TextInput
+              initialVal={displayName}
+              updateVal={(newName) => updateSelectOption(newName, 'displayName')}
             />
           </div>
 
