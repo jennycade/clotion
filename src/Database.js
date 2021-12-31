@@ -19,6 +19,7 @@ import Menu from './Menu';
 import { removeFromArray,  } from './helpers';
 import { renderDate, isBlank, sortIDsByCreated } from './databaseFunctions';
 import MoreButton from './MoreButton';
+import DBActionBar from './DBActionBar';
 
 // constants
 
@@ -154,118 +155,27 @@ const Database = (props) => {
   ///////////////
 
   // the bits of rendering - reusable for different view types
-
-  // action bar
-  // views, properties, group, filter, sort, search, …, New button
-  const actionBar = (
-    <div className='dbActionBar'>
-      {/* VIEWS */}
-      <div className='viewButton'>
-        <ViewManager
-          views={page.views}
-          activeViewID={page.activeView}
-          addView={addView}
-          updateViewName={updateViewName}
-          switchView={switchView}
-          deleteView={deleteView}
-        />
-      </div>
-
-      <div className='otherActions'>
-
-        {/* PROPERTIES */}
-        <div className='dropdownWrapper'>
-        <button onClick={() => setShowPropertiesManager(true)}>
-          Properties
-        </button>
-        { showPropertiesManager &&
-          <Popup exit={() => setShowPropertiesManager(false)}>
-            <ul className='menu wideMenu'>
-              {/* Group by for boards */}
-              { type === 'board' &&
-                <li className='rightButton'>
-                  <span>Group by</span>
-                  <MoreButton displayText={getPropName(groupBy)}>
-                    {/* all select properties */}
-                    <Menu
-                      menuItems={
-                        Object.keys(page.properties).filter(propID => {
-                          return getType(propID) === 'select'
-                        }).map(propID => {
-                          return {
-                            id: propID,
-                            displayText: page.properties[propID].displayName,
-                          }
-                        })
-                      }
-                      choose={(newGroupByPropID) => updateViewGroupByProperty(newGroupByPropID, activeViewID)}
-
-                    />
-                  </MoreButton>
-                </li>
-              }
-              {
-                ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)].map(propID => {
-                  return (
-                    <li key={propID} className='rightButtonGrid'>
-                      <FieldName
-                        type={getType(propID)}
-                        displayName={getPropName(propID)}
-                        updateDBPropName={(newName) => updateDBPropName(newName, propID)}
-                        updateDBPropType={(newType) => updateDBPropType(newType, propID)}
-                        handleColumnAction={(action) => handleColumnAction(action, propID)}
-                      />
-
-                      {/* SWITCH */}
-                      <Toggle
-                        checked={propIDs.includes(propID)}
-                        onCallback={() => updatePropertyVisibility('add', propID, page.activeView)}
-                        offCallback={() => updatePropertyVisibility('remove', propID, page.activeView)}
-                        disabled={propID === 'title'}
-                      />
-                    </li>
-                  )
-                }
-                )
-              }
-              <li onClick={addProperty}>+ Add a property</li>
-            </ul>
-            
-          </Popup>
-        }
-        </div>
-
-        {/* <div className='dropdownWrapper'>
-          <button>
-            Group
-          </button>
-        </div>
-        <div className='dropdownWrapper'>
-          <button>
-            Filter
-          </button>
-        </div>
-        <div className='dropdownWrapper'>
-          <button>
-            Sort
-          </button>
-        </div>
-        <div className='dropdownWrapper'>
-          <button>
-            Search
-          </button>
-        </div> */}
-        
-
-        <div className='dropdownWrapper'>
-          <button className='newButton' onClick={() => addDBRow()}>
-            New
-          </button>
-        </div>
-      </div>
-    </div>
-  );
   
+  const getActionBar = () => {
+    return (
+      <DBActionBar
+        page={page}
+        getPropName={getPropName}
+        getType={getType}
+        addDBRow={addDBRow}
+        updateDBPropName={updateDBPropName}
+        updateDBPropType={updateDBPropType}
+        handleColumnAction={handleColumnAction}
+        addProperty={addProperty}
+        addView={addView}
+        updateViewName={updateViewName}
+        switchView={switchView}
+        deleteView={deleteView}
+        updateViewGroupByProperty={updateViewGroupByProperty}
+        updatePropertyVisibility={updatePropertyVisibility}
+      />
+    )
+  }
   // Property icon/name
   const getColumnNameSpan = (propID) => {
     return (
@@ -495,7 +405,7 @@ const Database = (props) => {
 
       return (
         <div>
-          {actionBar}
+          { getActionBar() }
           <table>
             <thead>
               <tr>
@@ -514,7 +424,7 @@ const Database = (props) => {
     case 'board':
       return (
         <div>
-          { actionBar }
+          { getActionBar() }
           <div className='board'>
 
             {/* NO VALUE */}
@@ -601,7 +511,7 @@ const Database = (props) => {
     case 'gallery':
       return (
         <div>
-          { actionBar }
+          { getActionBar() }
 
           <div className={type}>
             {/* ONE 'CARD' PER ROW */}

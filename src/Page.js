@@ -1082,7 +1082,7 @@ const Page = ( props ) => {
               // add property
               addProperty={() => addProperty(page, rows)}
               // column actions
-              handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, page, rows)}
+              handleColumnAction={async (action, fieldID) => await handleColumnAction(action, fieldID, page, rows)}
               // add row
               addDBRow={(fields) => addDBRow(page, fields)}
               // views
