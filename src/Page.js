@@ -803,13 +803,35 @@ const Page = ( props ) => {
   }
 
   const deleteView = async (dbPage, viewID) => {
+    const currentViewIDs = Object.keys(dbPage.views);
+    // can't delete only view!
+    if (currentViewIDs <= 1) {
+      throw new Error(`Can't delete a database's only view`);
+    }
+
+    // delete and redirect simultaneously
+    const batch = writeBatch(db);
+
+    // delete
     const docRef = doc(db, 'pages', dbPage.id);
-    const fieldStr = `views${viewID}`;
-    await updateDoc(
+    const deleteFieldStr = `views.${viewID}`;
+    batch.update(
       docRef,
-      fieldStr,
+      deleteFieldStr,
       deleteField()
     );
+
+    // redirect
+    // choose any other view
+    const otherViewIDs = removeFromArray(viewID, currentViewIDs);
+    batch.update(
+      docRef,
+      'activeView',
+      otherViewIDs[0] // grab the first viewID
+    );
+
+    // send the batch through
+    await batch.commit();
   }
 
   const updatePropertyVisibility = async (action, propID, viewID, dbPage) => {

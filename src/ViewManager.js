@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import Popup from './Popup';
 import Menu from './Menu';
 import Content from './Content';
+import MoreButton from './MoreButton';
 
 // constants
 import { VIEWMENU } from './definitions';
+import TextInput from './TextInput';
 
 const ViewManager = (props) => {
   // props
@@ -61,7 +63,22 @@ const ViewManager = (props) => {
                   return {
                     id: id,
                     displayText: views[id].displayName,
-                    moreButton: <button>…</button>
+                    moreButton: (
+                      <MoreButton>
+                        <TextInput
+                          initialVal={views[id].displayName}
+                          updateVal={(newName) => updateViewName(newName, id)}
+                        />
+                        <ul className='menu'>
+                          <li className='grid'
+                            onClick={() => deleteView(id)}
+                          >
+                            <span className='icon'>🗑</span>
+                            <span>Delete</span>
+                          </li>
+                        </ul>
+                      </MoreButton>
+                    )
                   }
                 }
               )

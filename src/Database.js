@@ -164,6 +164,7 @@ const Database = (props) => {
           addView={addView}
           updateViewName={updateViewName}
           switchView={switchView}
+          deleteView={deleteView}
         />
       </div>
 

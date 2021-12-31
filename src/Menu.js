@@ -41,22 +41,21 @@ const Menu = (props) => {
             liClassName = 'rightButtonGrid';
           }
 
-          const handleClick = !!item.onChoose ? item.onChoose : () => choose(item.id)
+          const handleClick = !!item.onChoose ? item.onChoose : () => choose(item.id);
           
           return (
             <li
               key={item.id}
               className={liClassName}
-              onClick={ handleClick }
             >
               {/* ICON */}
               {!! item.displayIcon && 
-                <span className='icon'>
+                <span className='icon' onClick={ handleClick }>
                   {item.displayIcon}
                 </span>
               }
               {/* TEXT */}
-              <span>
+              <span onClick={ handleClick }>
                 {item.displayText}
               </span>
               {/* MORE BUTTON */}
