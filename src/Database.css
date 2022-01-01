@@ -307,9 +307,14 @@ button.viewButton {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* .list .cardProp div.field .content .block span.field */
 .list .cardProp, .list .cardProp .field, .list .cardProp .content, .list .cardProp .block {
+  display: block;
   max-width: 180px;
+}
+.list .cardProp span.field {
   text-overflow: ellipsis;
+  overflow-x: hidden;
 }
 
 .list .addRow {
