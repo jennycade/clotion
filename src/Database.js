@@ -398,26 +398,28 @@ const Database = (props) => {
       });
 
       return (
-        <div>
+        <div className='database'>
           { getActionBar() }
-          <table>
-            <thead>
-              <tr>
-                {topRow}
-              </tr>
-            </thead>
-            <tbody>
-              { tableRows }
-              { tableFooter }
-            </tbody>
-          </table>
+          <div className='tableWrapper'>
+            <table>
+              <thead>
+                <tr>
+                  {topRow}
+                </tr>
+              </thead>
+              <tbody>
+                { tableRows }
+                { tableFooter }
+              </tbody>
+            </table>
+          </div>
         </div>
       );
 
     // BOARD
     case 'board':
       return (
-        <div>
+        <div className='database'>
           { getActionBar() }
           <div className='board'>
 
@@ -504,7 +506,7 @@ const Database = (props) => {
     case 'list':
     case 'gallery':
       return (
-        <div>
+        <div className='database'>
           { getActionBar() }
 
           <div className={type}>

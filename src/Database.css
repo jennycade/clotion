@@ -1,7 +1,17 @@
+.contentArea {
+  width: 100%;
+  /* overflow: hidden; */
+}
+.tableWrapper {
+  width: 100%;
+  overflow-x: scroll;
+}
+
 /* TABLES */
 .contentArea table {
   border-bottom: 1px solid rgb(233, 233, 231);
-  width: 100%;
+  width: min-content;
+  table-layout: fixed;
   height: 100%;
   padding: 0;
   border-collapse: collapse;
@@ -20,6 +30,7 @@
   min-height: 32px;
   padding: 12px;
   margin: 0;
+  width: 200px;
 }
 
 .contentArea th {
@@ -38,6 +49,7 @@
 
 td.title {
   position: relative;
+  width: 275px;
 }
 
 
@@ -104,6 +116,7 @@ table .addProperty, table .addRow, .board .addRow, .list .addRow {
 }
 table .addProperty {
   text-align: center;
+  width: 2rem;
 }
 
 table .addProperty:hover, table .addRow:hover, .board .addRow:hover, .list .addRow:hover {
