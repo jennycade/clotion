@@ -22,13 +22,15 @@ const Popup = (props) => {
     if (popupDiv) {
       const rectangle = popupDiv.current.getBoundingClientRect();
 
+      // right
       if (rectangle.right > window.innerHeight) {
         setRight(0);
       } else {
         setRight('auto');
       }
 
-      if (rectangle.bottom > window.innerHeight) {
+      // bottom
+      if (rectangle.top + rectangle.height > window.innerHeight) {
         setBottom(0);
       } else {
         setBottom('auto');
