@@ -529,16 +529,20 @@ const Database = (props) => {
 
     // SINGLE DB PAGE
     case 'header':
-      return ([
+      return (
         <div className='pageDbInfo'>
           {/* map over properties in single row */}
           { propIDs.map(propID => {
-            return ([
-              getColumnNameSpan(propID), // property name
-              rows.map(row => { // field value; only one row but that's fine
-                return getCell(propID, row);
-              })
-            ]);
+            return (
+              <div className='propertyRow' key={propID}>
+                
+                {/* PROPERTY NAME */}
+                { getColumnNameSpan(propID) } 
+
+                {/* FIELD VALUE (only one row) */}
+                { getCell(propID, rows[0]) }
+              </div>
+            );
           }) }
 
           {/* ADD PROPERTY */}
@@ -547,9 +551,8 @@ const Database = (props) => {
             <span>Add Property</span>
           </span>
 
-        </div>,
-        <hr />
-      ]);
+        </div>
+      );
 
     default:
       return null;
