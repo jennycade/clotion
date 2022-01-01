@@ -98,9 +98,9 @@ const Page = ( props ) => {
   // SUBPAGES //
   //////////////
 
-  const handleAddPage = () => {
+  const handleAddPage = async () => {
     // add page
-    const newPageId = addPage(id);
+    const newPageId = await addPage(id);
 
     // redirect router to new page
     // SHOULDN'T NEED TO DO THIS -- App.addPage() already redirects

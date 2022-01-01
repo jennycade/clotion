@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
+import { Slate, Editable, withReact } from 'slate-react';
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Range } from 'slate';
 
 import './LiveBlock.css';
@@ -11,7 +11,6 @@ import DynamicPageLink from './DynamicPageLink';
 // toolbars
 import BlockToolbar from './BlockToolbar';
 import SpanToolbar from './SpanToolbar';
-import Page from './Page';
 
 const CustomEditor = {
   ///////////////
@@ -389,6 +388,8 @@ const LiveBlock = (props) => {
           // setBlock
           CustomEditor.setBlock(editor, blockType, {pageId: newPageId});
           break;
+        default:
+          throw new Error(`handleBlockToolbarChoice() doesn't know how to handle blockType ${blockType}`);
       }
     } else {
       // a normal block! Proceed.
