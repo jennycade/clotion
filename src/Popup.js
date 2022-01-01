@@ -1,12 +1,41 @@
 import './Popup.css';
 
-import { useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 
 import { getAncestorClassList } from './helpers';
 
 const Popup = (props) => {
   // props
   const { exit } = props;
+
+  // ref
+  const popupDiv = useRef(null);
+
+  // state
+  const [right, setRight] = useState('auto');
+  const [left, setLeft] = useState('auto');
+  const [top, setTop] = useState('auto');
+  const [bottom, setBottom] = useState('auto');
+
+  // position
+  useLayoutEffect(() => {
+    if (popupDiv) {
+      const rectangle = popupDiv.current.getBoundingClientRect();
+
+      if (rectangle.right > window.innerHeight) {
+        setRight(0);
+      } else {
+        setRight('auto');
+      }
+
+      if (rectangle.bottom > window.innerHeight) {
+        setBottom(0);
+      } else {
+        setBottom('auto');
+      }
+
+    }
+  }, [setRight, setBottom]);
 
   // unique className
   let uniqueClassName = 'popup';
@@ -15,9 +44,6 @@ const Popup = (props) => {
     uniqueClassName = props.popupClassName;
     fullClassName = `popup ${props.popupClassName}`;
   }
-
-  // full className
-
 
   // event listener for clicking outside the picker --> close it
   useEffect(() => {
@@ -43,8 +69,20 @@ const Popup = (props) => {
     }
   }, [exit, uniqueClassName]);
 
+  // render
   return (
-    <div className={ fullClassName }>
+    <div
+      ref={popupDiv}
+      className={ fullClassName }
+      style={
+        {
+          top: top,
+          left: left,
+          right: right,
+          bottom: bottom
+        }
+      }
+    >
       { props.children }
     </div>
   );
