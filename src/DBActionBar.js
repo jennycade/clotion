@@ -31,7 +31,13 @@ const DBActionBar = (props) => {
   const viewType = page.views[activeViewID].type;
   const groupBy = viewType === 'board' ? page.views[activeViewID].groupBy : null;
   const visiblePropIDs = page.views[activeViewID].visibleProperties;
-  const sortedVisiblePropIDs = ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)];
+  // const sortedVisiblePropIDs = ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)];
+
+  const getSortedVisiblePropIDs = () => {
+    console.log(page.properties);
+    const sortedIDsArray = ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)]
+    return sortedIDsArray;
+  }
 
   return (
     <div className='dbActionBar'>
@@ -81,7 +87,7 @@ const DBActionBar = (props) => {
                 </li>
               }
               {
-                sortedVisiblePropIDs.map(propID => {
+                getSortedVisiblePropIDs().map(propID => {
                   return (
                     <li key={propID} className='rightButtonGrid'>
                       <FieldName

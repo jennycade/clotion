@@ -359,6 +359,13 @@ const getMilliseconds = (timestamp) => {
 
 const sortIDsByCreated = (idsArray, map) => {
   const sortFn = (firstID, secondID) => {
+    // no timestamp -> most recent
+    if (!map[firstID].created) {
+      return -1;
+    } else if (!map[secondID].created) {
+      return 1;
+    }
+
     const firstTimestamp = getMilliseconds(map[firstID].created);
     const secondTimestamp = getMilliseconds(map[secondID].created);
 
