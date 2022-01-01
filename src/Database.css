@@ -2,6 +2,7 @@
 .contentArea table {
   border-bottom: 1px solid rgb(233, 233, 231);
   width: 100%;
+  height: 100%;
   padding: 0;
   border-collapse: collapse;
   font-size: 14px;
@@ -16,8 +17,8 @@
 }
 
 .contentArea th, .contentArea td {
-  height: 32px;
-  padding: 0 8px;
+  min-height: 32px;
+  padding: 12px;
   margin: 0;
 }
 
@@ -76,15 +77,24 @@ tr:hover .openLinkContainer:hover {
   background-color: rgb(240, 240, 240);
 }
 
+td div.field, td .field .content, td .field .content .block, td .field .content .block .field {
+  height: 100%;
+  width: 100%;
+}
 
+td span.field {
+  display: block;
+}
+
+/*
 td .content, td .content .block {
   width: 100%;
   height: 100%;
-}
+} */
 
-td, table .field, table .selectCell{
-  min-width: 32px;
-  min-height: 32px;
+table .selectCell{
+  width: 100%;
+  height: 100%;
 }
 
 table .addProperty, table .addRow, .board .addRow, .list .addRow {
@@ -222,6 +232,22 @@ button.viewButton {
 .pageDbInfo .field .content, .pageDbInfo .field .content .block {
   width: 100%;
   height: 100%;
+}
+.pageDbInfo .columnName, .pageDbInfo>.field {
+  border-radius: 3px;
+  padding: 6px;
+}
+.pageDbInfo .columnName:hover, .pageDbInfo>.field:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+}
+
+.singlePageDBHeader {
+  border-bottom: 1px solid rgb(234, 234, 233);
+}
+
+.pageDbInfo {
+  display: grid;
+  grid-template-columns: 160px 1fr;
 }
 
 

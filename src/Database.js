@@ -281,8 +281,8 @@ const Database = (props) => {
               renderDate(row[propID])
             }
 
-            { type === 'text' &&
-              row[propID]
+            { type === 'text' && 
+              row[propID] === '' ? '\u00A0' : row[propID]
             }
           </span>
         </Content>
@@ -530,11 +530,11 @@ const Database = (props) => {
     // SINGLE DB PAGE
     case 'header':
       return (
-        <div className='pageDbInfo'>
+        <div className='singlePageDBHeader'>
           {/* map over properties in single row */}
           { propIDs.map(propID => {
             return (
-              <div className='propertyRow' key={propID}>
+              <div className='pageDbInfo' key={propID}>
                 
                 {/* PROPERTY NAME */}
                 { getColumnNameSpan(propID) } 
