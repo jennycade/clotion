@@ -307,6 +307,10 @@ const Database = (props) => {
             {
               propIDs.map(propID => {
                 const propType = getType(propID);
+                if ((propType === 'select' || propType === 'multiselect') && !Array.isArray(row[propID])) {
+                  // firebase doesn't have array value yet. Replace with empty array while waiting for it to come through
+                  row[propID] = [];
+                }
                 if (propType !== 'title' && !isBlank(row[propID], propType)) {
                   return (
                     <div className='cardProp' key={propID}>

@@ -964,11 +964,11 @@ const Page = ( props ) => {
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
         updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, parentDbPage)}
-        updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, parentDbPage, parentDbRows)}
+        updateDBPropType={async (newType, fieldID) => await updateDBPropType(newType, fieldID, parentDbPage, parentDbRows)}
         // add property
         addProperty={() => addProperty(parentDbPage, parentDbRows)}
         // column actions
-        handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, 'singlePage', parentDbPage, parentDbRows)}
+        handleColumnAction={async (action, fieldID) => await handleColumnAction(action, fieldID, 'singlePage', parentDbPage, parentDbRows)}
       />
     );
   }
@@ -1084,13 +1084,13 @@ const Page = ( props ) => {
               // property changes
               handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, page)}
               updateDBPropName={(newName, fieldID) => updateDBPropName(newName, fieldID, page)}
-              updateDBPropType={(newType, fieldID) => updateDBPropType(newType, fieldID, page, rows)}
+              updateDBPropType={async (newType, fieldID) => await updateDBPropType(newType, fieldID, page, rows)}
               // add property
-              addProperty={() => addProperty(page, rows)}
+              addProperty={async () => await addProperty(page, rows)}
               // column actions
               handleColumnAction={async (action, fieldID, viewID) => await handleColumnAction(action, fieldID, viewID, page, rows)}
               // add row
-              addDBRow={(fields) => addDBRow(page, fields)}
+              addDBRow={async (fields) => await addDBRow(page, fields)}
               // views
               addView={(viewType) => addView(page, rows, viewType)}
               switchView={(newViewID) => switchView(page, newViewID)}

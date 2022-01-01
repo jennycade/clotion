@@ -31,9 +31,9 @@ const FieldName = (props) => {
   }
 
   // other column actions
-  const handleColumnActionClick = (action) => {
+  const handleColumnActionClick = async (action) => {
     // send it through
-    handleColumnAction(action);
+    await handleColumnAction(action);
 
      // close
      setEditing(false);

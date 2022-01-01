@@ -93,8 +93,8 @@ const DBActionBar = (props) => {
                         displayName={getPropName(propID)}
                         viewType={viewType}
                         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
-                        updateDBPropType={(newType) => updateDBPropType(newType, propID)}
-                        handleColumnAction={(action) => handleColumnAction(action, propID, activeViewID)}
+                        updateDBPropType={async (newType) => await updateDBPropType(newType, propID)}
+                        handleColumnAction={async (action) => await handleColumnAction(action, propID, activeViewID)}
                       />
 
                       {/* SWITCH */}
@@ -115,28 +115,6 @@ const DBActionBar = (props) => {
           </Popup>
         }
         </div>
-
-        {/* <div className='dropdownWrapper'>
-          <button>
-            Group
-          </button>
-        </div>
-        <div className='dropdownWrapper'>
-          <button>
-            Filter
-          </button>
-        </div>
-        <div className='dropdownWrapper'>
-          <button>
-            Sort
-          </button>
-        </div>
-        <div className='dropdownWrapper'>
-          <button>
-            Search
-          </button>
-        </div> */}
-        
 
         <div className='dropdownWrapper'>
           <button className='newButton' onClick={() => addDBRow()}>
