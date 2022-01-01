@@ -31,10 +31,8 @@ const DBActionBar = (props) => {
   const viewType = page.views[activeViewID].type;
   const groupBy = viewType === 'board' ? page.views[activeViewID].groupBy : null;
   const visiblePropIDs = page.views[activeViewID].visibleProperties;
-  // const sortedVisiblePropIDs = ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)];
 
   const getSortedVisiblePropIDs = () => {
-    console.log(page.properties);
     const sortedIDsArray = ['title', ...sortIDsByCreated(removeFromArray('title', Object.keys(page.properties)), page.properties)]
     return sortedIDsArray;
   }
@@ -95,7 +93,7 @@ const DBActionBar = (props) => {
                         displayName={getPropName(propID)}
                         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
                         updateDBPropType={(newType) => updateDBPropType(newType, propID)}
-                        handleColumnAction={(action) => handleColumnAction(action, propID)}
+                        handleColumnAction={(action) => handleColumnAction(action, propID, activeViewID)}
                       />
 
                       {/* SWITCH */}

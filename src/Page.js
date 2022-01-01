@@ -874,10 +874,16 @@ const Page = ( props ) => {
   }
 
   // column actions (table and single page)
-  const handleColumnAction = async (action, fieldID, dbPage, dbRows) => {
+  const handleColumnAction = async (action, fieldID, viewID, dbPage, dbRows) => {
     switch (action) {
       case 'delete':
         await deleteProperty(fieldID, dbPage, dbRows);
+        break;
+      case 'hide':
+        if (viewID === 'singlePage') {
+          throw new Error(`Can't hide a property from single page view`);
+        }
+        await updatePropertyVisibility('remove', fieldID, viewID, dbPage);
         break;
       
       default:
@@ -962,7 +968,7 @@ const Page = ( props ) => {
         // add property
         addProperty={() => addProperty(parentDbPage, parentDbRows)}
         // column actions
-        handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, parentDbPage, parentDbRows)}
+        handleColumnAction={(action, fieldID) => handleColumnAction(action, fieldID, 'singlePage', parentDbPage, parentDbRows)}
       />
     );
   }
@@ -1082,7 +1088,7 @@ const Page = ( props ) => {
               // add property
               addProperty={() => addProperty(page, rows)}
               // column actions
-              handleColumnAction={async (action, fieldID) => await handleColumnAction(action, fieldID, page, rows)}
+              handleColumnAction={async (action, fieldID, viewID) => await handleColumnAction(action, fieldID, viewID, page, rows)}
               // add row
               addDBRow={(fields) => addDBRow(page, fields)}
               // views

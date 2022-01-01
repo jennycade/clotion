@@ -6,6 +6,7 @@ import Menu from './Menu';
 
 // constants
 import { PROPERTYTYPEICONS } from './definitions';
+import TextInput from './TextInput';
 
 const FieldName = (props) => {
   // props
@@ -18,20 +19,6 @@ const FieldName = (props) => {
   // state
   const [editing, setEditing] = useState(false);
   const [showPropTypeMenu, setShowPropTypeMenu] = useState(false);
-  const [newName, setNewName] = useState(displayName);
-
-  // updates
-  const handleNameChange = (event) => {
-    // update state
-    const input = event.target.value;
-    setNewName(input);
-  }
-
-  // update prop/column name
-  const handleBlur = () => {
-    // send it through!
-    updateDBPropName(newName);
-  }
 
   // change prop type
   const handleChoosePropType = (newType) => {
@@ -47,14 +34,7 @@ const FieldName = (props) => {
   const handleColumnActionClick = (action) => {
     /*
     ACTIONS
-    - selectOptions
-    - filter
-    - sortAsc
-    - sortDesc
-    - addLeft
-    - addRight
     - hide
-    - duplicate
     - delete
     */
     handleColumnAction(action);
@@ -112,46 +92,45 @@ const FieldName = (props) => {
     },
   ];
   const columnActionMenu = [
-    {
-      id: 'selectOptions',
-      displayText: 'Configure options',
-    },
-    {
-      id: 'filter',
-      displayText: 'Add filter',
-    },
-    {
-      id: 'sortAsc',
-      displayText: 'Sort ascending',
-    },
-    {
-      id: 'sortDesc',
-      displayText: 'Sort descending',
-    },
-    {
-      id: 'addLeft',
-      displayText: 'Insert left',
-    },
-    {
-      id: 'addRight',
-      displayText: 'Insert right',
-    },
+    // {
+    //   id: 'selectOptions',
+    //   displayText: 'Configure options',
+    // },
+    // {
+    //   id: 'filter',
+    //   displayText: 'Add filter',
+    // },
+    // {
+    //   id: 'sortAsc',
+    //   displayText: 'Sort ascending',
+    // },
+    // {
+    //   id: 'sortDesc',
+    //   displayText: 'Sort descending',
+    // },
+    // {
+    //   id: 'addLeft',
+    //   displayText: 'Insert left',
+    // },
+    // {
+    //   id: 'addRight',
+    //   displayText: 'Insert right',
+    // },
     {
       id: 'hide',
       displayText: 'Hide',
+      icon: '🚫',
     },
-    {
-      id: 'duplicate',
-      displayText: 'Duplicate',
-    },
+    // {
+    //   id: 'duplicate',
+    //   displayText: 'Duplicate',
+    // },
     {
       id: 'delete',
       displayText: 'Delete',
+      icon: '🗑'
     },
   ];
-
-  // adapt columnActionMenu for special types: title, non-selectOption types
-
 
   // RENDER
 
@@ -163,15 +142,17 @@ const FieldName = (props) => {
       >
         {/* COLUMN NAME */}
         <div>
-          <input type="text"
-            onChange={handleNameChange}
-            onBlur={handleBlur}
-            value={newName}
-            autoFocus={true}
+          <TextInput
+            initialVal={displayName}
+            updateVal={updateDBPropName}
+            liveUpdate={false}
           />
+          
         </div>
 
         {/* PROPERTY TYPE */}
+        { type !== 'title' &&
+        
         <ul className='menu'>
           <li className='noHover'><h2>PROPERTY TYPE</h2></li>
           <li className='grid'
@@ -185,8 +166,10 @@ const FieldName = (props) => {
             </span>
           </li>
         </ul>
+        }
 
-        { showPropTypeMenu &&
+        {/* PROPERTY TYPE MENU */}
+        { type !== 'title' &&showPropTypeMenu &&
           <Popup
             exit={ () => setShowPropTypeMenu(false) }
             popupClassName={'propTypePopup'}
@@ -200,10 +183,14 @@ const FieldName = (props) => {
         }
 
         {/* COLUMN ACTIONS */}
+        { type !== 'title' &&
+        
         <Menu
           menuItems={ columnActionMenu }
           choose={ handleColumnActionClick }
         />
+
+        }
 
       </Popup>
     );

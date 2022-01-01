@@ -39,7 +39,6 @@ const Database = (props) => {
 
   // state
   const [draggedRowID, setDraggedRowID] = useState('');
-  const [showPropertiesManager, setShowPropertiesManager] = useState(false);
 
   // some variables to smooth things out
   let type, propIDs, groupBy, groupBySelectOptions, activeViewID, activeView;
@@ -65,12 +64,6 @@ const Database = (props) => {
   const SPECIALTYPES = [
     'title', 'checkbox', 'select', 'multiselect',
   ];
-
-  // helper functions
-  const propertySorter = (firstEl, secondEl) => {
-    // elements are propIDs. sort by properties[propID].created
-    return page.properties[firstEl].created.seconds - page.properties[secondEl].created.seconds;
-  }
 
   // get property info
   const getType = (propID) => {
@@ -184,7 +177,7 @@ const Database = (props) => {
         displayName={ getPropName(propID) }
         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
         updateDBPropType={(newType) => updateDBPropType(newType, propID)}
-        handleColumnAction={(action) => handleColumnAction(action, propID)}
+        handleColumnAction={(action) => handleColumnAction(action, propID, activeViewID)}
       />
     );
   }
