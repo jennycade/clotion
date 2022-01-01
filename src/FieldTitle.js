@@ -11,7 +11,7 @@ import TextInput from './TextInput';
 const FieldName = (props) => {
   // props
   const {
-    type, displayName,
+    type, displayName, viewType,
     updateDBPropName, updateDBPropType,
     handleColumnAction,
   } = props;
@@ -32,15 +32,11 @@ const FieldName = (props) => {
 
   // other column actions
   const handleColumnActionClick = (action) => {
-    /*
-    ACTIONS
-    - hide
-    - delete
-    */
+    // send it through
     handleColumnAction(action);
 
-   // close
-   setEditing(false);
+     // close
+     setEditing(false);
   }
 
   // menus
@@ -92,45 +88,27 @@ const FieldName = (props) => {
     },
   ];
   const columnActionMenu = [
-    // {
-    //   id: 'selectOptions',
-    //   displayText: 'Configure options',
-    // },
-    // {
-    //   id: 'filter',
-    //   displayText: 'Add filter',
-    // },
-    // {
-    //   id: 'sortAsc',
-    //   displayText: 'Sort ascending',
-    // },
-    // {
-    //   id: 'sortDesc',
-    //   displayText: 'Sort descending',
-    // },
-    // {
-    //   id: 'addLeft',
-    //   displayText: 'Insert left',
-    // },
-    // {
-    //   id: 'addRight',
-    //   displayText: 'Insert right',
-    // },
     {
       id: 'hide',
       displayText: 'Hide',
-      icon: '🚫',
+      displayIcon: '🚫',
     },
-    // {
-    //   id: 'duplicate',
-    //   displayText: 'Duplicate',
-    // },
     {
       id: 'delete',
       displayText: 'Delete',
-      icon: '🗑'
+      displayIcon: '🗑'
     },
   ];
+
+  // but not for single page!
+  if (viewType === 'header') {
+    // find it
+    const hideIndex = columnActionMenu.findIndex(actionMenuItem => {
+      return actionMenuItem.id === 'hide';
+    });
+    // remove it
+    columnActionMenu.splice(hideIndex,1);
+  }
 
   // RENDER
 

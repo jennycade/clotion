@@ -91,6 +91,7 @@ const DBActionBar = (props) => {
                       <FieldName
                         type={getType(propID)}
                         displayName={getPropName(propID)}
+                        viewType={viewType}
                         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
                         updateDBPropType={(newType) => updateDBPropType(newType, propID)}
                         handleColumnAction={(action) => handleColumnAction(action, propID, activeViewID)}

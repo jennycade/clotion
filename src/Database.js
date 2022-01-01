@@ -175,6 +175,7 @@ const Database = (props) => {
       <FieldName
         type={ getType(propID) }
         displayName={ getPropName(propID) }
+        viewType={type}
         updateDBPropName={(newName) => updateDBPropName(newName, propID)}
         updateDBPropType={(newType) => updateDBPropType(newType, propID)}
         handleColumnAction={(action) => handleColumnAction(action, propID, activeViewID)}
