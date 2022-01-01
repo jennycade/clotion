@@ -171,6 +171,10 @@ const Database = (props) => {
   }
   // Property icon/name
   const getColumnNameSpan = (propID) => {
+    // check that it's really there
+    if (!page.properties[propID]) {
+      return <div></div>;
+    }
     return (
       <FieldName
         type={ getType(propID) }
@@ -203,6 +207,10 @@ const Database = (props) => {
   }
 
   const getCell = (propID, row) => {
+    // check that it's really there
+    if (!page.properties[propID]) {
+      return <div></div>;
+    }
     const type = getType(propID);
     let displayInfo;
     let handleClick;
@@ -308,7 +316,7 @@ const Database = (props) => {
               propIDs.map(propID => {
                 const propType = getType(propID);
                 if ((propType === 'select' || propType === 'multiselect') && !Array.isArray(row[propID])) {
-                  // firebase doesn't have array value yet. Replace with empty array while waiting for it to come through
+                  // firebase doesn't have array value yet. Replace with empty array while waiting for it to come through 
                   row[propID] = [];
                 }
                 if (propType !== 'title' && !isBlank(row[propID], propType)) {
