@@ -339,7 +339,11 @@ const Database = (props) => {
       const numColumns = propIDs.length + 1; // +1 for Add property column
       const tableFooter = (
         <tr>
-          <td className='addRow' colSpan={numColumns} onClick={addDBRow}>
+          <td
+            className='addRow'
+            colSpan={numColumns}
+            onClick={() => addDBRow()}
+          >
             + New
           </td>
         </tr>
