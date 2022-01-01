@@ -2,3 +2,9 @@
   display: flex;
   align-items: baseline;
 }
+
+.breadcrumb > * {
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -2,12 +2,19 @@
   width: 100%;
   /* overflow: hidden; */
 }
+
+.iconTitle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+/* TABLES */
 .tableWrapper {
   width: 100%;
   overflow-x: scroll;
 }
 
-/* TABLES */
 .contentArea table {
   border-bottom: 1px solid rgb(233, 233, 231);
   width: min-content;
@@ -50,6 +57,12 @@
 td.title {
   position: relative;
   width: 275px;
+}
+
+table .iconTitle {
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-color: rgb(223, 223, 222);
 }
 
 
