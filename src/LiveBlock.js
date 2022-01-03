@@ -178,6 +178,7 @@ const CustomEditor = {
 
     let options = {type: type}; // pass as-is for simple blocks. modify for lists, todos, links...
     
+    // first unwrap
     Transforms.unwrapNodes(editor, {
       match: n =>
         !Editor.isEditor(n) &&
@@ -198,9 +199,16 @@ const CustomEditor = {
       }
     }
 
-    // pages
+    // page
     if (type === 'page') {
-      options.id = blockParams.pageId; 
+      // try wrapping this node
+      const block = { type: 'container', children: [] }
+      Transforms.wrapNodes(editor, block);
+      
+      // specify page to link to
+      options.id = blockParams.pageId;
+
+      // add empty nodes before and after
     }
 
     // for all: set node
@@ -363,6 +371,12 @@ const LiveBlock = (props) => {
             {...props}
           />
         );
+      case 'container':
+        return (
+          <div {...props.attributes}>
+            {props.children}
+          </div>
+        )
       default:
         return <DefaultElement {...props} />
     }
@@ -376,7 +390,7 @@ const LiveBlock = (props) => {
   // TOOLBARS / BLOCKS //
   ///////////////////////
   const handleBlockToolbarChoice = async (blockType) => {
-    const overrideBlocks = ['page',];
+    const overrideBlocks = ['page', 'divider'];
 
     let newPageId;
 
@@ -387,6 +401,10 @@ const LiveBlock = (props) => {
           newPageId = await addPage();
           // setBlock
           CustomEditor.setBlock(editor, blockType, {pageId: newPageId});
+          break;
+        case 'divider':
+          // setBlock without deleting
+          CustomEditor.setBlock(editor, blockType);
           break;
         default:
           throw new Error(`handleBlockToolbarChoice() doesn't know how to handle blockType ${blockType}`);
