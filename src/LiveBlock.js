@@ -407,7 +407,7 @@ const LiveBlock = (props) => {
 
     // made a new page? redirect
     if (blockType === 'page') {
-      // redirect(newPageId);
+      redirect(newPageId);
     }
   }
 
@@ -427,7 +427,7 @@ const LiveBlock = (props) => {
       editor={editor}
       value={value}
       placeholder="Type something"
-      onChange={value => {
+      onChange={async (value) => {
         setValue(value);
 
         const isAstChange = editor.operations.some(
@@ -436,7 +436,7 @@ const LiveBlock = (props) => {
         if (isAstChange) {
           // save the value to the database
           const content = JSON.stringify(value);
-          updateContent(id, content);
+          await updateContent(id, content);
         }
       }
       }
