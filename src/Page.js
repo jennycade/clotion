@@ -180,6 +180,7 @@ const Page = ( props ) => {
   //////////
   // ICON //
   //////////
+  
   const updateIcon = ( newIcon ) => {
     updateDoc(docRef, {
       icon: newIcon,

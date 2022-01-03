@@ -19,9 +19,9 @@ const BlockToolbar = (props) => {
   );
 
   // selecting a block type
-  const handleClick = (event, blockType) => {
+  const handleClick = async (event, blockType) => {
     event.preventDefault();
-    chooseBlock(blockType);
+    await chooseBlock(blockType);
   }
 
   // for positioning at the caret
@@ -99,12 +99,12 @@ const BlockToolbar = (props) => {
 
   // effect to choose with enter/return key
   useEffect(() => {
-    const onKeyDown = (event) => {
+    const onKeyDown = async (event) => {
       if (event.key === 'Enter') {
         // don't type enter!
         event.preventDefault();
         // choose the type
-        chooseBlock(selectedType);
+        await chooseBlock(selectedType);
       }
     }
     window.addEventListener('keydown', onKeyDown);

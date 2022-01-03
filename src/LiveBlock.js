@@ -394,21 +394,20 @@ const LiveBlock = (props) => {
     } else {
       // a normal block! Proceed.
       CustomEditor.setBlock(editor, blockType);
+      if (blockToolbarFromSlash) {
+        CustomEditor.deleteToLastSlash(editor);
+      }
     }
 
-
-    if (blockToolbarFromSlash) {
-      CustomEditor.deleteToLastSlash(editor);
-      // reset for next time
-      setBlockToolbarFromSlash(false);
-    }
+    // reset for next time
+    setBlockToolbarFromSlash(false);
 
     // hide toolbar
     setShowBlockToolbar(false);
 
     // made a new page? redirect
     if (blockType === 'page') {
-      redirect(newPageId);
+      // redirect(newPageId);
     }
   }
 

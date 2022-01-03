@@ -7,9 +7,9 @@ const MiniBlockToolbar = (props) => {
   const { chooseBlock, hideToolbar } = props;
 
   // selecting a block type
-  const handleClick = (event, blockType) => {
+  const handleClick = async (event, blockType) => {
     event.preventDefault();
-    chooseBlock(blockType);
+    await chooseBlock(blockType);
     hideToolbar();
   }
 
