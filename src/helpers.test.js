@@ -1,7 +1,9 @@
 import { stringify } from '@firebase/util';
 import {
   countDuplicates,
-  getTitles, rearrange, getDescendents, splicePageLinkInBlock, getAncestorClassList, generateUniqueString, removeFromArray,
+  getTitles, rearrange, getDescendents,
+  splicePageLinkInBlock, isPageNodeInBlock,
+  getAncestorClassList, generateUniqueString, removeFromArray,
   sortOutOfPlace
 } from './helpers';
 
@@ -442,6 +444,11 @@ test(`getDescendents() works with a complex hierarchy—mid-hierarchy`, () => {
   expect(descendents.sort()).toEqual(expected.sort());
 });
 
+
+/////////////////////////////
+// splicePageLinkInBlock() //
+/////////////////////////////
+
 test(`splicePageLinkInBlock() returns the non-pagelink member of a two-node slatejs record.`, () => {
   const testRecord = '[{"type":"paragraph","children":[{"text":"Text"}]},{"type":"page","children":[{"text":""}],"id":"iU6YiNm8K91LsnUXgk8g"}]';
 
@@ -477,6 +484,70 @@ test(`splicePageLinkInBlock() replaces pagelink node with empty text node if the
 
 //   expect(result).toBe(expectedResult);
 // });
+
+/////////////////////////
+// isPageNodeInBlock() //
+/////////////////////////
+
+test(`isPageNodeInBlock() returns true when only node is the page link`, () => {
+  const testRecord = '[{"type":"page","children":[{"text":""}],"id":"iU6YiNm8K91LsnUXgk8g"}]';
+
+  const result = isPageNodeInBlock(testRecord, 'iU6YiNm8K91LsnUXgk8g');
+
+  expect(result).toBe(true);
+});
+
+test(`isPageNodeInBlock() returns false when only node is a different page link`, () => {
+  const testRecord = '[{"type":"page","children":[{"text":""}],"id":"iU6YiNm8K91LsnUXgk8g"}]';
+
+  const result = isPageNodeInBlock(testRecord, 'poop');
+
+  expect(result).toBe(false);
+});
+
+test(`isPageNodeInBlock() returns true when one of several nodes is the page link`, () => {
+  const testArr = [
+    {
+      type: 'paragraph',
+      children: [{text: 'bloopity gloop'}],
+    },
+    {
+      type: 'page',
+      children: [{text: ''}],
+      id: 'iU6YiNm8K91LsnUXgk8g',
+    },
+    {
+      type: 'paragraph',
+      children: [{text: 'bloopity gloop'}],
+    },
+  ];
+
+  const result = isPageNodeInBlock(JSON.stringify(testArr), 'iU6YiNm8K91LsnUXgk8g');
+
+  expect(result).toBe(true);
+});
+
+test(`isPageNodeInBlock() returns false when none of several nodes is the page link`, () => {
+  const testArr = [
+    {
+      type: 'paragraph',
+      children: [{text: 'bloopity gloop'}],
+    },
+    {
+      type: 'page',
+      children: [{text: ''}],
+      id: 'gobble',
+    },
+    {
+      type: 'paragraph',
+      children: [{text: 'bloopity gloop'}],
+    },
+  ];
+
+  const result = isPageNodeInBlock(JSON.stringify(testArr), 'iU6YiNm8K91LsnUXgk8g');
+
+  expect(result).toBe(false);
+});
 
 
 // for the DOM

@@ -235,6 +235,15 @@ const CustomEditor = {
     Transforms.select(editor, Editor.end(editor, []));
   },
 
+  appendPageLinkNode(editor, pageID) {
+    // stick a new page node at the end of the editor
+    // move cursor to the end
+    Transforms.select(editor, Editor.end(editor, []));
+
+    // add the node
+    this.insertBlock(editor, 'page', {pageID: pageID});
+  },
+
   ///////////////////////
   // TEXT MANIPULATION //
   ///////////////////////
@@ -325,7 +334,7 @@ export { CustomEditor };
 
 const LiveBlock = (props) => {
   // props
-  const { id, updateContent, addPage, redirect } = props;
+  const { id, updateContent, addPage, redirect, subpages } = props;
 
   // state
   // const editor = useMemo(() => withReact(withMentions(createEditor()), []));

@@ -44,6 +44,7 @@ const Page = ( props ) => {
   const [dbPages, setDbPages] = useState([]);
   const [parentDbPage, setParentDbPage] = useState({});
   const [parentDbRows, setParentDbRows] = useState([]);
+  const [subpages, setSubpages] = useState([]);
 
   // get page object
   useEffect( () => {
@@ -109,6 +110,26 @@ const Page = ( props ) => {
     // return the new id
     return newPageId;
   }
+
+  // get subpages
+  useEffect( () => {
+    const subPagesQuery = query(
+      collection(db, 'pages'),
+      where('uid', '==', uid),
+      where('parent', '==', id)
+    )
+    const unsub = onSnapshot(
+      subPagesQuery,
+      (subpagesSnapshot) => {
+        const newSubpages = [];
+        subpagesSnapshot.forEach((subpage) => {
+          newSubpages.push(subpage.id)
+        });
+        setSubpages(newSubpages);
+      }
+    );
+    return unsub;
+  }, [id, uid]);
 
   ////////////
   // BLOCKS //
@@ -1064,6 +1085,7 @@ const Page = ( props ) => {
               updateContent={ updateBlock }
               addPage={ handleAddPage }
               redirect={ redirect }
+              subpages={ subpages }
             />
           ))}
 

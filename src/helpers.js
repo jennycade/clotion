@@ -121,6 +121,8 @@ const getDescendents = (pages, page) => {
 }
 
 const splicePageLinkInBlock = (blockJson, pageID) => {
+  // for removing a PageLink when subpage is deleted
+
   // convert to array
   let arr = JSON.parse(blockJson);
 
@@ -144,6 +146,18 @@ const splicePageLinkInBlock = (blockJson, pageID) => {
 
   // return string
   return jsonResult;
+}
+
+const isPageNodeInBlock = (blockJson, pageID) => {
+  // returns true if the block contains a page link corresponding to pageID,
+  // false if not
+  // convert to array
+  let arr = JSON.parse(blockJson);
+
+  // find matching nodes
+  arr = arr.filter(node => (node.type === 'page' && node.id === pageID));
+
+  return arr.length !== 0; // found at least one match
 }
 
 const getColorCode = (colorName, type) => {
@@ -258,6 +272,7 @@ export {
   rearrange,
   getDescendents,
   splicePageLinkInBlock,
+  isPageNodeInBlock,
   getColorCode,
   getAncestorClassList,
   generateUniqueString,
