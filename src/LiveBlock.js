@@ -175,6 +175,7 @@ const CustomEditor = {
   ////////////////
   setBlock(editor, type, blockParams = {}) {
     const listTypes = ['todoList', 'orderedList', 'bulletList'];
+    const voidTypes = ['page', 'divider'];
 
     let options = {type: type}; // pass as-is for simple blocks. modify for lists, todos, links...
     
@@ -199,16 +200,9 @@ const CustomEditor = {
       }
     }
 
-    // page
-    if (type === 'page') {
-      // try wrapping this node
-      const block = { type: 'container', children: [] }
-      Transforms.wrapNodes(editor, block);
-      
-      // specify page to link to
-      options.id = blockParams.pageId;
-
-      // add empty nodes before and after
+    // void nodes
+    if (voidTypes.includes(type)) {
+      throw new Error(`setBlock() called for an element that requires insertBlock()`);
     }
 
     // for all: set node
@@ -217,6 +211,28 @@ const CustomEditor = {
       options,
       { match: n => Editor.isBlock(editor, n) }
     )
+  },
+
+  insertBlock(editor, type, blockParams = {}) {
+    // page and divider -> insert instead of changing node
+
+    const text = { text: '' }
+    const block = { type: type, children: [text] };
+
+    const blankBlock = { type : 'paragraph', children: [text]};
+
+    if (type === 'page') {
+      // specify page to link to
+      block.id = blockParams.pageId;
+    }
+    // add as a new node
+    Transforms.insertNodes(editor, block);
+
+    // go ahead and insert a blank one too!
+    Transforms.insertNodes(editor, blankBlock);
+
+    // move cursor to the end
+    Transforms.select(editor, Editor.end(editor, []));
   },
 
   ///////////////////////
@@ -395,16 +411,18 @@ const LiveBlock = (props) => {
     let newPageId;
 
     if (overrideBlocks.includes(blockType)) {
+      // FIRST delete to slash
+      CustomEditor.deleteToLastSlash(editor);
       switch (blockType) {
         case 'page':
           // add page
           newPageId = await addPage();
           // setBlock
-          CustomEditor.setBlock(editor, blockType, {pageId: newPageId});
+          CustomEditor.insertBlock(editor, blockType, {pageId: newPageId});
           break;
         case 'divider':
           // setBlock without deleting
-          CustomEditor.setBlock(editor, blockType);
+          CustomEditor.insertBlock(editor, blockType);
           break;
         default:
           throw new Error(`handleBlockToolbarChoice() doesn't know how to handle blockType ${blockType}`);
@@ -476,6 +494,7 @@ const LiveBlock = (props) => {
       <Editable
         renderElement={ renderElement }
         renderLeaf={ renderLeaf }
+        placeholder={`Type '/' for commands`}
         onKeyDown={event => {
           ///////////////////
           // BLOCK TOOLBAR //
