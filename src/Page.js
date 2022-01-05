@@ -459,7 +459,7 @@ const Page = ( props ) => {
     return newID;
   }
 
-  const updateSelectOption = async (newVal, updateType, selectOptionID, fieldID, page) => {
+  const updateSelectOption = async (newVal, updateType, selectOptionID, fieldID, dbPage) => {
 
     const VALID_UPDATES = ['displayName', 'color', 'sortOrder'];
     if (!VALID_UPDATES.includes(updateType)) {
@@ -468,7 +468,7 @@ const Page = ( props ) => {
 
     // update database
     await updateDoc(
-      doc(db, 'pages', page.id),
+      doc(db, 'pages', dbPage.id),
       `properties.${fieldID}.selectOptions.${selectOptionID}.${updateType}`,
       newVal
     );
@@ -1025,7 +1025,7 @@ const Page = ( props ) => {
         handleClickChange={ (payload, rowPageID, fieldID) => handleClickChange(payload, rowPageID, fieldID, parentDbPage, row, setRow) }
         // selectOptions
         addSelectOption={ (propID, displayName) => addSelectOption(displayName, propID, parentDbPage)}
-        updateSelectOption={ (newVal, type, selectOptionID, fieldID) => updateSelectOption(newVal, type, selectOptionID, fieldID, page) }
+        updateSelectOption={ (newVal, type, selectOptionID, fieldID) => updateSelectOption(newVal, type, selectOptionID, fieldID, parentDbPage) }
         deleteSelectOption={ (selectOptionID, fieldID) => deleteSelectOption(selectOptionID, fieldID, parentDbRows, parentDbPage) }
         // database property updates
         handleDBPropNameChange={(newName, fieldID) => handleDBPropNameChange(newName, fieldID, parentDbPage)}
