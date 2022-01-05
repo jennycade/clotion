@@ -559,10 +559,12 @@ const Database = (props) => {
           }) }
 
           {/* ADD PROPERTY */}
-          <span className='columnName' onClick={ addProperty }>
-            <span>+</span>
-            <span>Add Property</span>
-          </span>
+          <div className='pageDbInfo'>
+            <span className='columnName addProperty' onClick={ addProperty }>
+              <span>+</span>
+              <span>Add Property</span>
+            </span>
+          </div>
 
         </div>
       );
