@@ -23,7 +23,13 @@ import EmojiPicker from './EmojiPicker';
 import LiveBlock from './LiveBlock';
 import Warning from './Warning';
 import Database from './Database';
-import { generateUniqueString, removeFromArray } from './helpers';
+
+// functions
+import {
+  generateUniqueString,
+  removeFromArray,
+  isPageNodeInBlock, appendPageLinkNode,
+} from './helpers';
 
 const Page = ( props ) => {
   // props
@@ -95,6 +101,55 @@ const Page = ( props ) => {
     addBlocks();
   }
 
+  ////////////
+  // BLOCKS //
+  ////////////
+
+  const addBlocks = () => {
+    const newBlock = {
+      uid: uid,
+      order: 1,
+      content: JSON.stringify([{type: 'paragraph', children:[{text: ''}]}])
+    };
+    addDoc(collection(db, 'pages', id, 'blocks'), newBlock);
+  }
+
+  // get blocks
+  useEffect(() => {
+    if (uid !== '') {
+      const blocksRef = collection(db, 'pages', id, 'blocks');
+      const blocksQuery = query(blocksRef, where('uid', '==', uid), orderBy('order'));
+
+      const unsub = onSnapshot(blocksQuery, (blocksSnapshot) => {
+        const newBlocks = [];
+        blocksSnapshot.forEach((doc) => {
+          const newBlock = {id: doc.id, ...doc.data()}
+          newBlocks.push(newBlock);
+        });
+        setBlocks(newBlocks);
+
+        // check subpages
+      });
+      return unsub;
+    }
+  }, [uid, id]);
+
+  const updateBlock = (blockId, newContent) => {
+    // update db
+    const blockRef = doc(db, 'pages', id, 'blocks', blockId);
+    updateDoc(blockRef, {
+      content: newContent,
+    });
+
+    // update state
+    const newBlocks = [...blocks]; // does it matter that this is a shallow copy?
+    const index = blocks.findIndex(block => block.id === blockId);
+    const newBlock = {...blocks[index]};
+    newBlock.content = newContent;
+    newBlocks.splice(index, 1, newBlock);
+    setBlocks(newBlocks);
+  }
+
   //////////////
   // SUBPAGES //
   //////////////
@@ -131,52 +186,38 @@ const Page = ( props ) => {
     return unsub;
   }, [id, uid]);
 
-  ////////////
-  // BLOCKS //
-  ////////////
-
-  const addBlocks = () => {
-    const newBlock = {
-      uid: uid,
-      order: 1,
-      content: JSON.stringify([{type: 'paragraph', children:[{text: ''}]}])
-    };
-    addDoc(collection(db, 'pages', id, 'blocks'), newBlock);
-  }
-
-  // get blocks
+  // check nodes for subpages when block first loads
   useEffect(() => {
-    if (uid !== '') {
-      const blocksRef = collection(db, 'pages', id, 'blocks');
-      const blocksQuery = query(blocksRef, where('uid', '==', uid), orderBy('order'));
-
-      const unsub = onSnapshot(blocksQuery, (blocksSnapshot) => {
-        const newBlocks = [];
-        blocksSnapshot.forEach((doc) => {
-          const newBlock = {id: doc.id, ...doc.data()}
-          newBlocks.push(newBlock);
+    if (blocks.length > 0 && subpages.length > 0) {
+      const blockUpdates = [];
+      blocks.forEach((block) => {
+        subpages.forEach(subpageID => {
+          if (!isPageNodeInBlock(block.content, subpageID)) {
+            const newBlockJSON = appendPageLinkNode(block.content, subpageID);
+            blockUpdates.push({
+              id: block.id,
+              newContent: newBlockJSON,
+            });
+          }
         });
-        setBlocks(newBlocks);
-      })
-      return unsub;
+      });
+      // changes needed?
+      if (blockUpdates.length > 0) {
+        // update firestore with a batch write
+        const batch = writeBatch(db);
+
+        blockUpdates.forEach(blockUpdate => {
+          batch.update(
+            doc(db, 'pages', id, 'blocks', blockUpdate.id),
+            { content: blockUpdate.newContent },
+          );
+        });
+
+        // push the batch through
+        batch.commit();
+      }
     }
-  }, [uid, id]);
-
-  const updateBlock = (blockId, newContent) => {
-    // update db
-    const blockRef = doc(db, 'pages', id, 'blocks', blockId);
-    updateDoc(blockRef, {
-      content: newContent,
-    });
-
-    // update state
-    const newBlocks = [...blocks]; // does it matter that this is a shallow copy?
-    const index = blocks.findIndex(block => block.id === blockId);
-    const newBlock = {...blocks[index]};
-    newBlock.content = newContent;
-    newBlocks.splice(index, 1, newBlock);
-    setBlocks(newBlocks);
-  }
+  }, [blocks, subpages, id, uid]);
 
 
   ///////////
@@ -1085,7 +1126,6 @@ const Page = ( props ) => {
               updateContent={ updateBlock }
               addPage={ handleAddPage }
               redirect={ redirect }
-              subpages={ subpages }
             />
           ))}
 

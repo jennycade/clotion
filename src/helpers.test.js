@@ -2,7 +2,7 @@ import { stringify } from '@firebase/util';
 import {
   countDuplicates,
   getTitles, rearrange, getDescendents,
-  splicePageLinkInBlock, isPageNodeInBlock,
+  splicePageLinkInBlock, isPageNodeInBlock, appendPageLinkNode,
   getAncestorClassList, generateUniqueString, removeFromArray,
   sortOutOfPlace
 } from './helpers';
@@ -549,6 +549,56 @@ test(`isPageNodeInBlock() returns false when none of several nodes is the page l
   expect(result).toBe(false);
 });
 
+test(`isPageNodeInBlock() works for real data`, () => {
+  const ids = [
+    'RRX4KUK3sU2eU4QSQDOB',
+    'z261xYrTtHksjoNjofWz',
+    'csiKH7AFpkPPsvYqM0bE',
+    '5uYs9KJAxjNUcftsC1LY',
+  ];
+  const testJsonStr = '[{"type":"paragraph","children":[{"text":"dfasdfasdfCOOL."}]},{"type":"page","children":[{"text":""}],"id":"RRX4KUK3sU2eU4QSQDOB"},{"type":"paragraph","children":[{"text":""}]},{"type":"page","children":[{"text":""}],"id":"z261xYrTtHksjoNjofWz"},{"type":"paragraph","children":[{"text":"/pa"}]},{"type":"page","children":[{"text":""}],"id":"csiKH7AFpkPPsvYqM0bE"},{"type":"paragraph","children":[{"text":"asdfasdf"}]},{"type":"paragraph","children":[{"text":"/div"}]},{"type":"divider","children":[{"text":""}]},{"type":"paragraph","children":[{"text":"IT WORKS WELL ENOUGH."}]},{"type":"paragraph","children":[{"text":""}]},{"type":"divider","children":[{"text":""}]},{"type":"paragraph","children":[{"text":""}]},{"type":"page","children":[{"text":""}],"id":"5uYs9KJAxjNUcftsC1LY"},{"type":"paragraph","children":[{"text":""}]}]';
+  const present = isPageNodeInBlock(testJsonStr, '5uYs9KJAxjNUcftsC1LY');
+  const absent = isPageNodeInBlock(testJsonStr, 'bloop');
+
+  expect(present).toBe(true);
+  expect(absent).toBe(false);
+});
+
+////////////////////////
+// appendPageLinkNode //
+////////////////////////
+
+test(`appendPageLinkNode() adds two nodes to the end of a JSON string. The first is a page node with supplied ID and the second is an empty paragraph node.`, () => {
+  const testJsonStr = '[{"type":"paragraph","children":[{"text":""}]}]';
+  const targetArr = [
+    {
+      type: 'paragraph',
+      children: [{text:''}],
+    },
+    {
+      type: 'page',
+      children: [{text:''}],
+      id: 'newPageID',
+    },
+    {
+      type: 'paragraph',
+      children: [{text:''}],
+    },
+  ];
+
+
+  const newJsonStr = appendPageLinkNode(testJsonStr, 'newPageID');
+
+  const newArr = JSON.parse(newJsonStr);
+
+  expect(newArr.length).toBe(3);
+  expect(newArr).toEqual(targetArr);
+});
+
+
+//////////////////////////
+// getAncestorClassList //
+//////////////////////////
 
 // for the DOM
 test(`getAncestorClassList returns parents class`, () => {

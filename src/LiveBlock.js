@@ -173,7 +173,7 @@ const CustomEditor = {
   ////////////////
   // SET BLOCKS //
   ////////////////
-  setBlock(editor, type, blockParams = {}) {
+  setBlock(editor, type) {
     const listTypes = ['todoList', 'orderedList', 'bulletList'];
     const voidTypes = ['page', 'divider'];
 
@@ -235,15 +235,6 @@ const CustomEditor = {
     Transforms.select(editor, Editor.end(editor, []));
   },
 
-  appendPageLinkNode(editor, pageID) {
-    // stick a new page node at the end of the editor
-    // move cursor to the end
-    Transforms.select(editor, Editor.end(editor, []));
-
-    // add the node
-    this.insertBlock(editor, 'page', {pageID: pageID});
-  },
-
   ///////////////////////
   // TEXT MANIPULATION //
   ///////////////////////
@@ -274,7 +265,6 @@ const CustomEditor = {
     throw new Error (`Could not find slash before selection in LiveBlock.`);
     // console.log(`Could not find slash before selection in LiveBlock.`);
   },
-
 
 
   /////////////
@@ -334,7 +324,7 @@ export { CustomEditor };
 
 const LiveBlock = (props) => {
   // props
-  const { id, updateContent, addPage, redirect, subpages } = props;
+  const { id, updateContent, addPage, redirect } = props;
 
   // state
   // const editor = useMemo(() => withReact(withMentions(createEditor()), []));

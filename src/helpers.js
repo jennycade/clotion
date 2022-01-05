@@ -160,6 +160,25 @@ const isPageNodeInBlock = (blockJson, pageID) => {
   return arr.length !== 0; // found at least one match
 }
 
+const appendPageLinkNode = (blockJson, pageID) => {
+  const arr = JSON.parse(blockJson);
+
+  // add page node
+  arr.push({
+    type: 'page',
+    id: pageID,
+    children: [{text: ''}],
+  });
+  // add empty paragraph node
+  arr.push({
+    type: 'paragraph',
+    children: [{text: ''}],
+  });
+
+  const str = JSON.stringify(arr);
+  return str;
+}
+
 const getColorCode = (colorName, type) => {
   const COLORS = {
     gray: 'rgba(96, 96, 98, 0.93)',
@@ -273,6 +292,7 @@ export {
   getDescendents,
   splicePageLinkInBlock,
   isPageNodeInBlock,
+  appendPageLinkNode,
   getColorCode,
   getAncestorClassList,
   generateUniqueString,
