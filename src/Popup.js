@@ -13,8 +13,6 @@ const Popup = (props) => {
 
   // state
   const [right, setRight] = useState('auto');
-  const [left, setLeft] = useState('auto');
-  const [top, setTop] = useState('auto');
   const [bottom, setBottom] = useState('auto');
 
   // position
@@ -78,8 +76,6 @@ const Popup = (props) => {
       className={ fullClassName }
       style={
         {
-          top: top,
-          left: left,
           right: right,
           bottom: bottom
         }

@@ -1,7 +1,5 @@
 import { sortOutOfPlace } from './helpers';
 
-import { toDate } from 'firebase/firestore';
-
 const convertEntry = (entry, propType, finalSave = false, selectOptions = null) => {
   switch(propType) {
     case 'text':

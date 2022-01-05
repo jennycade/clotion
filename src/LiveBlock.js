@@ -557,10 +557,10 @@ const LiveBlock = (props) => {
                 event.preventDefault();
                 CustomEditor.setBlock(editor, 'h3');
                 break;
-              case 'Digit4' || 'Numpad4':
-                event.preventDefault();
-                CustomEditor.setBlock(editor, 'todoList');
-                break;
+              // case 'Digit4' || 'Numpad4':
+              //   event.preventDefault();
+              //   CustomEditor.setBlock(editor, 'todoList');
+              //   break;
               case 'Digit5' || 'Numpad5':
                 event.preventDefault();
                 CustomEditor.setBlock(editor, 'bulletList');
@@ -569,10 +569,10 @@ const LiveBlock = (props) => {
                 event.preventDefault();
                 CustomEditor.setBlock(editor, 'orderedList');
                 break;
-              case 'Digit7' || 'Numpad7':
-                event.preventDefault();
-                CustomEditor.setBlock(editor, 'toggle'); // TODO: implement!
-                break;
+              // case 'Digit7' || 'Numpad7':
+              //   event.preventDefault();
+              //   CustomEditor.setBlock(editor, 'toggle'); // TODO: implement!
+              //   break;
               case 'Digit8' || 'Numpad8':
                 event.preventDefault();
                 CustomEditor.setBlock(editor, 'code');

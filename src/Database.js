@@ -10,15 +10,10 @@ import Content from './Content';
 import SelectOption from './SelectOption';
 import SelectCell from './SelectCell';
 import FieldName from './FieldTitle';
-import ViewManager from './ViewManager';
-import Popup from './Popup';
-import Toggle from './Toggle';
-import Menu from './Menu';
 
 // my functions
 import { removeFromArray,  } from './helpers';
-import { renderDate, isBlank, sortIDsByCreated } from './databaseFunctions';
-import MoreButton from './MoreButton';
+import { renderDate, isBlank } from './databaseFunctions';
 import DBActionBar from './DBActionBar';
 
 // constants

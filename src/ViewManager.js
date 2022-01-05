@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // my components
 import Popup from './Popup';
 import Menu from './Menu';
-import Content from './Content';
 import MoreButton from './MoreButton';
 
 // constants

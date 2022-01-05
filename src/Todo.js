@@ -1,6 +1,6 @@
 const Todo = (props) => {
   // props
-  const { completed, handleTodoClick } = props;
+  // const { completed, handleTodoClick } = props;
 
   return (
     <li className='todo'

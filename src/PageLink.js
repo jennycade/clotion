@@ -1,9 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-
-// database
-import {doc, onSnapshot} from 'firebase/firestore';
-import { db } from './firebase/db';
 
 // CSS
 import './PageLink.css';
@@ -12,9 +7,6 @@ const PageLink = ( props ) => {
   // props
   let { id, title, icon, draggable } = props;
 
-  // state! for style
-  const [style, setStyle] = useState({});
-
   
   /////////////////
   // DRAG & DROP //
@@ -22,40 +14,9 @@ const PageLink = ( props ) => {
 
   const handleDragOver = (event) => {
     event.preventDefault();
-    // const newStyle = {
-    //   borderTop: '3px solid Highlight',
-    //   marginTop: '-3px',
-    // };
-    // if (Object.keys(style).length === 0) { // currently empty
-    //   setStyle(newStyle);
-    // }
-  }
-
-  const handleDragEnter = () => {
-    // highlight!
-    const newStyle = {
-      borderTop: '3px solid Highlight',
-      marginTop: '-3px',
-    };
-
-    console.log(`Entering page ${title}`)
-
-    if (Object.keys(style).length === 0) { // currently empty
-      setStyle(newStyle);
-    }
-      
-  }
-
-  const handleDragLeave = () => {
-    console.log(`Possibly leaving page ${title}`)
-    if (props.isDragLeaveReal(id)) {
-      // returns true if it's really leaving
-      setStyle({});
-    }
   }
 
   const handleDrop = () => {
-    // setStyle({});
     props.handleDrop(id);
   }
 
