@@ -51,6 +51,7 @@ const Page = ( props ) => {
   const [parentDbPage, setParentDbPage] = useState({});
   const [parentDbRows, setParentDbRows] = useState([]);
   const [subpages, setSubpages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // get page object
   useEffect( () => {
@@ -127,6 +128,7 @@ const Page = ( props ) => {
           newBlocks.push(newBlock);
         });
         setBlocks(newBlocks);
+        setLoading(false);
 
         // check subpages
       });
@@ -294,6 +296,7 @@ const Page = ( props ) => {
           newRows.push(newBlock);
         });
         setRows(newRows);
+        setLoading(false);
       });
       return unsub;
     }
@@ -1086,7 +1089,7 @@ const Page = ( props ) => {
         <div className="contentArea">
 
           {/* NEW PAGE MENU */}
-          { blocks.length === 0 && !page.isDb &&
+          { !loading && blocks.length === 0 && !page.isDb &&
             <div className="newPageMenu">
               <p>Press Enter to continue with an empty page, or pick a template (click to select)</p>
               
