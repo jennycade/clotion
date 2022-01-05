@@ -12,7 +12,7 @@
 /* TABLES */
 .tableWrapper {
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .contentArea table {
@@ -196,7 +196,7 @@ button.viewButton {
 .board {
   display: flex;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
   gap: 20px;
 }
 
