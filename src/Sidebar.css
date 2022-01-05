@@ -8,6 +8,12 @@
   flex-direction: column;
 }
 
+.sidebar p {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-bottom: 0;
+}
+
 .sidebar a {
   color: inherit;
   text-decoration: inherit;
@@ -32,4 +38,27 @@
 
 .sidebar div {
   padding-left: 15px;
+}
+
+.sidebar button {
+  padding: 1rem;
+  color: rgb(114, 112, 107);
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar button:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+}
+.sidebar button.sidebarAddPage {
+  margin-top: 1rem;
+  border-top: 1px solid rgb(230, 229, 225);
+}
+.sidebar button.signOutButton {
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgb(230, 229, 225);
 }

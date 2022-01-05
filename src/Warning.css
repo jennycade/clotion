@@ -3,6 +3,7 @@
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 }
 .warningDialog {
   position: fixed;
@@ -14,5 +15,30 @@
   border: 1px solid rgb(152, 151, 152);
   border-radius: 3px;
   
+  width: 337px;
   padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.warningDialog button {
+  cursor: pointer;
+  
+  border-radius: 3px;
+  border-width: 1px;
+  margin-bottom: 14px;
+  box-shadow: rgb(15 15 15 / 10%) 0px 1px 2px;
+  font-size: 14px;
+  font-weight: 500;
+  height: 36px;
+
+  background-color: rgb(225, 98, 89);
+  border: 1px solid rgb(190, 86, 67);
+  color: white;
+}
+
+.warningDialog button.cancelButton {
+  background-color: white;
+  color: rgb(190, 86, 67);
 }

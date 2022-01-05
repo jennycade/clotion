@@ -543,16 +543,22 @@ function App() {
       <div className="App">
         <Sidebar>
           <p>{userDisplayName}'s Clotion</p>
-          <button onClick={ signOutUser }>Sign out</button>
+          <button
+            className='signOutButton'
+            onClick={ signOutUser }
+          >Sign out</button>
 
           { pages.filter((page) => page.parent === '').map( (page) => getSidebarNode(page)) }
           
           <div className="endSort" >
           </div>
 
-          <button onClick={ handleSideBarAddPage }
-            onDrop={ () => handleSideBarPageDrop() } onDragOver={ (e) => e.preventDefault() } 
-          >Add page</button>
+          <button
+            className='sidebarAddPage'
+            onClick={ handleSideBarAddPage }
+            onDrop={ () => handleSideBarPageDrop() }
+            onDragOver={ (e) => e.preventDefault() } 
+          >+ New page</button>
           
         </Sidebar>
 

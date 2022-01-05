@@ -8,9 +8,9 @@ const Warning = (props) => {
     <div className='warningWrapper'
     >
       <div className='warningDialog'>
-        { text }
+        <p>{ text }</p>
         <button onClick={ continueFunction }>{ continueText }</button>
-        <button onClick={ cancelFunction }>{ cancelText }</button>
+        <button onClick={ cancelFunction } className='cancelButton'>{ cancelText }</button>
       </div>
     </div>
   );
