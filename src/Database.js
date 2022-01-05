@@ -285,7 +285,7 @@ const Database = (props) => {
             }
 
             { type === 'text' && 
-              row[propID] === '' ? '\u00A0' : row[propID]
+              (row[propID] === '' ? '\u00A0' : row[propID])
             }
           </span>
         </Content>
