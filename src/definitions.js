@@ -32,6 +32,13 @@ const PROPERTYTYPEICONS = {
   phone: '📞',
 };
 
+const DROPDOWNICON = (
+  <svg
+    viewBox="0 0 30 30" className="chevronDown">
+      <polygon points="15,17.4 4.8,7 2,9.8 15,23 28,9.8 25.2,7 "></polygon>
+  </svg>
+);
+
 function* infinite() {
   let index = 0;
 
@@ -461,6 +468,7 @@ const getSamplePage = (uid, pageName, referencePageID = '') => {
 ////////////
 
 export {
+  DROPDOWNICON,
   VIEWMENU,
   PROPERTYTYPEICONS,
   getSamplePage

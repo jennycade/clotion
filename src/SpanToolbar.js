@@ -13,6 +13,9 @@ import SpanButton from './SpanButton';
 import ColorToolbar from './ColorToolbar';
 import MiniBlockToolbar from './MiniBlockToolbar';
 
+// constants
+import { DROPDOWNICON } from './definitions';
+
 const SpanToolbar = (props) => {
   // props
   const { chooseBlock, chooseColor, toggleMark, isMarkActive, getColorCode } = props;
@@ -37,12 +40,6 @@ const SpanToolbar = (props) => {
     event.preventDefault();
     setShowBlockToolbar(!showBlockToolbar);
   }
-  const dropdownIcon = (
-    <svg
-      viewBox="0 0 30 30" className="chevronDown">
-        <polygon points="15,17.4 4.8,7 2,9.8 15,23 28,9.8 25.2,7 "></polygon>
-    </svg>
-  );
 
   // for positioning
   const containerRef = useRef(null);
@@ -65,7 +62,10 @@ const SpanToolbar = (props) => {
       Range.isCollapsed(selection) ||
       Editor.string(editor, selection) === ''
     ) {
-      containerElement.removeAttribute('style')
+      containerElement.removeAttribute('style');
+      // collapse dropdowns
+      setShowBlockToolbar(false);
+      setShowColorToolbar(false);
       return
     }
 
@@ -90,7 +90,7 @@ const SpanToolbar = (props) => {
       >
         <SpanButton mark='blockButton' isMarkActive={ () => false } handleMouseDown={ handleBlockToolbarClick } dropdown={true}>
           Choose block
-          { dropdownIcon }
+          { DROPDOWNICON }
         </SpanButton>
 
         <SpanButton mark='bold' isMarkActive={ isMarkActive } handleMouseDown={ handleClick }>B</SpanButton>
@@ -105,7 +105,7 @@ const SpanToolbar = (props) => {
 
         <SpanButton mark='colorButton' isMarkActive={ () => false } handleMouseDown={ handleColorToolbarClick } dropdown={true}>
           A
-          { dropdownIcon }
+          { DROPDOWNICON }
         </SpanButton>
 
       </div>
