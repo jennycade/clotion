@@ -162,6 +162,12 @@ table .addProperty:hover, table .addRow:hover, .board .addRow:hover, .list .addR
   color: rgba(55, 53, 47, 0.6);
   cursor: pointer;
 }
+
+.dbActionBar button.withDropDownIcon {
+  display: flex;
+  align-items: center;
+}
+
 .dbActionBar button:hover {
   background-color: rgba(55,53,47,0.08);
 }

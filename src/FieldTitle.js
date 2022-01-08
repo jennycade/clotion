@@ -5,7 +5,7 @@ import Popup from './Popup';
 import Menu from './Menu';
 
 // constants
-import { PROPERTYTYPEICONS } from './definitions';
+import { PROPERTYTYPEICONS, DROPDOWNICON } from './definitions';
 import TextInput from './TextInput';
 
 const FieldName = (props) => {
@@ -133,7 +133,7 @@ const FieldName = (props) => {
         
         <ul className='menu'>
           <li className='noHover'><h2>PROPERTY TYPE</h2></li>
-          <li className='grid'
+          <li className='iconNameButtonGrid'
             onClick={() => setShowPropTypeMenu(true)}
           >
             <span className='icon'>
@@ -142,6 +142,7 @@ const FieldName = (props) => {
             <span>
               { propertyTypeMenu.find(x => x.id === type).displayText }
             </span>
+            <span>{DROPDOWNICON}</span>
           </li>
         </ul>
         }
@@ -164,6 +165,7 @@ const FieldName = (props) => {
         { type !== 'title' &&
         
         <Menu
+          className='menu topBorder'
           menuItems={ columnActionMenu }
           choose={ handleColumnActionClick }
         />

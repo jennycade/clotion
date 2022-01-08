@@ -23,7 +23,7 @@
   display: grid;
   grid-template-columns: 30px 1fr min-content;
   justify-items: start;
-  align-items: baseline;
+  align-items: center;
 }
 .menu li.rightButtonGrid {
   display: grid;
@@ -52,3 +52,6 @@
   font-weight: 500;
 }
 
+.menu.topBorder {
+  border-top: 1px solid rgb(237, 237, 236);
+}

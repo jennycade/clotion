@@ -6,7 +6,7 @@ import Menu from './Menu';
 import MoreButton from './MoreButton';
 
 // constants
-import { VIEWMENU } from './definitions';
+import { DROPDOWNICON, VIEWMENU } from './definitions';
 import TextInput from './TextInput';
 
 const ViewManager = (props) => {
@@ -48,8 +48,12 @@ const ViewManager = (props) => {
 
       {/* Active view name */}
       { numViews > 1 &&
-        <button onClick={() => setShowSwitcher(true)}>
+        <button
+          className='withDropDownIcon'
+          onClick={() => setShowSwitcher(true)}
+        >
           {views[activeViewID].displayName}
+          {DROPDOWNICON}
         </button>
       }
 
