@@ -47,6 +47,7 @@ test(`getSamplePage() takes parent page ID as third argument, uses it for db chi
 
   Object.keys(recipePages).forEach(recipePageID => {
     expect(recipePages[recipePageID].doc.parent).toBe(parentID);
+    expect(recipePages[recipePageID].doc.parentDb).toBe(parentID);
   });
 });
 

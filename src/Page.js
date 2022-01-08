@@ -1043,7 +1043,6 @@ const Page = ( props ) => {
   // RENDER //
   ////////////
 
-  console.log(page);
   return (
     <div className="pageContainer">
       { warning &&
