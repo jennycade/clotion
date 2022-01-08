@@ -151,27 +151,54 @@ function App() {
 
   const addDefaultPages = async (uid) => {
     // just hard code it in
+
     // add instructions page
-    const WELCOMEPAGE = getSamplePage(uid, 'welcome');
-    const CHILDPAGE = getSamplePage(uid, 'child');
-    await setDoc(
-      doc(db, 'pages', WELCOMEPAGE.pageID),
-      WELCOMEPAGE.doc,
+    const welcomeDoc = getSamplePage(uid, 'welcomeDoc');
+    const welcomePageRef = await addDoc(
+      collection(db, 'pages'),
+      welcomeDoc,
+    );
+    // add subpage
+    const childPage = getSamplePage(uid, 'child', welcomePageRef.id);
+    const childPageRef = await addDoc(
+      collection(db, 'pages'),
+      childPage.doc,
     );
     // content
+    const welcomeBlock = getSamplePage(uid, 'welcomeBlock', childPageRef.id)
     await addDoc(
-      collection(db, 'pages', WELCOMEPAGE.pageID, 'blocks'),
-      {
-        content: WELCOMEPAGE.content
+      collection(db, 'pages', welcomePageRef.id, 'blocks'),
+      welcomeBlock,
+    );
+
+    // recipesDB
+    const RECIPESDB = getSamplePage(uid, 'recipesDB');
+    const recipesDBRef = await addDoc(
+      collection(db, 'pages'),
+      RECIPESDB.doc,
+    );
+    // add the rows
+    const RECIPEROWS = getSamplePage(uid, 'recipeRows');
+    const RECIPEPAGES = getSamplePage(uid, 'recipePages', recipesDBRef.id);
+    Object.keys(RECIPEROWS).forEach(async recipeID => {
+      // add page
+      const recipePageRef = await addDoc(
+        collection(db, 'pages'),
+        RECIPEPAGES[recipeID].doc,
+      );
+      // add content
+      if (RECIPEPAGES[recipeID].block) {
+        await addDoc(
+          collection(db, 'pages', recipePageRef.id, 'blocks'),
+          RECIPEPAGES[recipeID].block,
+        );
       }
-    )
-
-
-    // add subpage
-    await setDoc(
-      doc(db, 'pages', CHILDPAGE.pageID),
-      CHILDPAGE.doc,
-    )
+      // add row to DB
+      await setDoc(
+        doc(db, 'pages', recipesDBRef.id, 'rows', recipePageRef.id),
+        RECIPEROWS[recipeID],
+      );
+    })
   }
 
   ///////////
@@ -195,7 +222,7 @@ function App() {
 
         // no pages? add defaults
         if (newPages.length === 0) {
-          addDefaultPages(); // need to await this line?
+          addDefaultPages(uid); // need to await this line?
         }
       });
       return unsub;
