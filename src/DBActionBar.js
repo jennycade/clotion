@@ -60,7 +60,7 @@ const DBActionBar = (props) => {
         </button>
         { showPropertiesManager &&
           <Popup exit={() => setShowPropertiesManager(false)}>
-            <ul className='menu wideMenu'>
+            <ul className='menu'>
               {/* Group by for boards */}
               { viewType === 'board' &&
                 <li className='rightButton'>
