@@ -4,12 +4,19 @@
 Clotion is a simple Notion clone made for The Odin Project. Learn more about this app at <github.com/jennycade/clotion>.
 
 ## 👆 Icon and title
+
 Every page has an icon and title. Click the icon (or the Add icon button) to choose a new emoji to use as the icon, and click the title to change it.
+
 ## 👈 Sidebar
+
 The sidebar shows all of your pages. Click any page to open it. Drag and drop to re-order top-level pages.
+
 ## New page
+
 When you open a new page, you can choose to make it either an empty rich text document or a database.
+
 ---
+
 ## Rich text editor
 Type '/' to see the types of blocks that are available. You can make:
 - paragraphs
