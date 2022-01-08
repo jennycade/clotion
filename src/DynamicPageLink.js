@@ -20,10 +20,16 @@ const DynamicPageLink = (props) => {
   //////////////////////////////
 
   useEffect( () => {
-    const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
-      setTitle(doc.data().title);
-      setIcon(doc.data().icon);
-    });
+    const unsub = onSnapshot(
+      doc(db, 'pages', id),
+      (doc) => {
+        setTitle(doc.data().title);
+        setIcon(doc.data().icon);
+      },
+      (error) => {
+        throw new Error (`Error getting DynamicPageLink data for page with id ${id}: ${error}`);
+      }
+    );
     return unsub;
   }, [id]);
 

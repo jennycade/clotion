@@ -131,7 +131,11 @@ const Page = ( props ) => {
         setLoading(false);
 
         // check subpages
-      });
+      },
+      (error) => {
+        throw new Error(`Error getting page blocks: ${error}`);
+      }
+      );
       return unsub;
     }
   }, [uid, id]);
@@ -183,6 +187,9 @@ const Page = ( props ) => {
           newSubpages.push(subpage.id)
         });
         setSubpages(newSubpages);
+      },
+      (error) => {
+        throw new Error(`Error getting subpages: ${error}`);
       }
     );
     return unsub;

@@ -124,8 +124,7 @@ const getSamplePage = (uid, pageName, referencePageID = '') => {
           {"type":"li","children":[{"text":"phone"}]}]},
           {"type":"paragraph","children":[{"text":"You can create any number of views by clicking on the view selector at the top left corner of the database. Within each view, any number of properties can be displayed."}]},
           {"type":"paragraph","children":[{"text":"In a board, drag and drop cards to assign the grouping select property."}]},
-          {"type":"page","id":"uDHKB5JuKM6ycTYLSNiH","children":[{"text":""}]},
-          {"type":"paragraph","children":[{"text":""}]}]),
+          ]),
         order: 1,
         uid: uid,
       };

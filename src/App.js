@@ -217,7 +217,11 @@ function App() {
         pagesSnapshot.forEach((doc) => {
           const newPage = {id: doc.id, ...doc.data()}
           newPages.push(newPage);
-        });
+        },
+        (error) => {
+          throw new Error(`Error loading pages from database: ${error}`)
+        }
+        );
         setPages(newPages);
 
         // no pages? add defaults
