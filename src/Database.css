@@ -108,6 +108,8 @@ td div.field, td .field .content, td .field .content .block, td .field .content 
 
 td span.field {
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /*
