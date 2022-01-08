@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 import { sortOutOfPlace } from './helpers';
 
 const convertEntry = (entry, propType, finalSave = false, selectOptions = null) => {

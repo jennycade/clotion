@@ -1043,6 +1043,7 @@ const Page = ( props ) => {
   // RENDER //
   ////////////
 
+  console.log(page);
   return (
     <div className="pageContainer">
       { warning &&
@@ -1091,7 +1092,7 @@ const Page = ( props ) => {
           {/* NEW PAGE MENU */}
           { !loading && blocks.length === 0 && !page.isDb &&
             <div className="newPageMenu">
-              <p>Press Enter to continue with an empty page, or pick a template (click to select)</p>
+              <p>Choose a page type by clicking below.</p>
               
               <button className='linklike'
                 onClick={handleEmptyWithIconPageClick}

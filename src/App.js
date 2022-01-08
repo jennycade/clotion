@@ -9,6 +9,8 @@ import Login from './Login';
 
 import { rearrange, getDescendents, splicePageLinkInBlock } from './helpers';
 
+import { getSamplePage } from './definitions';
+
 // import { DbContext } from './firebase';
 import { db, auth, googleProvider } from './firebase/db';
 
@@ -144,6 +146,34 @@ function App() {
     signOut(auth);
   }
 
+
+  // default pages
+
+  const addDefaultPages = async (uid) => {
+    // just hard code it in
+    // add instructions page
+    const WELCOMEPAGE = getSamplePage(uid, 'welcome');
+    const CHILDPAGE = getSamplePage(uid, 'child');
+    await setDoc(
+      doc(db, 'pages', WELCOMEPAGE.pageID),
+      WELCOMEPAGE.doc,
+    );
+    // content
+    await addDoc(
+      collection(db, 'pages', WELCOMEPAGE.pageID, 'blocks'),
+      {
+        content: WELCOMEPAGE.content
+      }
+    )
+
+
+    // add subpage
+    await setDoc(
+      doc(db, 'pages', CHILDPAGE.pageID),
+      CHILDPAGE.doc,
+    )
+  }
+
   ///////////
   // PAGES //
   ///////////
@@ -162,6 +192,11 @@ function App() {
           newPages.push(newPage);
         });
         setPages(newPages);
+
+        // no pages? add defaults
+        if (newPages.length === 0) {
+          addDefaultPages(); // need to await this line?
+        }
       });
       return unsub;
     }
