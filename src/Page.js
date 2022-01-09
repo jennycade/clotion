@@ -55,9 +55,15 @@ const Page = ( props ) => {
 
   // get page object
   useEffect( () => {
-    const unsub = onSnapshot(doc(db, 'pages', id), (doc) => {
-      setPage({id: doc.id, ...doc.data()});
-    });
+    const unsub = onSnapshot(
+      doc(db, 'pages', id),
+      (doc) => {
+        setPage({id: doc.id, ...doc.data()});
+      },
+      (error) => {
+        console.warning(`Error getting page object for pageID ${id}: ${error}`);
+      }
+    );
     return unsub;
   }, [id]);
 
@@ -133,7 +139,7 @@ const Page = ( props ) => {
         // check subpages
       },
       (error) => {
-        throw new Error(`Error getting page blocks: ${error}`);
+        console.warning(`Error getting page blocks: ${error}`);
       }
       );
       return unsub;
@@ -189,7 +195,7 @@ const Page = ( props ) => {
         setSubpages(newSubpages);
       },
       (error) => {
-        throw new Error(`Error getting subpages: ${error}`);
+        console.warning(`Error getting subpages: ${error}`);
       }
     );
     return unsub;
@@ -296,15 +302,21 @@ const Page = ( props ) => {
       const rowsRef = collection(db, 'pages', id, 'rows');
       const rowsQuery = query(rowsRef, where('uid', '==', uid));
 
-      const unsub = onSnapshot(rowsQuery, (rowsSnapshot) => {
-        const newRows = [];
-        rowsSnapshot.forEach((doc) => {
-          const newBlock = {id: doc.id, ...doc.data()}
-          newRows.push(newBlock);
-        });
-        setRows(newRows);
-        setLoading(false);
-      });
+      const unsub = onSnapshot(
+        rowsQuery,
+        (rowsSnapshot) => {
+          const newRows = [];
+          rowsSnapshot.forEach((doc) => {
+            const newBlock = {id: doc.id, ...doc.data()}
+            newRows.push(newBlock);
+          });
+          setRows(newRows);
+          setLoading(false);
+        },
+        (error) => {
+          console.warning(`Error getting database rows for db ${id}: ${error}`);
+        }
+      );
       return unsub;
     }
   }, [uid, id, page]);
@@ -321,13 +333,19 @@ const Page = ( props ) => {
         where('parentDb', '==', id)
       );
 
-      const unsub = onSnapshot(pagesQuery, (pagesSnapshot) => {
-        const newDbPages = {};
-        pagesSnapshot.forEach((doc) => {
-          newDbPages[doc.id] = {...doc.data()};
-        });
-        setDbPages(newDbPages);
-      });
+      const unsub = onSnapshot(
+        pagesQuery,
+        (pagesSnapshot) => {
+          const newDbPages = {};
+          pagesSnapshot.forEach((doc) => {
+            newDbPages[doc.id] = {...doc.data()};
+          });
+          setDbPages(newDbPages);
+        },
+        (error) => {
+          console.warning(`Error getting page info from db rows for db ${id}: ${error}`);
+        }
+      );
 
       return unsub;
     }
@@ -976,9 +994,15 @@ const Page = ( props ) => {
     if (uid !== '' && page.parentDb && page.parentDb !== '') {
 
       // get the row
-      const unsub = onSnapshot(doc(db, 'pages', page.parentDb, 'rows', id), (doc) => {
-        setRow([{id: doc.id, ...doc.data()}]);
-      });
+      const unsub = onSnapshot(
+        doc(db, 'pages', page.parentDb, 'rows', id),
+        (doc) => {
+          setRow([{id: doc.id, ...doc.data()}]);
+        },
+        (error) => {
+          console.warning(`Error getting row info from database. PageID ${id} and database ${page.parentDb}: ${error}`);
+        }
+      );
       return unsub;
     }
   }, [uid, id, page]);
@@ -987,9 +1011,15 @@ const Page = ( props ) => {
   useEffect(() => {
     if (uid !== '' && page.parentDb && page.parentDb !== '') {
       // get the parent page
-      const unsub = onSnapshot(doc(db, 'pages', page.parentDb), (doc) => {
-        setParentDbPage({id: doc.id, ...doc.data()});
-      });
+      const unsub = onSnapshot(
+        doc(db, 'pages', page.parentDb),
+        (doc) => {
+          setParentDbPage({id: doc.id, ...doc.data()});
+        },
+        (error) => {
+          console.warning(`Error getting parent db info for db ${page.parentDb}: ${error}`);
+        }
+      );
       return unsub;
     }
   }, [uid, id, page]);
@@ -1000,14 +1030,19 @@ const Page = ( props ) => {
       const rowsRef = collection(db, 'pages', page.parentDb, 'rows');
       const rowsQuery = query(rowsRef, where('uid', '==', uid));
 
-      const unsub = onSnapshot(rowsQuery, (rowsSnapshot) => {
-        const newRows = [];
-        rowsSnapshot.forEach((doc) => {
-          const newBlock = {id: doc.id, ...doc.data()}
-          newRows.push(newBlock);
-        });
-        setParentDbRows(newRows);
-      });
+      const unsub = onSnapshot(rowsQuery,
+        (rowsSnapshot) => {
+          const newRows = [];
+          rowsSnapshot.forEach((doc) => {
+            const newBlock = {id: doc.id, ...doc.data()}
+            newRows.push(newBlock);
+          });
+          setParentDbRows(newRows);
+        },
+        (error) => {
+          console.warning(`Error getting parent db rows for db ${page.parentDb}: ${error}`);
+        }
+      );
       return unsub;
     }
   }, [page.parentDb, uid]);

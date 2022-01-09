@@ -78,7 +78,7 @@ const SpanToolbar = (props) => {
       window.pageXOffset -
       toolbarElement.offsetWidth / 2 +
       rect.width / 2}px`
-  });
+  }, [editor]);
 
 
   return (

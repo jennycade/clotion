@@ -27,7 +27,7 @@ const DynamicPageLink = (props) => {
         setIcon(doc.data().icon);
       },
       (error) => {
-        throw new Error (`Error getting DynamicPageLink data for page with id ${id}: ${error}`);
+        console.warning(`Error getting DynamicPageLink data for page with id ${id}: ${error}`);
       }
     );
     return unsub;
