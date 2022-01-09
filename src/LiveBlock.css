@@ -24,3 +24,8 @@ blockquote {
   /* text-decoration: underline; */
   border-bottom: 1px solid rgb(222,222,221);
 }
+
+.contentArea hr {
+  border: 0;
+  border-top: 1px solid rgb(234, 234, 233);
+}
