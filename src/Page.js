@@ -61,7 +61,7 @@ const Page = ( props ) => {
         setPage({id: doc.id, ...doc.data()});
       },
       (error) => {
-        console.warning(`Error getting page object for pageID ${id}: ${error}`);
+        console.warn(`Error getting page object for pageID ${id}: ${error}`);
       }
     );
     return unsub;
@@ -139,7 +139,7 @@ const Page = ( props ) => {
         // check subpages
       },
       (error) => {
-        console.warning(`Error getting page blocks: ${error}`);
+        console.warn(`Error getting page blocks: ${error}`);
       }
       );
       return unsub;
@@ -195,7 +195,7 @@ const Page = ( props ) => {
         setSubpages(newSubpages);
       },
       (error) => {
-        console.warning(`Error getting subpages: ${error}`);
+        console.warn(`Error getting subpages: ${error}`);
       }
     );
     return unsub;
@@ -314,7 +314,7 @@ const Page = ( props ) => {
           setLoading(false);
         },
         (error) => {
-          console.warning(`Error getting database rows for db ${id}: ${error}`);
+          console.warn(`Error getting database rows for db ${id}: ${error}`);
         }
       );
       return unsub;
@@ -343,7 +343,7 @@ const Page = ( props ) => {
           setDbPages(newDbPages);
         },
         (error) => {
-          console.warning(`Error getting page info from db rows for db ${id}: ${error}`);
+          console.warn(`Error getting page info from db rows for db ${id}: ${error}`);
         }
       );
 
@@ -1000,7 +1000,7 @@ const Page = ( props ) => {
           setRow([{id: doc.id, ...doc.data()}]);
         },
         (error) => {
-          console.warning(`Error getting row info from database. PageID ${id} and database ${page.parentDb}: ${error}`);
+          console.warn(`Error getting row info from database. PageID ${id} and database ${page.parentDb}: ${error}`);
         }
       );
       return unsub;
@@ -1017,7 +1017,7 @@ const Page = ( props ) => {
           setParentDbPage({id: doc.id, ...doc.data()});
         },
         (error) => {
-          console.warning(`Error getting parent db info for db ${page.parentDb}: ${error}`);
+          console.warn(`Error getting parent db info for db ${page.parentDb}: ${error}`);
         }
       );
       return unsub;
@@ -1040,7 +1040,7 @@ const Page = ( props ) => {
           setParentDbRows(newRows);
         },
         (error) => {
-          console.warning(`Error getting parent db rows for db ${page.parentDb}: ${error}`);
+          console.warn(`Error getting parent db rows for db ${page.parentDb}: ${error}`);
         }
       );
       return unsub;

@@ -219,7 +219,7 @@ function App() {
           newPages.push(newPage);
         },
         (error) => {
-          console.warning(`Error loading pages from database: ${error}`)
+          console.warn(`Error loading pages from database: ${error}`)
         }
         );
         setPages(newPages);
